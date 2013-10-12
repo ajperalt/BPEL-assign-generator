@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>pl.eiti.bpel</groupId>
-	<artifactId>bpesag</artifactId>
+	<artifactId>bpelag</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
 	<dependencies>
@@ -19,6 +19,19 @@
 			<version>2.9.0</version>
 			<scope>system</scope>
 			<systemPath>${project.basedir}/lib/org.eclipse.emf.ecore_2.9.0.v20130528-0742.jar</systemPath>
+		</dependency><dependency>
+			<groupId>org.eclipse.emf</groupId>
+			<artifactId>common</artifactId>
+			<version>2.9.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/org.eclipse.emf.common_2.9.0.v20130528-0742.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse</groupId>
+			<artifactId>common</artifactId>
+			<version>2.9.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/app-1.0.0-v20070606.jar</systemPath>
 		</dependency>
 	</dependencies>
 </project>
