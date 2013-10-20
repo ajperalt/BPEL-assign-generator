@@ -1,0 +1,108 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>pl.eiti.bpel</groupId>
+	<artifactId>bpelag</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+
+	<repositories>
+		<repository>
+			<id>thirdparty-releases</id>
+			<name>JBoss Thirdparty Releases</name>
+			<url>https://repository.jboss.org/nexus/content/repositories/thirdparty-releases</url>
+		</repository>
+		<repository>
+			<id>deprecated</id>
+			<name>JBoss Deprecated</name>
+			<url>https://repository.jboss.org/nexus/content/repositories/deprecated</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.eclipse.bpel</groupId>
+			<artifactId>model</artifactId>
+			<version>1.0.3</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/org.eclipse.bpel.model_1.0.3.v20130509-1351-CI.jar</systemPath>
+		</dependency>
+		<!--dependency> <groupId>org.eclipse.emf</groupId> <artifactId>ecore</artifactId> 
+			<version>2.9.0</version> <scope>system</scope> <systemPath>${project.basedir}/lib/org.eclipse.emf.ecore_2.9.0.v20130528-0742.jar</systemPath> 
+			</dependency -->
+		<dependency>
+			<groupId>org.eclipse.emf</groupId>
+			<artifactId>ecore</artifactId>
+			<version>2.4.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.emf</groupId>
+			<artifactId>common</artifactId>
+			<version>2.9.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/org.eclipse.emf.common_2.9.0.v20130528-0742.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse</groupId>
+			<artifactId>common</artifactId>
+			<version>2.9.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/app-1.0.0-v20070606.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.emf.ecore</groupId>
+			<artifactId>xmi</artifactId>
+			<version>2.3.0-v200706262000</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.wst</groupId>
+			<artifactId>wsdl</artifactId>
+			<version>1.2.3</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/org.eclipse.wst.wsdl_1.2.300.v201109010430.jar</systemPath>
+		</dependency>
+		<!--dependency> <groupId>org.eclipse.wtp</groupId> <artifactId>wsdl</artifactId> 
+			<version>1.0.0</version> </dependency -->
+		<dependency>
+			<groupId>axis</groupId>
+			<artifactId>axis-wsdl4j</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse</groupId>
+			<artifactId>xsd</artifactId>
+			<version>2.3.0-v200706262000</version>
+		</dependency>
+		<dependency>
+			<groupId>xerces</groupId>
+			<artifactId>xerces</artifactId>
+			<version>2.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>xerces</groupId>
+			<artifactId>xercesImpl</artifactId>
+			<version>2.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.bpel</groupId>
+			<artifactId>ui</artifactId>
+			<version>1.0.3.v20130509-1351-CI</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/org.eclipse.bpel.ui_1.0.3.v20130509-1351-CI.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.core</groupId>
+			<artifactId>resources</artifactId>
+			<version>3.3.0-v20070604</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.core</groupId>
+			<artifactId>runtime</artifactId>
+			<version>3.3.100-v20070530</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.ui</groupId>
+			<artifactId>org.eclipse.ui</artifactId>
+			<version>3.5.0.I20090604-2000</version>
+		</dependency>
+	</dependencies>
+</project>
