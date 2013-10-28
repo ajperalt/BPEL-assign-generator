@@ -1,6 +1,5 @@
 package bpelag;
 
-import org.eclipse.bpel.ui.util.BPELReader;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
@@ -15,7 +14,6 @@ import org.eclipse.equinox.app.IApplicationContext;
 public class AssignGenerator implements IApplication {
 
 	public static void main(String[] args) {
-		BPELReader bpelReader = new BPELReader();
 
 		IPath pathFile = new Path(
 				"E:/private/Dropbox/engineer/project/aag_test/IBMExample/processes/travelbooking.bpel");
