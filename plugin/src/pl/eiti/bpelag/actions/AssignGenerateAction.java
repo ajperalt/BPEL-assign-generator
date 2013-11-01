@@ -9,7 +9,6 @@ import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
-import org.eclipse.jface.dialogs.MessageDialog;
 
 import reader.BPELReader;
 
@@ -22,6 +21,7 @@ import reader.BPELReader;
  * @see IWorkbenchWindowActionDelegate
  */
 public class AssignGenerateAction implements IWorkbenchWindowActionDelegate {
+	@SuppressWarnings("unused")
 	private IWorkbenchWindow window = null;
 	private MessageConsoleStream consoleStream = null;
 
@@ -38,13 +38,21 @@ public class AssignGenerateAction implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
 	public void run(IAction action) {
-		MessageDialog.openInformation(window.getShell(), "BPEL Assign Generator", "Hello, BPEL world, let's begin.");
+		this.consoleStream.println(">>>>>>>>>> BPEL Assign Generator START <<<<<<<<<<");
+		this.consoleStream.println();
 
-		BPELReader processReader = new BPELReader();
+		BPELReader processReader = new BPELReader(
+				"E:/private/Dropbox/engineer/project/aag_test/IBMexamples/processes/travelbookingBPEL.bpel");
 
-		MessageDialog.openInformation(window.getShell(), "EL DUPA", "EL DUPA initialization");
+		processReader.loadProcess();
 
-		this.consoleStream.println("EL DUPA");
+		this.consoleStream.print("BPEL process name: ");
+		this.consoleStream.println(processReader.getBPELProcess().getName());
+
+		this.consoleStream.println("BPEL process >> " + processReader.saveProcess() + " << Saved");
+
+		this.consoleStream.println();
+		this.consoleStream.println(">>>>>>>>>> BPEL Assign Generator STOP  <<<<<<<<<<");
 	}
 
 	/**
