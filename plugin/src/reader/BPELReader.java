@@ -2,11 +2,18 @@ package reader;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
+import model.ActivitySet;
+
+import org.eclipse.bpel.model.Activity;
+import org.eclipse.bpel.model.BPELExtensibleElement;
 import org.eclipse.bpel.model.Process;
 import org.eclipse.bpel.model.resource.BPELResource;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Factory;
 
@@ -24,7 +31,11 @@ public class BPELReader {
 	private BPELResource resource = null;
 	private org.eclipse.bpel.model.resource.BPELReader reader = null;
 
+	// temporary check list of all activities in the process
+	private ActivitySet activities = null;
+
 	public BPELReader() {
+		this.activities = new ActivitySet();
 	}
 
 	public BPELReader(String newBPELFileLocation) {
@@ -44,6 +55,9 @@ public class BPELReader {
 			e.printStackTrace();
 		}
 		this.process = (Process) resource.getContents().get(0);
+
+		/** temporary */
+		this.activities.createProcessActivity(this.process);
 	}
 
 	public String saveProcess() {
