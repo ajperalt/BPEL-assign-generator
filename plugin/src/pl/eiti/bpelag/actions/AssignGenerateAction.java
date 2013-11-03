@@ -1,5 +1,8 @@
 package pl.eiti.bpelag.actions;
 
+import model.BPELModel;
+
+import org.eclipse.bpel.model.Activity;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -25,6 +28,8 @@ public class AssignGenerateAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window = null;
 	private MessageConsoleStream consoleStream = null;
 
+	private BPELModel processModel = null;
+
 	/**
 	 * The constructor.
 	 */
@@ -48,6 +53,17 @@ public class AssignGenerateAction implements IWorkbenchWindowActionDelegate {
 
 		this.consoleStream.print("BPEL process name: ");
 		this.consoleStream.println(processReader.getBPELProcess().getName());
+		this.consoleStream.println();
+
+		this.processModel = new BPELModel(processReader.getBPELProcess());
+
+		this.consoleStream.println(">>>>>>>>>> BPEL Process elements:");
+
+		for (Activity elem : this.processModel.getActivities()) {
+			this.consoleStream.println(elem.getName());
+		}
+
+		this.consoleStream.println();
 
 		this.consoleStream.println("BPEL process >> " + processReader.saveProcess() + " << Saved");
 

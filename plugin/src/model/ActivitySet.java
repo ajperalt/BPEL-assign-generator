@@ -30,5 +30,4 @@ public class ActivitySet extends HashSet<Activity> {
 		}
 		return allActs;
 	}
-
 }
