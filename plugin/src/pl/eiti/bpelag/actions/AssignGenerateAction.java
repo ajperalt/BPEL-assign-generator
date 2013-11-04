@@ -3,6 +3,10 @@ package pl.eiti.bpelag.actions;
 import model.BPELModel;
 
 import org.eclipse.bpel.model.Activity;
+import org.eclipse.bpel.model.Source;
+import org.eclipse.bpel.model.Target;
+import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -59,9 +63,35 @@ public class AssignGenerateAction implements IWorkbenchWindowActionDelegate {
 
 		this.consoleStream.println(">>>>>>>>>> BPEL Process elements:");
 
-		for (Activity elem : this.processModel.getActivities()) {
-			this.consoleStream.println(elem.getName());
-		}
+		TreeIterator<EObject> test = processReader.getBPELProcess().eAllContents();
+		 processStructurePrint(test, "");
+//		for (EObject elem : processReader.getBPELProcess().eContents()) {
+//			this.consoleStream.println(elem.toString());
+//		}
+
+		// for (Activity elem : this.processModel.getActivities()) {
+		// this.consoleStream.println(elem.getName());
+		// if (null != elem.eContents() && !elem.eContents().isEmpty() &&
+		// elem.eContents().get(0) instanceof Activity) {
+		// this.consoleStream.println("     " + ((Activity)
+		// elem.eContents().get(0)).getName());
+		// }
+		// this.consoleStream.println("----+");
+		// for (Object source : elem.getSources().getChildren()) {
+		// if (source instanceof Source) {
+		// this.consoleStream.println("     " + ((Source)
+		// source).getActivity().getName());
+		// }
+		// }
+		//
+		// this.consoleStream.println("----+");
+		// for (Object target : elem.getTargets().getChildren()) {
+		// if (target instanceof Target) {
+		// this.consoleStream.println("     " + ((Target)
+		// target).getActivity().getName());
+		// }
+		// }
+		// }
 
 		this.consoleStream.println();
 
@@ -69,6 +99,18 @@ public class AssignGenerateAction implements IWorkbenchWindowActionDelegate {
 
 		this.consoleStream.println();
 		this.consoleStream.println(">>>>>>>>>> BPEL Assign Generator STOP  <<<<<<<<<<");
+	}
+
+	private void processStructurePrint(TreeIterator<EObject> input, String tab) {
+
+		while (input.hasNext()) {
+			EObject temp = input.next();
+			if (temp instanceof Activity) {
+				this.consoleStream.println(tab + ((Activity) temp).getName());
+				TreeIterator<EObject> a = temp.eAllContents();
+				processStructurePrint(a, tab + "     ");
+			}
+		}
 	}
 
 	/**
