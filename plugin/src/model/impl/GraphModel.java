@@ -1,15 +1,17 @@
-package model;
+package model.impl;
+
+import model.IModel;
 
 import org.eclipse.bpel.model.Process;
 
-public class BPELModel {
+public class GraphModel implements IModel {
 	private ActivitySet activities = null;
 
-	public BPELModel() {
+	public GraphModel() {
 		this.activities = new ActivitySet();
 	}
 
-	public BPELModel(Process newProcess) {
+	public GraphModel(Process newProcess) {
 		this();
 		this.activities.createProcessActivity(newProcess);
 	}
