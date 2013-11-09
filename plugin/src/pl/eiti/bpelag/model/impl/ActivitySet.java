@@ -1,4 +1,4 @@
-package model.impl;
+package pl.eiti.bpelag.model.impl;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,10 +1,10 @@
 package pl.eiti.bpelag.actions;
 
-import model.impl.GraphModel;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.bpel.model.Activity;
-import org.eclipse.bpel.model.Source;
-import org.eclipse.bpel.model.Target;
+import org.eclipse.bpel.model.BPELExtensibleElement;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.IAction;
@@ -17,7 +17,11 @@ import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 
-import reader.BPELReader;
+import pl.eiti.bpelag.model.IModel;
+import pl.eiti.bpelag.model.impl.GraphModel;
+import pl.eiti.bpelag.reader.BPELReader;
+import pl.eiti.bpelag.transformer.impl.GraphTransformer;
+import pl.eiti.bpelag.util.ActivityUtil;
 
 /**
  * Our sample action implements workbench action delegate. The action proxy will
@@ -32,7 +36,7 @@ public class AssignGenerateAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window = null;
 	private MessageConsoleStream consoleStream = null;
 
-	private GraphModel processModel = null;
+	// private GraphModel processModel = null;
 
 	/**
 	 * The constructor.
@@ -50,40 +54,7 @@ public class AssignGenerateAction implements IWorkbenchWindowActionDelegate {
 		this.consoleStream.println(">>>>>>>>>> BPEL Assign Generator START <<<<<<<<<<");
 		this.consoleStream.println();
 
-		BPELReader processReader = new BPELReader(
-				"E:/private/Dropbox/engineer/project/aag_test/IBMexamples/processes/travelbookingBPEL.bpel");
-
-		processReader.loadProcess();
-
-		this.consoleStream.print("BPEL process name: ");
-		this.consoleStream.println(processReader.getBPELProcess().getName());
-		this.consoleStream.println();
-
-		this.processModel = new GraphModel(processReader.getBPELProcess());
-
-		this.consoleStream.println(">>>>>>>>>> BPEL Process elements:");
-
-		TreeIterator<EObject> test = processReader.getBPELProcess().eAllContents();
-		 processStructurePrint(test, "");
-
-		this.consoleStream.println();
-
-		this.consoleStream.println("BPEL process >> " + processReader.saveProcess() + " << Saved");
-
-		this.consoleStream.println();
-		this.consoleStream.println(">>>>>>>>>> BPEL Assign Generator STOP  <<<<<<<<<<");
-	}
-
-	private void processStructurePrint(TreeIterator<EObject> input, String tab) {
-
-		while (input.hasNext()) {
-			EObject temp = input.next();
-			if (temp instanceof Activity) {
-				this.consoleStream.println(tab + ((Activity) temp).getName());
-				TreeIterator<EObject> a = temp.eAllContents();
-				processStructurePrint(a, tab + "     ");
-			}
-		}
+		MainTest();
 	}
 
 	/**
@@ -134,5 +105,58 @@ public class AssignGenerateAction implements IWorkbenchWindowActionDelegate {
 		MessageConsole myConsole = new MessageConsole(name, null);
 		conMan.addConsoles(new IConsole[] { myConsole });
 		return myConsole;
+	}
+
+	/**
+	 * Temporary method.
+	 */
+	private void MainTest() {
+		BPELReader processReader = new BPELReader(
+				"E:/private/Dropbox/engineer/project/aag_test/IBMexamples/processes/travelbookingBPEL.bpel");
+
+		processReader.loadProcess();
+
+		this.consoleStream.print("BPEL process name: ");
+		this.consoleStream.println(processReader.getBPELProcess().getName());
+		this.consoleStream.println();
+
+		// this.processModel = new GraphModel(processReader.getBPELProcess());
+
+		this.consoleStream.println(">>>>>>>>>> BPEL Process elements:");
+
+		TreeIterator<EObject> test = processReader.getBPELProcess().eAllContents();
+		Set<Activity> processed = new HashSet<>();
+		processStructurePrint(test, "", processed);
+
+		// IModel model = (GraphModel)
+		// GraphTransformer.instance().ProcessToModel(processReader.getBPELProcess());
+
+		this.consoleStream.println();
+
+		this.consoleStream.println("BPEL process >> " + processReader.saveProcess() + " << Saved");
+
+		this.consoleStream.println();
+		this.consoleStream.println(">>>>>>>>>> BPEL Assign Generator STOP  <<<<<<<<<<");
+	}
+
+	/**
+	 * Temporary method.
+	 */
+	private void processStructurePrint(TreeIterator<EObject> input, String tab, Set<Activity> processedActivities) {
+
+		while (input.hasNext()) {
+			EObject temp = input.next();
+			if (temp instanceof Activity && !(processedActivities.contains((Activity) temp))) {
+				processedActivities.add((Activity) temp);
+				if (ActivityUtil.isBasicActivity((Activity) temp)) {
+					this.consoleStream.println(tab + ((Activity) temp).getName());
+				} else {
+					this.consoleStream.println(tab + ((Activity) temp).getName());
+					TreeIterator<EObject> a = temp.eAllContents();
+					processStructurePrint(a, tab + "     ", processedActivities);
+					this.consoleStream.println(tab + ((Activity) temp).getName());
+				}
+			}
+		}
 	}
 }

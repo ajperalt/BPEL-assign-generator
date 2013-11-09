@@ -1,4 +1,4 @@
-package reader;
+package pl.eiti.bpelag.reader;
 
 import java.io.IOException;
 import java.util.HashMap;
