@@ -13,6 +13,10 @@ import pl.eiti.bpelag.model.impl.GraphModel;
 import pl.eiti.bpelag.transformer.IProcessTransformer;
 import pl.eiti.bpelag.util.ActivityUtil;
 
+/**
+ * Concrete factory class for producing Graph model from BPEL process, and
+ * update BPEL process from Graph model.
+ */
 public class GraphTransformer implements IProcessTransformer {
 	private static GraphTransformer instance = null;
 
@@ -30,6 +34,17 @@ public class GraphTransformer implements IProcessTransformer {
 	public IModel ProcessToModel(Process process) {
 		GraphModel BPELModel = new GraphModel();
 
+		initGraphCreation(process, BPELModel);
+
+		return BPELModel;
+	}
+
+	@Override
+	public void updateProcessFromModel(Process process, IModel model) {
+		// TODO Auto-generated method stub
+	}
+
+	private void initGraphCreation(Process process, GraphModel model) {
 		TreeIterator<EObject> processIterator = process.eAllContents();
 		EObject temp = null;
 		while (processIterator.hasNext()) {
@@ -40,19 +55,11 @@ public class GraphTransformer implements IProcessTransformer {
 		}
 		GraphNode<Activity> rootActivity = new GraphNode<Activity>((Activity) temp);
 		GraphNode<Activity> complexNodeClone = null;
-		BPELModel.setRoot(rootActivity);
+		model.setRoot(rootActivity);
 		if (!ActivityUtil.isBasicActivity((Activity) temp)) {
 			complexNodeClone = new GraphNode<Activity>((Activity) temp);
 		}
-		createGraph(BPELModel.getRoot(), complexNodeClone);
-
-		return BPELModel;
-	}
-
-	@Override
-	public Process ModelToProcess(IModel model) {
-		// TODO Auto-generated method stub
-		return null;
+		createGraph(model.getRoot(), complexNodeClone);
 	}
 
 	private void createGraph(GraphNode<Activity> previous, GraphNode<Activity> closingNode) {
