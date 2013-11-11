@@ -1,17 +1,29 @@
 package pl.eiti.bpelag.model.graph;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class GraphNode<T> {
 	private T data;
 	private State state;
 
-	private Set<T> previousNodes;
-	private Set<T> nextNodes;
+	private Set<GraphNode<T>> previousNodes;
+	private Set<GraphNode<T>> nextNodes;
 
 	public GraphNode(T newData) {
 		this.data = newData;
 		this.state = State.UNVISITED;
+
+		this.previousNodes = new HashSet<>();
+		this.nextNodes = new HashSet<>();
+	}
+
+	public Boolean hasNext() {
+		return this.nextNodes.size() > 0;
+	}
+
+	public Boolean hasPrevious() {
+		return this.previousNodes.size() > 0;
 	}
 
 	public T getData() {
@@ -34,27 +46,27 @@ public class GraphNode<T> {
 		this.state = State.VISITED;
 	}
 
-	public Set<T> getPreviousNodes() {
+	public Set<GraphNode<T>> getPreviousNodes() {
 		return previousNodes;
 	}
 
-	public void setPreviousNodes(Set<T> previousNodes) {
+	public void setPreviousNodes(Set<GraphNode<T>> previousNodes) {
 		this.previousNodes = previousNodes;
 	}
 
-	public void addPreviousNode(T previousNode) {
+	public void addPreviousNode(GraphNode<T> previousNode) {
 		this.previousNodes.add(previousNode);
 	}
 
-	public Set<T> getNextNodes() {
+	public Set<GraphNode<T>> getNextNodes() {
 		return nextNodes;
 	}
 
-	public void setNextNodes(Set<T> nextNodes) {
+	public void setNextNodes(Set<GraphNode<T>> nextNodes) {
 		this.nextNodes = nextNodes;
 	}
 
-	public void addNextNode(T nextNode) {
+	public void addNextNode(GraphNode<T> nextNode) {
 		this.nextNodes.add(nextNode);
 	}
 

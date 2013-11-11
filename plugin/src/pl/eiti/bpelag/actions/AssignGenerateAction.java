@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.bpel.model.Activity;
-import org.eclipse.bpel.model.BPELExtensibleElement;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.IAction;
@@ -18,6 +17,7 @@ import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 
 import pl.eiti.bpelag.model.IModel;
+import pl.eiti.bpelag.model.graph.GraphNode;
 import pl.eiti.bpelag.model.impl.GraphModel;
 import pl.eiti.bpelag.reader.BPELReader;
 import pl.eiti.bpelag.transformer.impl.GraphTransformer;
@@ -115,21 +115,27 @@ public class AssignGenerateAction implements IWorkbenchWindowActionDelegate {
 				"E:/private/Dropbox/engineer/project/aag_test/IBMexamples/processes/travelbookingBPEL.bpel");
 
 		processReader.loadProcess();
+		GraphTransformer transformer = GraphTransformer.instance();
 
-		this.consoleStream.print("BPEL process name: ");
-		this.consoleStream.println(processReader.getBPELProcess().getName());
-		this.consoleStream.println();
+		// this.consoleStream.print("BPEL process name: ");
+		// this.consoleStream.println(processReader.getBPELProcess().getName());
+		// this.consoleStream.println();
 
 		// this.processModel = new GraphModel(processReader.getBPELProcess());
 
 		this.consoleStream.println(">>>>>>>>>> BPEL Process elements:");
 
-		TreeIterator<EObject> test = processReader.getBPELProcess().eAllContents();
-		Set<Activity> processed = new HashSet<>();
-		processStructurePrint(test, "", processed);
+		// TreeIterator<EObject> test =
+		// processReader.getBPELProcess().eAllContents();
+		// Set<Activity> processed = new HashSet<>();
+		// processStructurePrint(test, "", processed);
+
+		processModelPrint((GraphModel) transformer.ProcessToModel(processReader.getBPELProcess()));
 
 		// IModel model = (GraphModel)
 		// GraphTransformer.instance().ProcessToModel(processReader.getBPELProcess());
+		//
+		// processModelPrint(model);
 
 		this.consoleStream.println();
 
@@ -137,6 +143,11 @@ public class AssignGenerateAction implements IWorkbenchWindowActionDelegate {
 
 		this.consoleStream.println();
 		this.consoleStream.println(">>>>>>>>>> BPEL Assign Generator STOP  <<<<<<<<<<");
+	}
+
+	private void processModelPrint(GraphModel processToModel) {
+		this.consoleStream.println();
+		graphPrint(processToModel.getRoot());
 	}
 
 	/**
@@ -157,6 +168,13 @@ public class AssignGenerateAction implements IWorkbenchWindowActionDelegate {
 					this.consoleStream.println(tab + ((Activity) temp).getName());
 				}
 			}
+		}
+	}
+
+	private void graphPrint(GraphNode<Activity> node) {
+		this.consoleStream.println(node.getData().getName());
+		for (GraphNode<Activity> it : node.getNextNodes()) {
+			graphPrint(it);
 		}
 	}
 }

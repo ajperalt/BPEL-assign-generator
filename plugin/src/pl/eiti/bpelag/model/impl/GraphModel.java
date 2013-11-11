@@ -7,19 +7,12 @@ import pl.eiti.bpelag.model.IModel;
 import pl.eiti.bpelag.model.graph.Graph;
 
 public class GraphModel extends Graph<Activity> implements IModel {
-//	private ActivitySet activities = null;
 
 	public GraphModel() {
-//		this.activities = new ActivitySet();
+		super();
 	}
 
 	public GraphModel(Process newProcess) {
 		this();
-//		this.activities.createProcessActivity(newProcess);
 	}
-
-	/** Accessors section */
-//	public ActivitySet getActivities() {
-//		return this.activities;
-//	}
 }
