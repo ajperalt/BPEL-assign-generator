@@ -34,7 +34,7 @@ public class GraphTransformer implements IProcessTransformer {
 	public IModel ProcessToModel(Process process) {
 		GraphModel BPELModel = new GraphModel();
 
-		initGraphCreation(process, BPELModel);
+		createGraphModel(process, BPELModel);
 
 		return BPELModel;
 	}
@@ -44,7 +44,7 @@ public class GraphTransformer implements IProcessTransformer {
 		// TODO Auto-generated method stub
 	}
 
-	private void initGraphCreation(Process process, GraphModel model) {
+	private void createGraphModel(Process process, GraphModel model) {
 		TreeIterator<EObject> processIterator = process.eAllContents();
 		EObject temp = null;
 		while (processIterator.hasNext()) {
@@ -59,10 +59,10 @@ public class GraphTransformer implements IProcessTransformer {
 		if (!ActivityUtil.isBasicActivity((Activity) temp)) {
 			complexNodeClone = new GraphNode<Activity>((Activity) temp);
 		}
-		createGraph(model.getRoot(), complexNodeClone);
+		executeCreate(model.getRoot(), complexNodeClone);
 	}
 
-	private void createGraph(GraphNode<Activity> previous, GraphNode<Activity> closingNode) {
+	private void executeCreate(GraphNode<Activity> previous, GraphNode<Activity> closingNode) {
 		EList<EObject> contents = previous.getData().eContents();
 		GraphNode<Activity> insertedNode = null;
 		GraphNode<Activity> complexEndNode = null;
@@ -81,7 +81,7 @@ public class GraphTransformer implements IProcessTransformer {
 					complexEndNode = new GraphNode<Activity>((Activity) processed);
 					insertedNode.addPreviousNode(previous);
 					previous.addNextNode(insertedNode);
-					createGraph(insertedNode, complexEndNode);
+					executeCreate(insertedNode, complexEndNode);
 					if (!isFlow) {
 						previous = complexEndNode;
 					}
