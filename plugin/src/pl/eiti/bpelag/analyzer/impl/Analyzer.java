@@ -32,4 +32,5 @@ public class Analyzer implements IAnalyzer {
 		return result;
 	}
 
+	
 }

@@ -8,19 +8,24 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
+import org.eclipse.ui.handlers.HandlerUtil;
 
 import pl.eiti.bpelag.model.IModel;
 import pl.eiti.bpelag.model.graph.GraphNode;
 import pl.eiti.bpelag.model.impl.GraphModel;
 import pl.eiti.bpelag.reader.BPELReader;
 import pl.eiti.bpelag.transformer.impl.GraphTransformer;
+import pl.eiti.bpelag.ui.AnalyzerWizard;
 import pl.eiti.bpelag.util.ActivityUtil;
 
 /**
@@ -51,10 +56,11 @@ public class AssignGenerateAction implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
 	public void run(IAction action) {
-		this.consoleStream.println(">>>>>>>>>> BPEL Assign Generator START <<<<<<<<<<");
-		this.consoleStream.println();
+		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+				new AnalyzerWizard());
+		dialog.open();
 
-		MainTest();
+		// MainTest();
 	}
 
 	/**
@@ -107,6 +113,7 @@ public class AssignGenerateAction implements IWorkbenchWindowActionDelegate {
 		return myConsole;
 	}
 
+	/** BELOW - ONLY FOR TESTING */
 	/**
 	 * Temporary method.
 	 */
