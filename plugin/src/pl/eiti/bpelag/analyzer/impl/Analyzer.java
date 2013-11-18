@@ -28,9 +28,16 @@ public class Analyzer implements IAnalyzer {
 	@Override
 	public IAnalysisResult analyze() {
 		result = new AnalysisResult();
-		// TODO Auto-generated method stub
+
+		try {
+			// TODO implement some magic to conclude assigns between
+			// variables
+		} catch (NullPointerException ex) {
+			ex.printStackTrace();
+			// TODO throw an exception - non initialized Analyzer
+			return null;
+		}
 		return result;
 	}
 
-	
 }

@@ -1,6 +1,5 @@
 package pl.eiti.bpelag.actions;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.bpel.model.Activity;
@@ -8,7 +7,6 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
@@ -18,9 +16,7 @@ import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
-import org.eclipse.ui.handlers.HandlerUtil;
 
-import pl.eiti.bpelag.model.IModel;
 import pl.eiti.bpelag.model.graph.GraphNode;
 import pl.eiti.bpelag.model.impl.GraphModel;
 import pl.eiti.bpelag.reader.BPELReader;
@@ -90,14 +86,12 @@ public class AssignGenerateAction implements IWorkbenchWindowActionDelegate {
 	 */
 	public void init(IWorkbenchWindow window) {
 		this.window = window;
-
-		// TODO fix console printing
 		MessageConsole myConsole = findConsole("");
 		this.consoleStream = myConsole.newMessageStream();
 	}
 
 	/**
-	 * Currently not working. Eclipse instance message console finder.
+	 * Eclipse instance message console finder.
 	 * 
 	 */
 	private MessageConsole findConsole(String name) {
@@ -117,6 +111,7 @@ public class AssignGenerateAction implements IWorkbenchWindowActionDelegate {
 	/**
 	 * Temporary method.
 	 */
+	@SuppressWarnings("unused")
 	private void MainTest() {
 		BPELReader processReader = new BPELReader(
 				"E:/private/Dropbox/engineer/project/aag_test/IBMexamples/processes/travelbookingBPEL.bpel");
@@ -160,6 +155,7 @@ public class AssignGenerateAction implements IWorkbenchWindowActionDelegate {
 	/**
 	 * Temporary method.
 	 */
+	@SuppressWarnings("unused")
 	private void processStructurePrint(TreeIterator<EObject> input, String tab, Set<Activity> processedActivities) {
 
 		while (input.hasNext()) {

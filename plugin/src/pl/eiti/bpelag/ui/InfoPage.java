@@ -1,5 +1,6 @@
 package pl.eiti.bpelag.ui;
 
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -13,6 +14,24 @@ public class InfoPage extends WizardPage {
 		super(pageName);
 		setTitle(AssignGenConst.WIZARD_INFO_PAGE_TITLE);
 		// TODO Auto-generated constructor stub
+		setPageComplete(false);
+	}
+
+	@Override
+	public IWizardPage getNextPage() {
+		IWizardPage nextPage = super.getNextPage();
+
+		
+		// TODO magic to run analyzer
+		setPageComplete(true);
+
+		return nextPage;
+	}
+
+	@Override
+	public boolean canFlipToNextPage() {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
 	@Override
@@ -20,6 +39,5 @@ public class InfoPage extends WizardPage {
 		// TODO information page
 		container = new Composite(parent, SWT.NONE);
 		setControl(container);
-		setPageComplete(true);
 	}
 }

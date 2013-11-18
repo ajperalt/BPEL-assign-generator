@@ -20,6 +20,12 @@ public class AnalyzerWizard extends Wizard {
 		addPage(infoPage);
 		addPage(assignPage);
 	}
+	
+	@Override
+	public boolean canFinish() {
+		// TODO Auto-generated method stub
+		return super.canFinish();
+	}
 
 	@Override
 	public boolean performFinish() {

@@ -37,7 +37,6 @@ public class AssignPage extends WizardPage {
 		assignList.add("Omen");
 
 		setControl(container);
-		setPageComplete(true);
 	}
 
 }
