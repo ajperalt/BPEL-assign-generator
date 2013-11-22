@@ -3,6 +3,11 @@ package pl.eiti.bpelag.model.graph;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Graph node element implementation.
+ * 
+ * @param <T> type of node data
+ */
 public class GraphNode<T> {
 	private T data;
 	private State state;
@@ -10,6 +15,11 @@ public class GraphNode<T> {
 	private Set<GraphNode<T>> previousNodes;
 	private Set<GraphNode<T>> nextNodes;
 
+	/**
+	 * Graph node data set constructor.
+	 * 
+	 * @param newData graph node data element to set
+	 */
 	public GraphNode(T newData) {
 		this.data = newData;
 		this.state = State.UNVISITED;
@@ -18,14 +28,46 @@ public class GraphNode<T> {
 		this.nextNodes = new HashSet<>();
 	}
 
+	/**
+	 * Next element existing check.
+	 * 
+	 * @return next element existing bool value
+	 */
 	public Boolean hasNext() {
 		return this.nextNodes.size() > 0;
 	}
 
+	/**
+	 * Previous element existing check.
+	 * 
+	 * @return previous element existing bool value
+	 */
 	public Boolean hasPrevious() {
 		return this.previousNodes.size() > 0;
 	}
 
+	/**
+	 * Unvisited state setter.
+	 */
+	public void setUnvisited() {
+		this.state = State.UNVISITED;
+	}
+
+	/**
+	 * Processed state setter.
+	 */
+	public void setProcessed() {
+		this.state = State.PROCESSED;
+	}
+
+	/**
+	 * Visited state setter.
+	 */
+	public void setVisited() {
+		this.state = State.VISITED;
+	}
+
+	/** Graph node accessors section */
 	public T getData() {
 		return data;
 	}
@@ -33,19 +75,7 @@ public class GraphNode<T> {
 	public State getState() {
 		return state;
 	}
-
-	public void setUnvisited() {
-		this.state = State.UNVISITED;
-	}
-
-	public void setProcessed() {
-		this.state = State.PROCESSED;
-	}
-
-	public void setVisited() {
-		this.state = State.VISITED;
-	}
-
+	
 	public Set<GraphNode<T>> getPreviousNodes() {
 		return previousNodes;
 	}

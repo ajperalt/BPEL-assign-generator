@@ -2,14 +2,19 @@ package pl.eiti.bpelag.ui;
 
 import org.eclipse.jface.wizard.Wizard;
 
+import pl.eiti.bpelag.controller.AnalyzerWizardController;
 import pl.eiti.bpelag.util.AssignGenConst;
 
 public class AnalyzerWizard extends Wizard {
-	protected InfoPage infoPage;
-	protected AssignPage assignPage;
+	@SuppressWarnings("unused")
+	private AnalyzerWizardController wizardController = null;
+
+	protected InfoPage infoPage = null;
+	protected AssignPage assignPage = null;
 
 	public AnalyzerWizard() {
 		super();
+		wizardController = new AnalyzerWizardController("");
 		setNeedsProgressMonitor(Boolean.TRUE);
 	}
 
@@ -20,7 +25,7 @@ public class AnalyzerWizard extends Wizard {
 		addPage(infoPage);
 		addPage(assignPage);
 	}
-	
+
 	@Override
 	public boolean canFinish() {
 		// TODO Auto-generated method stub

@@ -13,9 +13,6 @@ import org.eclipse.emf.ecore.resource.Resource.Factory;
 /**
  * Reader class using to load BPEL process file to object model based on
  * org.eclipse.bpel.model package classes.
- * 
- * @author Marcin Maciorowski
- * 
  */
 public class BPELReader {
 
@@ -23,14 +20,25 @@ public class BPELReader {
 	private String BPELFileLocation = null;
 	private BPELResource resource = null;
 
+	/**
+	 * Default constructor.
+	 */
 	public BPELReader() {
 	}
 
+	/**
+	 * File location set constructor.
+	 * 
+	 * @param newBPELFileLocation file location
+	 */
 	public BPELReader(String newBPELFileLocation) {
 		this();
 		this.BPELFileLocation = newBPELFileLocation;
 	}
 
+	/**
+	 * BPEL process load method.
+	 */
 	public void loadProcess() {
 		URI uri = URI.createFileURI(this.BPELFileLocation);
 		Factory factory = Resource.Factory.Registry.INSTANCE.getFactory(uri);
@@ -44,6 +52,10 @@ public class BPELReader {
 		this.process = (Process) resource.getContents().get(0);
 	}
 
+	/**
+	 * BPEL process save method.
+	 * @return saved process name
+	 */
 	public String saveProcess() {
 		// try {
 		// this.resource.save( /** some map, not sure what it should be */ );

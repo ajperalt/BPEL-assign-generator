@@ -14,15 +14,23 @@ import pl.eiti.bpelag.transformer.IProcessTransformer;
 import pl.eiti.bpelag.util.ActivityUtil;
 
 /**
- * Concrete factory class for producing Graph model from BPEL process, and
- * update BPEL process from Graph model.
+ * Singleton concrete factory class for producing Graph model from BPEL process,
+ * and update BPEL process from Graph model.
  */
 public class GraphTransformer implements IProcessTransformer {
 	private static GraphTransformer instance = null;
 
+	/**
+	 * Default constructor.
+	 */
 	private GraphTransformer() {
 	}
 
+	/**
+	 * Graph transformer instance getter.
+	 * 
+	 * @return graph transformer instance reference
+	 */
 	public static GraphTransformer instance() {
 		if (null == instance) {
 			instance = new GraphTransformer();
@@ -44,6 +52,14 @@ public class GraphTransformer implements IProcessTransformer {
 		// TODO Auto-generated method stub
 	}
 
+	/**
+	 * Graph model creator.
+	 * 
+	 * @param process
+	 *            process to create model from
+	 * @param model
+	 *            model element to build with a method
+	 */
 	private void createGraphModel(Process process, GraphModel model) {
 		TreeIterator<EObject> processIterator = process.eAllContents();
 		EObject temp = null;
@@ -62,6 +78,14 @@ public class GraphTransformer implements IProcessTransformer {
 		executeCreate(model.getRoot(), complexNodeClone);
 	}
 
+	/**
+	 * Model creation executor, recursive for complex activities.
+	 * 
+	 * @param previous
+	 *            node created previously
+	 * @param closingNode
+	 *            complex activies complex nodes
+	 */
 	private void executeCreate(GraphNode<Activity> previous, GraphNode<Activity> closingNode) {
 		EList<EObject> contents = previous.getData().eContents();
 		GraphNode<Activity> insertedNode = null;
@@ -96,7 +120,6 @@ public class GraphTransformer implements IProcessTransformer {
 			previous.addNextNode(closingNode);
 			closingNode.addPreviousNode(previous);
 		}
-
 	}
 
 }
