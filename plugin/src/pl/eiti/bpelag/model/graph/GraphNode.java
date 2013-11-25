@@ -1,31 +1,33 @@
 package pl.eiti.bpelag.model.graph;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Graph node element implementation.
  * 
- * @param <T> type of node data
+ * @param <T>
+ *            type of node data
  */
 public class GraphNode<T> {
 	private T data;
 	private State state;
 
-	private Set<GraphNode<T>> previousNodes;
-	private Set<GraphNode<T>> nextNodes;
+	private List<GraphNode<T>> previousNodes;
+	private List<GraphNode<T>> nextNodes;
 
 	/**
 	 * Graph node data set constructor.
 	 * 
-	 * @param newData graph node data element to set
+	 * @param newData
+	 *            graph node data element to set
 	 */
 	public GraphNode(T newData) {
 		this.data = newData;
 		this.state = State.UNVISITED;
 
-		this.previousNodes = new HashSet<>();
-		this.nextNodes = new HashSet<>();
+		this.previousNodes = new ArrayList<>();
+		this.nextNodes = new ArrayList<>();
 	}
 
 	/**
@@ -34,7 +36,7 @@ public class GraphNode<T> {
 	 * @return next element existing bool value
 	 */
 	public Boolean hasNext() {
-		return this.nextNodes.size() > 0;
+		return null != this.nextNodes && this.nextNodes.size() > 0;
 	}
 
 	/**
@@ -43,7 +45,16 @@ public class GraphNode<T> {
 	 * @return previous element existing bool value
 	 */
 	public Boolean hasPrevious() {
-		return this.previousNodes.size() > 0;
+		return null != this.previousNodes && this.previousNodes.size() > 0;
+	}
+
+	/**
+	 * Multiple next elements check.
+	 * 
+	 * @return many next elements existing bool value
+	 */
+	public Boolean isBranched() {
+		return null != this.nextNodes && this.nextNodes.size() > 1;
 	}
 
 	/**
@@ -54,6 +65,15 @@ public class GraphNode<T> {
 	}
 
 	/**
+	 * Unvisited check.
+	 * 
+	 * @return if was not visited
+	 */
+	public Boolean isUnvisited() {
+		return State.UNVISITED == this.state;
+	}
+
+	/**
 	 * Processed state setter.
 	 */
 	public void setProcessed() {
@@ -61,10 +81,28 @@ public class GraphNode<T> {
 	}
 
 	/**
+	 * Processed check.
+	 * 
+	 * @return if is processing
+	 */
+	public Boolean isProcessed() {
+		return State.PROCESSED == this.state;
+	}
+
+	/**
 	 * Visited state setter.
 	 */
 	public void setVisited() {
 		this.state = State.VISITED;
+	}
+
+	/**
+	 * Visited check.
+	 * 
+	 * @return if was visited
+	 */
+	public Boolean isVisited() {
+		return State.VISITED == this.state;
 	}
 
 	/** Graph node accessors section */
@@ -75,12 +113,12 @@ public class GraphNode<T> {
 	public State getState() {
 		return state;
 	}
-	
-	public Set<GraphNode<T>> getPreviousNodes() {
+
+	public List<GraphNode<T>> getPreviousNodes() {
 		return previousNodes;
 	}
 
-	public void setPreviousNodes(Set<GraphNode<T>> previousNodes) {
+	public void setPreviousNodes(List<GraphNode<T>> previousNodes) {
 		this.previousNodes = previousNodes;
 	}
 
@@ -88,11 +126,11 @@ public class GraphNode<T> {
 		this.previousNodes.add(previousNode);
 	}
 
-	public Set<GraphNode<T>> getNextNodes() {
+	public List<GraphNode<T>> getNextNodes() {
 		return nextNodes;
 	}
 
-	public void setNextNodes(Set<GraphNode<T>> nextNodes) {
+	public void setNextNodes(List<GraphNode<T>> nextNodes) {
 		this.nextNodes = nextNodes;
 	}
 

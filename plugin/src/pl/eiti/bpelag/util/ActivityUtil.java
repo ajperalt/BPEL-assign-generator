@@ -28,4 +28,12 @@ public class ActivityUtil {
 		return isBasic;
 	}
 
+	public static Boolean isVarChangeActivity(Activity act) {
+		Boolean isVarChange = Boolean.FALSE;
+		if (act instanceof Receive || act instanceof Invoke) {
+			isVarChange = Boolean.TRUE;
+		}
+		return isVarChange;
+	}
+
 }

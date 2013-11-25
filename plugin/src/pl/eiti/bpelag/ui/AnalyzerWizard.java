@@ -14,7 +14,8 @@ public class AnalyzerWizard extends Wizard {
 
 	public AnalyzerWizard() {
 		super();
-		wizardController = new AnalyzerWizardController("");
+		wizardController = new AnalyzerWizardController(
+				"E:/private/Dropbox/engineer/project/aag_test/IBMexamples/processes/travelbookingBPEL.bpel");
 		setNeedsProgressMonitor(Boolean.TRUE);
 	}
 
