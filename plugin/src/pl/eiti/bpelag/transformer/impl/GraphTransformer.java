@@ -90,7 +90,7 @@ public class GraphTransformer implements IProcessTransformer {
 		EList<EObject> contents = previous.getData().eContents();
 		GraphNode<Activity> insertedNode = null;
 		GraphNode<Activity> complexEndNode = null;
-		Boolean isFlow = (previous instanceof Flow);
+		Boolean isFlow = (previous.getData() instanceof Flow);
 
 		for (EObject processed : contents) {
 			if (processed instanceof Activity) {
