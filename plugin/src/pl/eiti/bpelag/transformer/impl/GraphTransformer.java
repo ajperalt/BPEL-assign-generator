@@ -84,7 +84,7 @@ public class GraphTransformer implements IProcessTransformer {
 	 * @param previous
 	 *            node created previously
 	 * @param closingNode
-	 *            complex activies complex nodes
+	 *            complex activities complex nodes
 	 */
 	private void executeCreate(GraphNode<Activity> previous, GraphNode<Activity> closingNode) {
 		EList<EObject> contents = previous.getData().eContents();

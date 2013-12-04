@@ -1,7 +1,12 @@
 package pl.eiti.bpelag.analyzer.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.bpel.model.Activity;
+import org.eclipse.bpel.model.Variable;
 import org.eclipse.bpel.model.Variables;
+import org.eclipse.emf.ecore.EObject;
 
 import pl.eiti.bpelag.analyzer.IAnalysisResult;
 import pl.eiti.bpelag.analyzer.IAnalyzer;
@@ -39,19 +44,14 @@ public class Analyzer implements IAnalyzer {
 
 	@Override
 	public IAnalysisResult analyze() {
+		List<Variable> processVariables = getProcVariables(loader.getBPELProcess().getVariables());
+		List<Variable> settedVariables = getSettedVariables(processVariables);
+
 		result = new AnalysisResult();
 
 		try {
-			// TODO implement some magic to conclude assigns between
-			// variables
-			// TODO get all variables of the process including variables of
-			// partner links
-			// TODO create set of all variables
-			// TODO create set of variables that has value already
-
-			Variables vars = loader.getBPELProcess().getVariables();
 			GraphNode<Activity> processedNode = model.getRoot();
-			analyzeGraphNodes(processedNode);
+			analyzeGraphNodes(processedNode, settedVariables);
 		} catch (NullPointerException ex) {
 			ex.printStackTrace();
 			// TODO throw an exception - non initialized Analyzer
@@ -60,17 +60,52 @@ public class Analyzer implements IAnalyzer {
 		return result;
 	}
 
-	private GraphNode<Activity> analyzeGraphNodes(GraphNode<Activity> processedNode) {
-		GraphNode<Activity> current = processedNode;
-		while (current.hasNext() && !current.isVisited()) {
-			if (processedNode.hasPrevious() && current.equals(processedNode.getPreviousNodes().get(FIRST))) {
-				break;
+	/**
+	 * Gets all process variables list from given EObjects set Variables
+	 * 
+	 * @param variables
+	 *            EObject variables
+	 * @return list all process variables (type of Variable)
+	 */
+	private List<Variable> getProcVariables(Variables variables) {
+		List<Variable> procVariables = new ArrayList<>();
+
+		for (EObject it : variables.eContents()) {
+			if (it instanceof Variable) {
+				procVariables.add((Variable) it);
 			}
-			Boolean isComplex = ActivityUtil.isBasicActivity(current.getData());
-			if (current.isBranched() || isComplex) {
-				for (GraphNode<Activity> node : current.getNextNodes()) {
-					current = analyzeGraphNodes(node);
-				}
+		}
+
+		return procVariables;
+	}
+
+	/**
+	 * Gets list of process variables with value already set from all process
+	 * variables list.
+	 * 
+	 * @param processVariables
+	 *            all process variables list
+	 * @return process variables list with value set
+	 */
+	private List<Variable> getSettedVariables(List<Variable> processVariables) {
+		List<Variable> settedVariables = new ArrayList<>();
+
+		for (Variable it : processVariables) {
+			if (true) { // TODO check if variable has value set
+				settedVariables.add(it);
+			}
+		}
+		return null;
+	}
+
+	private GraphNode<Activity> analyzeGraphNodes(GraphNode<Activity> rootNode, List<Variable> settedVariables) {
+		GraphNode<Activity> current = rootNode;
+
+		while (current.hasNext() && !current.isVisited()) {
+			Boolean isFlow = ActivityUtil.isFlowActivity(current.getData());
+
+			if (isFlow) {
+				analyzeFlow(current, settedVariables);
 				// TODO finish block
 			} else {
 				current.setVisited();
@@ -80,6 +115,34 @@ public class Analyzer implements IAnalyzer {
 			}
 		}
 		return current;
+	}
+
+	// private GraphNode<Activity> analyzeGraphNodes(GraphNode<Activity>
+	// processedNode) {
+	// GraphNode<Activity> current = processedNode;
+	// while (current.hasNext() && !current.isVisited()) {
+	// if (processedNode.hasPrevious() &&
+	// current.equals(processedNode.getPreviousNodes().get(FIRST))) {
+	// break;
+	// }
+	// Boolean isComplex = ActivityUtil.isBasicActivity(current.getData());
+	// if (current.isBranched() || isComplex) {
+	// for (GraphNode<Activity> node : current.getNextNodes()) {
+	// current = analyzeGraphNodes(node);
+	// }
+	// // TODO finish block
+	// } else {
+	// current.setVisited();
+	// current = current.getNextNodes().get(FIRST);
+	// current.setProcessed();
+	// // TODO finish block
+	// }
+	// }
+	// return current;
+	// }
+
+	private void analyzeFlow(GraphNode<Activity> flowStartNode, List<Variable> settedVariables) {
+
 	}
 
 	/** Accessors section */

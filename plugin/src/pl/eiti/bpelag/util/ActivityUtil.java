@@ -5,6 +5,7 @@ import org.eclipse.bpel.model.Assign;
 import org.eclipse.bpel.model.Empty;
 import org.eclipse.bpel.model.Exit;
 import org.eclipse.bpel.model.ExtensionActivity;
+import org.eclipse.bpel.model.Flow;
 import org.eclipse.bpel.model.Invoke;
 import org.eclipse.bpel.model.Receive;
 import org.eclipse.bpel.model.Reply;
@@ -34,6 +35,14 @@ public class ActivityUtil {
 			isVarChange = Boolean.TRUE;
 		}
 		return isVarChange;
+	}
+
+	public static Boolean isFlowActivity(Activity act) {
+		Boolean isFlow = Boolean.FALSE;
+		if (act instanceof Flow) {
+			isFlow = Boolean.TRUE;
+		}
+		return isFlow;
 	}
 
 }
