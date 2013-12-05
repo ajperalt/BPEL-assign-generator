@@ -14,7 +14,9 @@ public class Generator implements IGenerator {
 	@Override
 	public void generate(org.eclipse.bpel.model.Process BPELprocess, IAnalysisResult analysis) {
 		generatedBlocks = new HashMap<Assign, Assign>();
-		// TODO Auto-generated method stub
+		// TODO iterate on process activities, when assign found search for it
+		// in analysis result if found put copy elements int assign block and
+		// remove from analysis result
 
 	}
 

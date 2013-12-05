@@ -76,7 +76,7 @@ public class GraphNode<T> {
 	/**
 	 * Processed state setter.
 	 */
-	public void setProcessed() {
+	public void setProcessing() {
 		this.state = State.PROCESSED;
 	}
 
@@ -85,7 +85,7 @@ public class GraphNode<T> {
 	 * 
 	 * @return if is processing
 	 */
-	public Boolean isProcessed() {
+	public Boolean isProcessing() {
 		return State.PROCESSED == this.state;
 	}
 

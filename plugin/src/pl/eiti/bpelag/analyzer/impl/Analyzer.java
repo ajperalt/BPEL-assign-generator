@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.bpel.model.Activity;
+import org.eclipse.bpel.model.Assign;
+import org.eclipse.bpel.model.Invoke;
 import org.eclipse.bpel.model.Variable;
 import org.eclipse.bpel.model.Variables;
 import org.eclipse.emf.ecore.EObject;
@@ -51,7 +53,7 @@ public class Analyzer implements IAnalyzer {
 
 		try {
 			GraphNode<Activity> processedNode = model.getRoot();
-			analyzeGraphNodes(processedNode, settedVariables);
+			analyzeGraphNodes(processedNode, settedVariables, result);
 		} catch (NullPointerException ex) {
 			ex.printStackTrace();
 			// TODO throw an exception - non initialized Analyzer
@@ -98,51 +100,44 @@ public class Analyzer implements IAnalyzer {
 		return null;
 	}
 
-	private GraphNode<Activity> analyzeGraphNodes(GraphNode<Activity> rootNode, List<Variable> settedVariables) {
+	private void analyzeGraphNodes(GraphNode<Activity> rootNode, List<Variable> settedVariables, IAnalysisResult result) {
 		GraphNode<Activity> current = rootNode;
 
 		while (current.hasNext() && !current.isVisited()) {
-			Boolean isFlow = ActivityUtil.isFlowActivity(current.getData());
+			Activity processingActivity = current.getData();
+			Boolean isFlow = ActivityUtil.isFlowActivity(processingActivity);
 
 			if (isFlow) {
 				analyzeFlow(current, settedVariables);
 				// TODO finish block
+			} else if (processingActivity instanceof Assign) {
+				List<Invoke> nextInvokes = getNextInvokes(current);
+				// TODO try to find variable from set of variables with value
+				// that fits invoke request variables with name and type then
+				// add to assign element list and after put pair key, value to
+				// the result map
 			} else {
-				current.setVisited();
-				current = current.getNextNodes().get(FIRST);
-				current.setProcessed();
+				if (processingActivity instanceof Invoke) {
+					// TODO add reponse variables to setted variables set
+				}
 				// TODO finish block
 			}
+			current.setVisited();
+			current = current.getNextNodes().get(FIRST);
+			current.setProcessing();
 		}
-		return current;
 	}
 
-	// private GraphNode<Activity> analyzeGraphNodes(GraphNode<Activity>
-	// processedNode) {
-	// GraphNode<Activity> current = processedNode;
-	// while (current.hasNext() && !current.isVisited()) {
-	// if (processedNode.hasPrevious() &&
-	// current.equals(processedNode.getPreviousNodes().get(FIRST))) {
-	// break;
-	// }
-	// Boolean isComplex = ActivityUtil.isBasicActivity(current.getData());
-	// if (current.isBranched() || isComplex) {
-	// for (GraphNode<Activity> node : current.getNextNodes()) {
-	// current = analyzeGraphNodes(node);
-	// }
-	// // TODO finish block
-	// } else {
-	// current.setVisited();
-	// current = current.getNextNodes().get(FIRST);
-	// current.setProcessed();
-	// // TODO finish block
-	// }
-	// }
-	// return current;
-	// }
-
 	private void analyzeFlow(GraphNode<Activity> flowStartNode, List<Variable> settedVariables) {
+		// TODO call analyzeGraphNodes for every parallel path
+	}
 
+	private List<Invoke> getNextInvokes(GraphNode<Activity> node) {
+		List<Invoke> invokeList = new ArrayList<>();
+
+		// TODO search all next invokes activities and to result list
+
+		return invokeList;
 	}
 
 	/** Accessors section */
