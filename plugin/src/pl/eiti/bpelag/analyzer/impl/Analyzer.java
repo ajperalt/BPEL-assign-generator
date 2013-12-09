@@ -100,7 +100,20 @@ public class Analyzer implements IAnalyzer {
 		return null;
 	}
 
-	private void analyzeGraphNodes(GraphNode<Activity> rootNode, List<Variable> settedVariables, IAnalysisResult result) {
+	/**
+	 * Analyzes path of graph and retrieves possibilities to create assign
+	 * activities.
+	 * 
+	 * @param rootNode
+	 *            analyze start node of graph
+	 * @param settedVariables
+	 *            list of process variables with value set
+	 * @param result
+	 *            result of analysis as list of assign block mapped to copy
+	 *            elements to add to assigns
+	 */
+	private void analyzeGraphNodes(GraphNode<Activity> rootNode, List<Variable> settedVariables,
+			IAnalysisResult analysisResult) {
 		GraphNode<Activity> current = rootNode;
 
 		while (current.hasNext() && !current.isVisited()) {
@@ -108,10 +121,16 @@ public class Analyzer implements IAnalyzer {
 			Boolean isFlow = ActivityUtil.isFlowActivity(processingActivity);
 
 			if (isFlow) {
-				analyzeFlow(current, settedVariables);
-				// TODO finish block
+				if (rootNode.hasPrevious()
+						&& processingActivity.equals(rootNode.getPreviousNodes().get(FIRST).getData())) {
+					break;
+				} else {
+					analyzeFlow(current, settedVariables, analysisResult);
+				}
 			} else if (processingActivity instanceof Assign) {
-				List<Invoke> nextInvokes = getNextInvokes(current);
+				List<Invoke> followingInvokes = getNextInvokes(current);
+
+				findMatchedVariables(settedVariables, followingInvokes);
 				// TODO try to find variable from set of variables with value
 				// that fits invoke request variables with name and type then
 				// add to assign element list and after put pair key, value to
@@ -120,7 +139,8 @@ public class Analyzer implements IAnalyzer {
 				if (processingActivity instanceof Invoke) {
 					// TODO add reponse variables to setted variables set
 				}
-				// TODO finish block
+				// TODO check if activity change value of any variable if yes
+				// put in list of variables with value set
 			}
 			current.setVisited();
 			current = current.getNextNodes().get(FIRST);
@@ -128,10 +148,45 @@ public class Analyzer implements IAnalyzer {
 		}
 	}
 
-	private void analyzeFlow(GraphNode<Activity> flowStartNode, List<Variable> settedVariables) {
-		// TODO call analyzeGraphNodes for every parallel path
+	/**
+	 * Finds all variables from given list that match (with name and type) to
+	 * any input variables of invokes from given list.
+	 * 
+	 * @param settedVariables
+	 *            list of variables that can be used as invoke call parameters
+	 * @param followingInvokes
+	 *            list of invoke activities following currently processed assign
+	 *            activity
+	 */
+	private void findMatchedVariables(List<Variable> settedVariables, List<Invoke> followingInvokes) {
+		// TODO Auto-generated method stub
 	}
 
+	/**
+	 * Analyzes parallel paths in graph started from flow node.
+	 * 
+	 * @param flowStartNode
+	 *            node of flow type, has several next nodes
+	 * @param settedVariables
+	 *            list of process variables with value set
+	 * @param analysisResult
+	 *            result of analysis process graph
+	 */
+	private void analyzeFlow(GraphNode<Activity> flowStartNode, List<Variable> settedVariables,
+			IAnalysisResult analysisResult) {
+		for (GraphNode<Activity> node : flowStartNode.getNextNodes()) {
+			analyzeGraphNodes(node, settedVariables, analysisResult);
+		}
+	}
+
+	/**
+	 * Retrieves graph searching all of invoke type nodes following node given
+	 * as parameter.
+	 * 
+	 * @param node
+	 *            currently processing node
+	 * @return list of following node type of invoke
+	 */
 	private List<Invoke> getNextInvokes(GraphNode<Activity> node) {
 		List<Invoke> invokeList = new ArrayList<>();
 
@@ -140,7 +195,12 @@ public class Analyzer implements IAnalyzer {
 		return invokeList;
 	}
 
-	/** Accessors section */
+	@Override
+	public List<Assign> getAssignActivities() {
+		return loader.getAllAssignBlocks();
+	}
+
+	/** Accessor section */
 	public GraphModel getModel() {
 		return model;
 	}

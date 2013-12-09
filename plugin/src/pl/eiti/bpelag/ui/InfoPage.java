@@ -5,14 +5,21 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
-import pl.eiti.bpelag.util.AssignGenConst;
+import pl.eiti.bpelag.ui.controller.AnalyzerWizardController;
+import pl.eiti.bpelag.ui.model.AnalyzerWizardModel;
+import pl.eiti.bpelag.util.Messages;
 
 public class InfoPage extends WizardPage {
+	private AnalyzerWizardModel model = null;
+	private AnalyzerWizardController controller = null;
+
 	private Composite container;
 
-	protected InfoPage(String pageName) {
+	protected InfoPage(String pageName, AnalyzerWizardController newController, AnalyzerWizardModel newModel) {
 		super(pageName);
-		setTitle(AssignGenConst.WIZARD_INFO_PAGE_TITLE);
+		setTitle(Messages.WIZARD_INFO_PAGE_TITLE);
+		model = newModel;
+		controller = newController;
 		// TODO Auto-generated constructor stub
 		setPageComplete(false);
 	}
@@ -21,8 +28,9 @@ public class InfoPage extends WizardPage {
 	public IWizardPage getNextPage() {
 		IWizardPage nextPage = super.getNextPage();
 
-		
 		// TODO magic to run analyzer
+		controller.executeAnalyze();
+		controller.executeGenerator();
 		setPageComplete(true);
 
 		return nextPage;

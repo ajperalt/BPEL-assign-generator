@@ -4,9 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.bpel.model.Assign;
+import org.eclipse.bpel.model.Copy;
 
-import pl.eiti.bpelag.analyzer.impl.AssignElem;
-
-public interface IAnalysisResult extends Map<Assign, List<AssignElem>> {
+public interface IAnalysisResult extends Map<Assign, List<Copy>> {
 
 }

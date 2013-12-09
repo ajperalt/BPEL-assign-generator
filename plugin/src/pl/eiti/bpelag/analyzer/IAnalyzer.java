@@ -1,5 +1,9 @@
 package pl.eiti.bpelag.analyzer;
 
+import java.util.List;
+
+import org.eclipse.bpel.model.Assign;
+
 /**
  * Model created from BPEL process analyzer behavior.
  */
@@ -18,4 +22,12 @@ public interface IAnalyzer {
 	 * @return results of the model analyze
 	 */
 	public IAnalysisResult analyze();
+	
+
+	/**
+	 * Gets all assign blocks from BPEL process.
+	 * 
+	 * @return list of assign block of BPEL process
+	 */
+	public List<Assign> getAssignActivities();
 }

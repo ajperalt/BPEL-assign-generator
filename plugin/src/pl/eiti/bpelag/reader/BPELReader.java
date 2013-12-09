@@ -1,12 +1,17 @@
 package pl.eiti.bpelag.reader;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.eclipse.bpel.model.Assign;
 import org.eclipse.bpel.model.Process;
 import org.eclipse.bpel.model.resource.BPELResource;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Factory;
 
@@ -29,7 +34,8 @@ public class BPELReader {
 	/**
 	 * File location set constructor.
 	 * 
-	 * @param newBPELFileLocation file location
+	 * @param newBPELFileLocation
+	 *            file location
 	 */
 	public BPELReader(String newBPELFileLocation) {
 		this();
@@ -54,6 +60,7 @@ public class BPELReader {
 
 	/**
 	 * BPEL process save method.
+	 * 
 	 * @return saved process name
 	 */
 	public String saveProcess() {
@@ -81,6 +88,19 @@ public class BPELReader {
 			e.printStackTrace();
 		}
 		return this.process.getName();
+	}
+
+	public List<Assign> getAllAssignBlocks() {
+		List<Assign> assigns = new ArrayList<>();
+		TreeIterator<EObject> it = process.eAllContents();
+		while (it.hasNext()) {
+			EObject next = it.next();
+			if (next instanceof Assign) {
+				assigns.add((Assign) next);
+			}
+		}
+
+		return assigns;
 	}
 
 	/** Accessors section */
