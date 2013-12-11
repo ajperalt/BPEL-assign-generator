@@ -31,6 +31,7 @@ public class AnalyzerWizardController {
 		model = newModel;
 		analyzer.init(pathToBPEL);
 		executeAnalyze();
+		model.setAssignList(analyzer.getAssignActivities());
 	}
 
 	public void executeAnalyze() {

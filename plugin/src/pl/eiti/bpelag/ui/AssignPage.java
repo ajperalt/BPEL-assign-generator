@@ -1,6 +1,5 @@
 package pl.eiti.bpelag.ui;
 
-import org.eclipse.bpel.model.Assign;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -59,38 +58,46 @@ public class AssignPage extends WizardPage {
 		// TODO create sth similar to properties in BPEL Designer for assign
 		// activities
 		mainContainer = new Composite(parent, SWT.BORDER);
-		mainContainer.setLayout(new RowLayout(SWT.HORIZONTAL));
 
-		assignContainer = new Composite(mainContainer, SWT.BORDER);
-		copyContainer = new Composite(mainContainer, SWT.BORDER);
-		copyFromContainer = new Composite(mainContainer, SWT.BORDER);
-		copyToContainer = new Composite(mainContainer, SWT.BORDER);
+		RowLayout mainLayout = new RowLayout(SWT.HORIZONTAL);
 
 		RowLayout innerVertLayout = new RowLayout(SWT.VERTICAL);
 		innerVertLayout.marginLeft = 0;
 		innerVertLayout.marginRight = 0;
 		innerVertLayout.marginTop = 0;
 		innerVertLayout.marginBottom = 0;
-
-		assignContainer.setLayout(innerVertLayout);
-		copyContainer.setLayout(innerVertLayout);
-		copyFromContainer.setLayout(innerVertLayout);
-		copyToContainer.setLayout(innerVertLayout);
+		innerVertLayout.fill = Boolean.TRUE;
 
 		RowLayout innerHorLayout = new RowLayout(SWT.HORIZONTAL);
 		innerHorLayout.marginLeft = 0;
 		innerHorLayout.marginRight = 0;
 		innerHorLayout.marginTop = 0;
 		innerHorLayout.marginBottom = 0;
+		innerHorLayout.fill = Boolean.TRUE;
+
+		mainContainer.setLayout(mainLayout);
+		mainContainer.setSize(1000, 1000);
+
+		assignContainer = new Composite(mainContainer, SWT.BORDER);
+		copyContainer = new Composite(mainContainer, SWT.BORDER);
+		copyFromContainer = new Composite(mainContainer, SWT.BORDER);
+		copyToContainer = new Composite(mainContainer, SWT.BORDER);
+
+		assignContainer.setSize(200, 300);
+
+		assignContainer.setLayout(innerVertLayout);
+		copyContainer.setLayout(innerVertLayout);
+		copyFromContainer.setLayout(innerVertLayout);
+		copyToContainer.setLayout(innerVertLayout);
 
 		assignList = new List(assignContainer, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL);
-		assignList.setBounds(0, 0, 200, 200);
 
-		for (Assign assign : controller.getAssignBlockList()) {
-			assignList.add(assign.getName());
+		for (String assignName : model.getAssignNameList()) {
+			assignList.add(assignName);
 		}
 
 		copyElemList = new List(copyContainer, SWT.BORDER | SWT.FILL);
+		copyElemList.setSize(300, 300);
 
 		copyButtonContainer = new Composite(copyContainer, SWT.BORDER);
 		copyButtonContainer.setLayout(innerHorLayout);
@@ -107,6 +114,7 @@ public class AssignPage extends WizardPage {
 		copyFromLabel.setText(Messages.ASSIGN_LABEL_FROM);
 		copyFromCombo = new Combo(copyFromComboContainer, SWT.DROP_DOWN | SWT.READ_ONLY);
 		copyFromList = new Tree(copyFromContainer, SWT.VIRTUAL | SWT.BORDER);
+		addDataToCombo(copyFromCombo, model.getFromComboList());
 
 		copyToComboContainer = new Composite(copyToContainer, SWT.NONE);
 		copyToComboContainer.setLayout(innerHorLayout);
@@ -114,11 +122,18 @@ public class AssignPage extends WizardPage {
 		copyToLabel.setText(Messages.ASSIGN_LABEL_TO);
 		copyToCombo = new Combo(copyToComboContainer, SWT.DROP_DOWN | SWT.READ_ONLY);
 		copyToList = new Tree(copyToContainer, SWT.VIRTUAL | SWT.BORDER);
+		addDataToCombo(copyToCombo, model.getToComboList());
 
 		assignList.addSelectionListener(new AssignSelectionListener());
 		copyElemList.addSelectionListener(new CopySelectionListener());
 
 		setControl(mainContainer);
+	}
+
+	private void addDataToCombo(Combo combobox, java.util.List<String> list) {
+		for (String it : list) {
+			combobox.add(it);
+		}
 	}
 
 	private class AssignSelectionListener implements SelectionListener {
@@ -130,8 +145,13 @@ public class AssignPage extends WizardPage {
 
 		@Override
 		public void widgetSelected(SelectionEvent arg0) {
+			int selectionIndex = assignList.getSelectionIndex();
+
 			copyElemList.removeAll();
-			copyElemList.add(assignList.getSelection()[0]);
+
+			for (String elem : model.getCopyList(selectionIndex)) {
+				copyElemList.add(elem);
+			}
 
 			// TODO handle select assign activity from the list event
 			// TODO set new list to copy elements list - clear
@@ -152,7 +172,6 @@ public class AssignPage extends WizardPage {
 
 		@Override
 		public void widgetSelected(SelectionEvent arg0) {
-			// TODO Auto-generated method stub
 
 		}
 
