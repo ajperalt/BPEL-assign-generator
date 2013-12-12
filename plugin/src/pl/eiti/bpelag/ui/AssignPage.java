@@ -4,6 +4,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
@@ -32,18 +33,20 @@ public class AssignPage extends WizardPage {
 
 	private List assignList = null;
 
-	List copyElemList = null;
+	private List copyElemList = null;
 
-	Button newButton = null;
-	Button delButton = null;
+	private Button newButton = null;
+	private Button delButton = null;
+	private Button moveUpButton = null;
+	private Button moveDownButton = null;
 
-	Label copyFromLabel = null;
-	Combo copyFromCombo = null;
-	Tree copyFromList = null;
+	private Label copyFromLabel = null;
+	private Combo copyFromCombo = null;
+	private Tree copyFromList = null;
 
-	Label copyToLabel = null;
-	Combo copyToCombo = null;
-	Tree copyToList = null;
+	private Label copyToLabel = null;
+	private Combo copyToCombo = null;
+	private Tree copyToList = null;
 
 	protected AssignPage(String pageName, AnalyzerWizardController newController, AnalyzerWizardModel newModel) {
 		super(pageName);
@@ -55,79 +58,106 @@ public class AssignPage extends WizardPage {
 
 	@Override
 	public void createControl(Composite parent) {
-		// TODO create sth similar to properties in BPEL Designer for assign
-		// activities
-		mainContainer = new Composite(parent, SWT.BORDER);
+		mainContainer = new Composite(parent, SWT.NULL);
 
-		RowLayout mainLayout = new RowLayout(SWT.HORIZONTAL);
+		setControl(mainContainer);
+		mainContainer.setLayout(new RowLayout(SWT.HORIZONTAL));
 
-		RowLayout innerVertLayout = new RowLayout(SWT.VERTICAL);
-		innerVertLayout.marginLeft = 0;
-		innerVertLayout.marginRight = 0;
-		innerVertLayout.marginTop = 0;
-		innerVertLayout.marginBottom = 0;
-		innerVertLayout.fill = Boolean.TRUE;
+		assignContainer = new Composite(mainContainer, SWT.NONE);
+		RowLayout rl_assignContainer = new RowLayout(SWT.VERTICAL);
+		assignContainer.setLayout(rl_assignContainer);
+		assignContainer.setLayoutData(new RowData(163, 227));
 
-		RowLayout innerHorLayout = new RowLayout(SWT.HORIZONTAL);
-		innerHorLayout.marginLeft = 0;
-		innerHorLayout.marginRight = 0;
-		innerHorLayout.marginTop = 0;
-		innerHorLayout.marginBottom = 0;
-		innerHorLayout.fill = Boolean.TRUE;
+		Label lblAssignBlocks = new Label(assignContainer, SWT.NONE);
+		lblAssignBlocks.setText(Messages.ASSIGN_LABEL_ASSIGNBLOCKS);
 
-		mainContainer.setLayout(mainLayout);
-		mainContainer.setSize(1000, 1000);
+		assignList = new List(assignContainer, SWT.BORDER);
+		assignList.setLayoutData(new RowData(150, 200));
 
-		assignContainer = new Composite(mainContainer, SWT.BORDER);
-		copyContainer = new Composite(mainContainer, SWT.BORDER);
-		copyFromContainer = new Composite(mainContainer, SWT.BORDER);
-		copyToContainer = new Composite(mainContainer, SWT.BORDER);
+		copyContainer = new Composite(mainContainer, SWT.NONE);
+		RowLayout rl_copyContainer = new RowLayout(SWT.VERTICAL);
+		copyContainer.setLayout(rl_copyContainer);
+		copyContainer.setLayoutData(new RowData(219, 273));
 
-		assignContainer.setSize(200, 300);
+		Label lblCopyElements = new Label(copyContainer, SWT.NONE);
+		lblCopyElements.setText(Messages.ASSIGN_LABEL_COPYELEMENTS);
 
-		assignContainer.setLayout(innerVertLayout);
-		copyContainer.setLayout(innerVertLayout);
-		copyFromContainer.setLayout(innerVertLayout);
-		copyToContainer.setLayout(innerVertLayout);
+		copyElemList = new List(copyContainer, SWT.BORDER);
+		copyElemList.setLayoutData(new RowData(200, 145));
 
-		assignList = new List(assignContainer, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL);
+		copyButtonContainer = new Composite(copyContainer, SWT.NONE);
+		copyButtonContainer.setLayout(new RowLayout(SWT.HORIZONTAL));
+		copyButtonContainer.setLayoutData(new RowData(200, 66));
+
+		newButton = new Button(copyButtonContainer, SWT.NONE);
+		newButton.setLayoutData(new RowData(95, SWT.DEFAULT));
+		newButton.setText(Messages.ASSIGN_BUTTON_NEW);
+
+		delButton = new Button(copyButtonContainer, SWT.NONE);
+		delButton.setLayoutData(new RowData(95, SWT.DEFAULT));
+		delButton.setText(Messages.ASSIGN_BUTTON_DELETE);
+
+		moveUpButton = new Button(copyButtonContainer, SWT.NONE);
+		moveUpButton.setGrayed(true);
+		moveUpButton.setLayoutData(new RowData(95, SWT.DEFAULT));
+		moveUpButton.setText(Messages.ASSIGN_BUTTON_MOVEUP);
+
+		moveDownButton = new Button(copyButtonContainer, SWT.NONE);
+		moveDownButton.setLayoutData(new RowData(95, SWT.DEFAULT));
+		moveDownButton.setText(Messages.ASSIGN_BUTTON_MOVEDOWN);
+
+		copyFromContainer = new Composite(mainContainer, SWT.NONE);
+		copyFromContainer.setLayout(new RowLayout(SWT.VERTICAL));
+		copyFromContainer.setLayoutData(new RowData(210, 225));
+
+		copyFromComboContainer = new Composite(copyFromContainer, SWT.NONE);
+		RowLayout rl_copyFromComboContainer = new RowLayout(SWT.HORIZONTAL);
+		rl_copyFromComboContainer.justify = true;
+		rl_copyFromComboContainer.center = true;
+		copyFromComboContainer.setLayout(rl_copyFromComboContainer);
+		copyFromComboContainer.setLayoutData(new RowData(201, 30));
+
+		copyFromLabel = new Label(copyFromComboContainer, SWT.NONE);
+		copyFromLabel.setText(Messages.ASSIGN_LABEL_FROM);
+
+		copyFromCombo = new Combo(copyFromComboContainer, SWT.READ_ONLY);
+		copyFromCombo.setLayoutData(new RowData(100, SWT.DEFAULT));
+
+		copyFromList = new Tree(copyFromContainer, SWT.BORDER);
+		copyFromList.setLayoutData(new RowData(180, 112));
+
+		copyToContainer = new Composite(mainContainer, SWT.NONE);
+		copyToContainer.setLayout(new RowLayout(SWT.VERTICAL));
+		copyToContainer.setLayoutData(new RowData(210, 225));
+
+		copyToComboContainer = new Composite(copyToContainer, SWT.NONE);
+		RowLayout rl_copyToComboContainer = new RowLayout(SWT.HORIZONTAL);
+		rl_copyToComboContainer.center = true;
+		rl_copyToComboContainer.justify = true;
+		copyToComboContainer.setLayout(rl_copyToComboContainer);
+		copyToComboContainer.setLayoutData(new RowData(195, 30));
+
+		copyToLabel = new Label(copyToComboContainer, SWT.NONE);
+		copyToLabel.setText(Messages.ASSIGN_LABEL_TO);
+
+		copyToCombo = new Combo(copyToComboContainer, SWT.READ_ONLY);
+		copyToCombo.setLayoutData(new RowData(100, SWT.DEFAULT));
+
+		copyToList = new Tree(copyToContainer, SWT.BORDER);
+		copyToList.setLayoutData(new RowData(180, 112));
+
+		/** Data load section */
 
 		for (String assignName : model.getAssignNameList()) {
 			assignList.add(assignName);
 		}
 
-		copyElemList = new List(copyContainer, SWT.BORDER | SWT.FILL);
-		copyElemList.setSize(300, 300);
-
-		copyButtonContainer = new Composite(copyContainer, SWT.BORDER);
-		copyButtonContainer.setLayout(innerHorLayout);
-
-		newButton = new Button(copyButtonContainer, SWT.PUSH);
-		delButton = new Button(copyButtonContainer, SWT.PUSH);
-
-		newButton.setText(Messages.ASSIGN_BUTTON_NEW);
-		delButton.setText(Messages.ASSIGN_BUTTON_DELETE);
-
-		copyFromComboContainer = new Composite(copyFromContainer, SWT.NONE);
-		copyFromComboContainer.setLayout(innerHorLayout);
-		copyFromLabel = new Label(copyFromComboContainer, SWT.NONE);
-		copyFromLabel.setText(Messages.ASSIGN_LABEL_FROM);
-		copyFromCombo = new Combo(copyFromComboContainer, SWT.DROP_DOWN | SWT.READ_ONLY);
-		copyFromList = new Tree(copyFromContainer, SWT.VIRTUAL | SWT.BORDER);
 		addDataToCombo(copyFromCombo, model.getFromComboList());
-
-		copyToComboContainer = new Composite(copyToContainer, SWT.NONE);
-		copyToComboContainer.setLayout(innerHorLayout);
-		copyToLabel = new Label(copyToComboContainer, SWT.NONE);
-		copyToLabel.setText(Messages.ASSIGN_LABEL_TO);
-		copyToCombo = new Combo(copyToComboContainer, SWT.DROP_DOWN | SWT.READ_ONLY);
-		copyToList = new Tree(copyToContainer, SWT.VIRTUAL | SWT.BORDER);
 		addDataToCombo(copyToCombo, model.getToComboList());
 
+		/** Add listeners section */
 		assignList.addSelectionListener(new AssignSelectionListener());
 		copyElemList.addSelectionListener(new CopySelectionListener());
-
-		setControl(mainContainer);
 	}
 
 	private void addDataToCombo(Combo combobox, java.util.List<String> list) {
@@ -172,7 +202,6 @@ public class AssignPage extends WizardPage {
 
 		@Override
 		public void widgetSelected(SelectionEvent arg0) {
-
 		}
 
 	}

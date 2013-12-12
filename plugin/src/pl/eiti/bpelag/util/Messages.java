@@ -8,6 +8,10 @@ public class Messages {
 
 	public static final String ASSIGN_BUTTON_NEW = "New";
 	public static final String ASSIGN_BUTTON_DELETE = "Delete";
+	public static final String ASSIGN_BUTTON_MOVEUP = "Move Up";
+	public static final String ASSIGN_BUTTON_MOVEDOWN = "Move Down";
+	public static final String ASSIGN_LABEL_ASSIGNBLOCKS = "Assign blocks:";
+	public static final String ASSIGN_LABEL_COPYELEMENTS = "Copy elements:";
 	public static final String ASSIGN_LABEL_FROM = "From: ";
 	public static final String ASSIGN_LABEL_TO = "To: ";
 
