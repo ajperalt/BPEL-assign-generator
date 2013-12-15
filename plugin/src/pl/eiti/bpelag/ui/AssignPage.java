@@ -1,5 +1,6 @@
 package pl.eiti.bpelag.ui;
 
+import org.eclipse.bpel.model.Variable;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -12,6 +13,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 
 import pl.eiti.bpelag.ui.controller.AnalyzerWizardController;
 import pl.eiti.bpelag.ui.model.AnalyzerWizardModel;
@@ -108,7 +110,7 @@ public class AssignPage extends WizardPage {
 
 		copyFromContainer = new Composite(mainContainer, SWT.NONE);
 		copyFromContainer.setLayout(new RowLayout(SWT.VERTICAL));
-		copyFromContainer.setLayoutData(new RowData(210, 225));
+		copyFromContainer.setLayoutData(new RowData(210, 285));
 
 		copyFromComboContainer = new Composite(copyFromContainer, SWT.NONE);
 		RowLayout rl_copyFromComboContainer = new RowLayout(SWT.HORIZONTAL);
@@ -124,11 +126,11 @@ public class AssignPage extends WizardPage {
 		copyFromCombo.setLayoutData(new RowData(100, SWT.DEFAULT));
 
 		copyFromList = new Tree(copyFromContainer, SWT.BORDER);
-		copyFromList.setLayoutData(new RowData(180, 112));
+		copyFromList.setLayoutData(new RowData(180, 172));
 
 		copyToContainer = new Composite(mainContainer, SWT.NONE);
 		copyToContainer.setLayout(new RowLayout(SWT.VERTICAL));
-		copyToContainer.setLayoutData(new RowData(210, 225));
+		copyToContainer.setLayoutData(new RowData(210, 285));
 
 		copyToComboContainer = new Composite(copyToContainer, SWT.NONE);
 		RowLayout rl_copyToComboContainer = new RowLayout(SWT.HORIZONTAL);
@@ -144,7 +146,7 @@ public class AssignPage extends WizardPage {
 		copyToCombo.setLayoutData(new RowData(100, SWT.DEFAULT));
 
 		copyToList = new Tree(copyToContainer, SWT.BORDER);
-		copyToList.setLayoutData(new RowData(180, 112));
+		copyToList.setLayoutData(new RowData(180, 172));
 
 		/** Data load section */
 
@@ -158,6 +160,8 @@ public class AssignPage extends WizardPage {
 		/** Add listeners section */
 		assignList.addSelectionListener(new AssignSelectionListener());
 		copyElemList.addSelectionListener(new CopySelectionListener());
+		newButton.addSelectionListener(new NewCopySelectionListener());
+		delButton.addSelectionListener(new DeleteCopySelectionListener());
 	}
 
 	private void addDataToCombo(Combo combobox, java.util.List<String> list) {
@@ -166,6 +170,10 @@ public class AssignPage extends WizardPage {
 		}
 	}
 
+	/**
+	 * Instance of selection listener class that listening for select on Assign
+	 * blocks list element.
+	 */
 	private class AssignSelectionListener implements SelectionListener {
 
 		@Override
@@ -178,20 +186,22 @@ public class AssignPage extends WizardPage {
 			int selectionIndex = assignList.getSelectionIndex();
 
 			copyElemList.removeAll();
+			copyFromCombo.deselectAll();
+			copyToCombo.deselectAll();
+			copyFromList.removeAll();
+			copyToList.removeAll();
 
-			for (String elem : model.getCopyList(selectionIndex)) {
+			for (String elem : model.getCopyListNames(selectionIndex)) {
 				copyElemList.add(elem);
 			}
-
-			// TODO handle select assign activity from the list event
-			// TODO set new list to copy elements list - clear
-			// TODO set new list to copy from list and copy to list
-			// TODO fill list of copy elements with selected assign copy
-			// activities
 		}
 
 	}
 
+	/**
+	 * Instance of selection listener that listening for select on Copy elements
+	 * list.
+	 */
 	private class CopySelectionListener implements SelectionListener {
 
 		@Override
@@ -202,6 +212,174 @@ public class AssignPage extends WizardPage {
 
 		@Override
 		public void widgetSelected(SelectionEvent arg0) {
+			Integer fromIndex = model.getFromTypeCopyIndex(copyElemList.getSelectionIndex());
+			Integer toIndex = model.getToTypeCopyIndex(copyElemList.getSelectionIndex());
+
+			if (null != fromIndex) {
+				copyFromCombo.select(fromIndex);
+			}
+			if (null != toIndex) {
+				copyToCombo.select(toIndex);
+			}
+
+			if (copyFromList.getItems().length <= 0 && copyToList.getItems().length <= 0) {
+				for (Variable var : model.getProcessVariables()) {
+					String itemLabel = var.getName();
+
+					if (null != var.getType()) {
+						itemLabel += " : " + var.getType().getName();
+					}
+
+					TreeItem fromItem = new TreeItem(copyFromList, SWT.NONE);
+					fromItem.setText(itemLabel);
+
+					TreeItem toItem = new TreeItem(copyToList, SWT.NONE);
+					toItem.setText(itemLabel);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Instance of selection listener that listening for select on copy from
+	 * type combo.
+	 */
+	private class FromTypeSelectionListener implements SelectionListener {
+
+		@Override
+		public void widgetDefaultSelected(SelectionEvent arg0) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void widgetSelected(SelectionEvent arg0) {
+			int selectionIndex = assignList.getSelectionIndex();
+
+			controller.setCopyFromType(selectionIndex);
+			
+			copyElemList.removeAll();
+
+			for (String elem : model.getCopyListNames(selectionIndex)) {
+				copyElemList.add(elem);
+			}
+		}
+
+	}
+
+	/**
+	 * Instance of selection listener that listening for select on copy to type
+	 * combo.
+	 */
+	private class ToTypeSelectionListener implements SelectionListener {
+
+		@Override
+		public void widgetDefaultSelected(SelectionEvent arg0) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void widgetSelected(SelectionEvent arg0) {
+			int selectionIndex = assignList.getSelectionIndex();
+
+			controller.setCopyToType(selectionIndex);
+			
+			copyElemList.removeAll();
+
+			for (String elem : model.getCopyListNames(selectionIndex)) {
+				copyElemList.add(elem);
+			}
+		}
+
+	}
+
+	/**
+	 * Instance of selection listener that listening for select on copy from
+	 * element.
+	 */
+	private class FromElementSelectionListener implements SelectionListener {
+
+		@Override
+		public void widgetDefaultSelected(SelectionEvent arg0) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void widgetSelected(SelectionEvent arg0) {
+			// TODO Auto-generated method stub
+
+		}
+
+	}
+
+	/**
+	 * Instance of selection listener that listening for select on copy to
+	 * element.
+	 */
+	private class ToElementSelectionListener implements SelectionListener {
+
+		@Override
+		public void widgetDefaultSelected(SelectionEvent arg0) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void widgetSelected(SelectionEvent arg0) {
+			// TODO Auto-generated method stub
+
+		}
+
+	}
+
+	private class NewCopySelectionListener implements SelectionListener {
+
+		@Override
+		public void widgetDefaultSelected(SelectionEvent arg0) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void widgetSelected(SelectionEvent arg0) {
+			controller.addNewCopy();
+			copyElemList.removeAll();
+			copyFromCombo.deselectAll();
+			copyToCombo.deselectAll();
+			copyFromList.removeAll();
+			copyToList.removeAll();
+
+			for (String elem : model.getCopyListNames(assignList.getSelectionIndex())) {
+				copyElemList.add(elem);
+			}
+
+			copyElemList.setSelection(copyElemList.getItemCount() - 1);
+		}
+	}
+
+	private class DeleteCopySelectionListener implements SelectionListener {
+
+		@Override
+		public void widgetDefaultSelected(SelectionEvent arg0) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void widgetSelected(SelectionEvent arg0) {
+			Integer copySelectionIndex = copyElemList.getSelectionIndex(); 
+			controller.deleteCopy(copySelectionIndex);
+			copyElemList.removeAll();
+			copyFromCombo.deselectAll();
+			copyToCombo.deselectAll();
+			copyFromList.removeAll();
+			copyToList.removeAll();
+
+			for (String elem : model.getCopyListNames(assignList.getSelectionIndex())) {
+				copyElemList.add(elem);
+			}
 		}
 
 	}

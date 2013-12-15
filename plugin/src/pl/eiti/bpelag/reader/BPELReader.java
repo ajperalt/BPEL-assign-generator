@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.eclipse.bpel.model.Assign;
 import org.eclipse.bpel.model.Process;
+import org.eclipse.bpel.model.Variable;
 import org.eclipse.bpel.model.resource.BPELResource;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
@@ -24,6 +25,8 @@ public class BPELReader {
 	private Process process = null;
 	private String BPELFileLocation = null;
 	private BPELResource resource = null;
+	
+	private Factory factory = null;
 
 	/**
 	 * Default constructor.
@@ -47,7 +50,7 @@ public class BPELReader {
 	 */
 	public void loadProcess() {
 		URI uri = URI.createFileURI(this.BPELFileLocation);
-		Factory factory = Resource.Factory.Registry.INSTANCE.getFactory(uri);
+		factory = Resource.Factory.Registry.INSTANCE.getFactory(uri);
 		this.resource = (BPELResource) factory.createResource(uri);
 		try {
 			this.resource.load(null);
@@ -56,6 +59,10 @@ public class BPELReader {
 			e.printStackTrace();
 		}
 		this.process = (Process) resource.getContents().get(0);
+	}
+
+	public Factory getFactory() {
+		return factory;
 	}
 
 	/**
@@ -101,6 +108,23 @@ public class BPELReader {
 		}
 
 		return assigns;
+	}
+
+	public List<Variable> getAllVariables() {
+		List<Variable> variables = new ArrayList<>();
+		// TreeIterator<EObject> it = process.eAllContents();
+		// while (it.hasNext()) {
+		// EObject next = it.next();
+		// if (next instanceof Variable) {
+		// variables.add((Variable) next);
+		// }
+		// }
+		for (EObject var : process.getVariables().eContents()) {
+			if (var instanceof Variable) {
+				variables.add((Variable) var);
+			}
+		}
+		return variables;
 	}
 
 	/** Accessors section */

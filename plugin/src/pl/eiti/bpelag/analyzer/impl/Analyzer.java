@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.eclipse.bpel.model.Activity;
 import org.eclipse.bpel.model.Assign;
+import org.eclipse.bpel.model.BPELFactory;
+import org.eclipse.bpel.model.Copy;
 import org.eclipse.bpel.model.Invoke;
 import org.eclipse.bpel.model.Variable;
 import org.eclipse.bpel.model.Variables;
@@ -200,6 +202,11 @@ public class Analyzer implements IAnalyzer {
 		return loader.getAllAssignBlocks();
 	}
 
+	@Override
+	public List<Variable> getProcessVariables() {
+		return loader.getAllVariables();
+	}
+
 	/** Accessor section */
 	public GraphModel getModel() {
 		return model;
@@ -207,5 +214,10 @@ public class Analyzer implements IAnalyzer {
 
 	public org.eclipse.bpel.model.Process getBPELProcess() {
 		return loader.getBPELProcess();
+	}
+
+	@Override
+	public Copy createCopy() {
+		return BPELFactory.eINSTANCE.createCopy();
 	}
 }
