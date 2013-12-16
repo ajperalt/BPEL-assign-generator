@@ -7,7 +7,6 @@ import pl.eiti.bpelag.ui.model.AnalyzerWizardModel;
 import pl.eiti.bpelag.util.Messages;
 
 public class AnalyzerWizard extends Wizard {
-	@SuppressWarnings("unused")
 	private AnalyzerWizardController wizardController = null;
 	private AnalyzerWizardModel wizardModel = null;
 

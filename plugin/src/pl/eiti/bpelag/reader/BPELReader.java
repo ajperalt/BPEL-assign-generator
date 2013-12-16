@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.eclipse.bpel.model.Assign;
 import org.eclipse.bpel.model.Process;
+import org.eclipse.bpel.model.Receive;
 import org.eclipse.bpel.model.Variable;
 import org.eclipse.bpel.model.resource.BPELResource;
 import org.eclipse.emf.common.util.TreeIterator;
@@ -25,7 +26,7 @@ public class BPELReader {
 	private Process process = null;
 	private String BPELFileLocation = null;
 	private BPELResource resource = null;
-	
+
 	private Factory factory = null;
 
 	/**
@@ -112,19 +113,26 @@ public class BPELReader {
 
 	public List<Variable> getAllVariables() {
 		List<Variable> variables = new ArrayList<>();
-		// TreeIterator<EObject> it = process.eAllContents();
-		// while (it.hasNext()) {
-		// EObject next = it.next();
-		// if (next instanceof Variable) {
-		// variables.add((Variable) next);
-		// }
-		// }
 		for (EObject var : process.getVariables().eContents()) {
 			if (var instanceof Variable) {
 				variables.add((Variable) var);
 			}
 		}
 		return variables;
+	}
+
+	public List<Receive> getAllReceives() {
+		List<Receive> result = new ArrayList<>();
+
+		TreeIterator<EObject> it = process.eAllContents();
+		while (it.hasNext()) {
+			EObject next = it.next();
+			if (next instanceof Receive) {
+				result.add((Receive) next);
+			}
+		}
+
+		return result;
 	}
 
 	/** Accessors section */
@@ -135,4 +143,5 @@ public class BPELReader {
 	public void setBPELFileLocation(String newBPELFileLocation) {
 		this.BPELFileLocation = newBPELFileLocation;
 	}
+
 }

@@ -1,34 +1,12 @@
 package pl.eiti.bpelag.ui.controller;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import java.util.Map;
-
-import javax.wsdl.extensions.ExtensibilityElement;
-import javax.xml.namespace.QName;
 
 import org.eclipse.bpel.model.Assign;
 import org.eclipse.bpel.model.Copy;
-import org.eclipse.bpel.model.Documentation;
 import org.eclipse.bpel.model.From;
 import org.eclipse.bpel.model.To;
-import org.eclipse.bpel.model.Variable;
-import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.TreeIterator;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EOperation;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.wst.wsdl.Definition;
-import org.eclipse.wst.wsdl.Message;
-import org.eclipse.wst.wsdl.WSDLElement;
-import org.eclipse.xsd.XSDElementDeclaration;
-import org.eclipse.xsd.XSDTypeDefinition;
-import org.w3c.dom.Element;
 
 import pl.eiti.bpelag.analyzer.IAnalysisResult;
 import pl.eiti.bpelag.analyzer.IAnalyzer;
@@ -114,7 +92,7 @@ public class AnalyzerWizardController {
 			// TO
 			break;
 		case Messages.ASSIGN_CATEGORY_LITERAL:
-			fromType.setVariable()
+			
 			break;
 		case Messages.ASSIGN_CATEGORY_VARPROPERTY:
 			// TO

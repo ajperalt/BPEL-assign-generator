@@ -162,6 +162,10 @@ public class AssignPage extends WizardPage {
 		copyElemList.addSelectionListener(new CopySelectionListener());
 		newButton.addSelectionListener(new NewCopySelectionListener());
 		delButton.addSelectionListener(new DeleteCopySelectionListener());
+		copyFromCombo.addSelectionListener(new FromTypeSelectionListener());
+		copyToCombo.addSelectionListener(new ToTypeSelectionListener());
+		copyFromList.addSelectionListener(new FromElementSelectionListener());
+		copyToList.addSelectionListener(new ToElementSelectionListener());
 	}
 
 	private void addDataToCombo(Combo combobox, java.util.List<String> list) {
@@ -195,7 +199,6 @@ public class AssignPage extends WizardPage {
 				copyElemList.add(elem);
 			}
 		}
-
 	}
 
 	/**
@@ -206,8 +209,7 @@ public class AssignPage extends WizardPage {
 
 		@Override
 		public void widgetDefaultSelected(SelectionEvent arg0) {
-			// TODO Auto-generated method stub
-
+			// TODO nobody knows what to do here.
 		}
 
 		@Override
@@ -248,21 +250,12 @@ public class AssignPage extends WizardPage {
 
 		@Override
 		public void widgetDefaultSelected(SelectionEvent arg0) {
-			// TODO Auto-generated method stub
-
+			// TODO nobody knows what to do here.
 		}
 
 		@Override
 		public void widgetSelected(SelectionEvent arg0) {
-			int selectionIndex = assignList.getSelectionIndex();
-
-			controller.setCopyFromType(selectionIndex);
-			
-			copyElemList.removeAll();
-
-			for (String elem : model.getCopyListNames(selectionIndex)) {
-				copyElemList.add(elem);
-			}
+			// TODO when from combo selected hide/show specific component to fill from element.
 		}
 
 	}
@@ -275,21 +268,12 @@ public class AssignPage extends WizardPage {
 
 		@Override
 		public void widgetDefaultSelected(SelectionEvent arg0) {
-			// TODO Auto-generated method stub
-
+			// TODO nobody knows what to do here.
 		}
 
 		@Override
 		public void widgetSelected(SelectionEvent arg0) {
-			int selectionIndex = assignList.getSelectionIndex();
-
-			controller.setCopyToType(selectionIndex);
-			
-			copyElemList.removeAll();
-
-			for (String elem : model.getCopyListNames(selectionIndex)) {
-				copyElemList.add(elem);
-			}
+			// TODO when to combo selected hide/show specific component to fill to element.
 		}
 
 	}
@@ -302,14 +286,12 @@ public class AssignPage extends WizardPage {
 
 		@Override
 		public void widgetDefaultSelected(SelectionEvent arg0) {
-			// TODO Auto-generated method stub
-
+			// TODO nobody knows what to do here.
 		}
 
 		@Override
 		public void widgetSelected(SelectionEvent arg0) {
-			// TODO Auto-generated method stub
-
+			// TODO some magic piece of code to fill copy from selected variable.
 		}
 
 	}
@@ -322,14 +304,12 @@ public class AssignPage extends WizardPage {
 
 		@Override
 		public void widgetDefaultSelected(SelectionEvent arg0) {
-			// TODO Auto-generated method stub
-
+			// TODO nobody knows what to do here.
 		}
 
 		@Override
 		public void widgetSelected(SelectionEvent arg0) {
-			// TODO Auto-generated method stub
-
+			// TODO some magic piece of code to fill copy to selected variable.
 		}
 
 	}
@@ -369,7 +349,7 @@ public class AssignPage extends WizardPage {
 
 		@Override
 		public void widgetSelected(SelectionEvent arg0) {
-			Integer copySelectionIndex = copyElemList.getSelectionIndex(); 
+			Integer copySelectionIndex = copyElemList.getSelectionIndex();
 			controller.deleteCopy(copySelectionIndex);
 			copyElemList.removeAll();
 			copyFromCombo.deselectAll();

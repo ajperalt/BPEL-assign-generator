@@ -10,6 +10,7 @@ import pl.eiti.bpelag.ui.model.AnalyzerWizardModel;
 import pl.eiti.bpelag.util.Messages;
 
 public class InfoPage extends WizardPage {
+	@SuppressWarnings("unused")
 	private AnalyzerWizardModel model = null;
 	private AnalyzerWizardController controller = null;
 

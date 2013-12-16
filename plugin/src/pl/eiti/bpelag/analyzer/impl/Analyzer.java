@@ -8,6 +8,7 @@ import org.eclipse.bpel.model.Assign;
 import org.eclipse.bpel.model.BPELFactory;
 import org.eclipse.bpel.model.Copy;
 import org.eclipse.bpel.model.Invoke;
+import org.eclipse.bpel.model.Receive;
 import org.eclipse.bpel.model.Variable;
 import org.eclipse.bpel.model.Variables;
 import org.eclipse.emf.ecore.EObject;
@@ -94,8 +95,12 @@ public class Analyzer implements IAnalyzer {
 	private List<Variable> getSettedVariables(List<Variable> processVariables) {
 		List<Variable> settedVariables = new ArrayList<>();
 
+		for (Receive it : loader.getAllReceives()) {
+			settedVariables.add(it.getVariable());
+		}
+
 		for (Variable it : processVariables) {
-			if (true) { // TODO check if variable has value set
+			if (null != it.getFrom().getLiteral()) {
 				settedVariables.add(it);
 			}
 		}
@@ -130,16 +135,17 @@ public class Analyzer implements IAnalyzer {
 					analyzeFlow(current, settedVariables, analysisResult);
 				}
 			} else if (processingActivity instanceof Assign) {
-				List<Invoke> followingInvokes = getNextInvokes(current);
+				List<Invoke> followingInvokes = new ArrayList<>();
+				getNextInvokes(current, followingInvokes);
 
-				findMatchedVariables(settedVariables, followingInvokes);
-				// TODO try to find variable from set of variables with value
-				// that fits invoke request variables with name and type then
-				// add to assign element list and after put pair key, value to
-				// the result map
+				List<Copy> copyBlocks = createCopyForMatchedVariables(settedVariables, followingInvokes);
+
+				if (!(null == copyBlocks || copyBlocks.isEmpty())) {
+					analysisResult.put((Assign) processingActivity, copyBlocks);
+				}
 			} else {
 				if (processingActivity instanceof Invoke) {
-					// TODO add reponse variables to setted variables set
+					settedVariables.add(((Invoke) processingActivity).getOutputVariable());
 				}
 				// TODO check if activity change value of any variable if yes
 				// put in list of variables with value set
@@ -160,8 +166,15 @@ public class Analyzer implements IAnalyzer {
 	 *            list of invoke activities following currently processed assign
 	 *            activity
 	 */
-	private void findMatchedVariables(List<Variable> settedVariables, List<Invoke> followingInvokes) {
-		// TODO Auto-generated method stub
+	private List<Copy> createCopyForMatchedVariables(List<Variable> settedVariables, List<Invoke> followingInvokes) {
+		List<Copy> result = new ArrayList<>();
+
+		for (Invoke it : followingInvokes) {
+			it.getInputVariable();
+			// TODO finish him
+		}
+
+		return result;
 	}
 
 	/**
@@ -187,12 +200,29 @@ public class Analyzer implements IAnalyzer {
 	 * 
 	 * @param node
 	 *            currently processing node
+	 * @param invokeList
+	 *            list of node following invoke activities
 	 * @return list of following node type of invoke
 	 */
-	private List<Invoke> getNextInvokes(GraphNode<Activity> node) {
-		List<Invoke> invokeList = new ArrayList<>();
+	private List<Invoke> getNextInvokes(GraphNode<Activity> node, List<Invoke> invokeList) {
+		GraphNode<Activity> tempNode = node;
 
-		// TODO search all next invokes activities and to result list
+		while (tempNode.hasNext()) {
+			Activity tempActivity = tempNode.getData();
+
+			if (tempNode.isBranched()) {
+				for (GraphNode<Activity> it : tempNode.getNextNodes()) {
+					getNextInvokes(it, invokeList);
+				}
+			}
+
+			if (tempActivity instanceof Invoke && !invokeList.contains((Invoke) tempActivity)) {
+				invokeList.add((Invoke) tempActivity);
+			} else if (tempActivity instanceof Assign) {
+				break;
+			}
+			tempNode = tempNode.getNextNodes().get(FIRST);
+		}
 
 		return invokeList;
 	}
