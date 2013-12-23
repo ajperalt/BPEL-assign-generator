@@ -100,11 +100,11 @@ public class Analyzer implements IAnalyzer {
 		}
 
 		for (Variable it : processVariables) {
-			if (null != it.getFrom().getLiteral()) {
+			if (null != it.getFrom() && null != it.getFrom().getLiteral()) {
 				settedVariables.add(it);
 			}
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 	/**
@@ -145,7 +145,10 @@ public class Analyzer implements IAnalyzer {
 				}
 			} else {
 				if (processingActivity instanceof Invoke) {
-					settedVariables.add(((Invoke) processingActivity).getOutputVariable());
+					Invoke invokeActivity = (Invoke) processingActivity;
+					if (null != invokeActivity) {
+						settedVariables.add(invokeActivity.getOutputVariable());
+					}
 				}
 				// TODO check if activity change value of any variable if yes
 				// put in list of variables with value set
