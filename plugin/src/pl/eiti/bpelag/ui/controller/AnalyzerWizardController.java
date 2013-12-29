@@ -36,12 +36,12 @@ public class AnalyzerWizardController {
 		model = newModel;
 		analyzer.init(pathToBPEL);
 		executeAnalyze();
-		model.setAssignList(analyzer.getAssignActivities());
-		model.setProcessVariables(analyzer.getProcessVariables());
 	}
 
 	public void executeAnalyze() {
 		analysisResult = analyzer.analyze();
+		model.setAssignList(analyzer.getAssignActivities());
+		model.setProcessVariables(analyzer.getProcessVariables());
 	}
 
 	public void executeGenerator() {
@@ -75,16 +75,16 @@ public class AnalyzerWizardController {
 		String copyType = null;
 		From fromType = null;
 		To toType = null;
-		
+
 		if (copyTypeElem instanceof From) {
 			copyType = model.getFromComboList().get(selectionIndex);
 			fromType = (From) copyTypeElem;
-		} else if(copyTypeElem instanceof To) {
+		} else if (copyTypeElem instanceof To) {
 			copyType = model.getToComboList().get(selectionIndex);
 			toType = (To) copyTypeElem;
 		}
 
-		switch(copyType) {
+		switch (copyType) {
 		case Messages.ASSIGN_CATEGORY_VARPART:
 			// TO
 			break;
@@ -92,7 +92,7 @@ public class AnalyzerWizardController {
 			// TO
 			break;
 		case Messages.ASSIGN_CATEGORY_LITERAL:
-			
+
 			break;
 		case Messages.ASSIGN_CATEGORY_VARPROPERTY:
 			// TO

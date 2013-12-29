@@ -3,11 +3,18 @@ package pl.eiti.bpelag.actions;
 import java.util.Set;
 
 import org.eclipse.bpel.model.Activity;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
@@ -16,6 +23,7 @@ import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
+import org.eclipse.ui.part.FileEditorInput;
 
 import pl.eiti.bpelag.model.graph.GraphNode;
 import pl.eiti.bpelag.model.impl.GraphModel;
@@ -23,6 +31,8 @@ import pl.eiti.bpelag.reader.BPELReader;
 import pl.eiti.bpelag.transformer.impl.GraphTransformer;
 import pl.eiti.bpelag.ui.AnalyzerWizard;
 import pl.eiti.bpelag.util.ActivityUtil;
+import pl.eiti.bpelag.util.Messages;
+import pl.eiti.bpelag.util.Settings;
 
 /**
  * Our sample action implements workbench action delegate. The action proxy will
@@ -37,8 +47,6 @@ public class AssignGenerateAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window = null;
 	private MessageConsoleStream consoleStream = null;
 
-	// private GraphModel processModel = null;
-
 	/**
 	 * The constructor.
 	 */
@@ -52,11 +60,40 @@ public class AssignGenerateAction implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
 	public void run(IAction action) {
-		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-				new AnalyzerWizard());
-		dialog.open();
+		Shell currentShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		IWorkbench workbench = PlatformUI.getWorkbench();
+		IWorkbenchWindow window = null;
+		IWorkbenchPage activePage = null;
+		IEditorPart editor = null;
+		IEditorInput input = null;
+		IPath path = null;
 
-		// MainTest();
+		if (null != workbench) {
+			window = workbench.getActiveWorkbenchWindow();
+		}
+
+		if (null != window) {
+			activePage = window.getActivePage();
+		}
+
+		if (null != activePage) {
+			editor = activePage.getActiveEditor();
+		}
+
+		if (null != editor) {
+			input = editor.getEditorInput();
+		}
+
+		if (input instanceof FileEditorInput) {
+			path = ((FileEditorInput) input).getPath();
+		}
+
+		if (path != null && Settings.BPEL_EXTENSION.equalsIgnoreCase(path.getFileExtension())) {
+			WizardDialog dialog = new WizardDialog(currentShell, new AnalyzerWizard(path.toString()));
+			dialog.open();
+		} else {
+			MessageDialog.openInformation(currentShell, Messages.DIALOG_TITLE_BAR, Messages.DIALOG_NO_BPEL_FILE);
+		}
 	}
 
 	/**

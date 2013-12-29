@@ -11,7 +11,10 @@ import org.eclipse.bpel.model.Invoke;
 import org.eclipse.bpel.model.Receive;
 import org.eclipse.bpel.model.Variable;
 import org.eclipse.bpel.model.Variables;
+import org.eclipse.bpel.validator.EmfModelQuery;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.wst.wsdl.Message;
 
 import pl.eiti.bpelag.analyzer.IAnalysisResult;
 import pl.eiti.bpelag.analyzer.IAnalyzer;
@@ -104,7 +107,7 @@ public class Analyzer implements IAnalyzer {
 				settedVariables.add(it);
 			}
 		}
-		return new ArrayList<>();
+		return settedVariables;
 	}
 
 	/**
@@ -136,7 +139,7 @@ public class Analyzer implements IAnalyzer {
 				}
 			} else if (processingActivity instanceof Assign) {
 				List<Invoke> followingInvokes = new ArrayList<>();
-				getNextInvokes(current, followingInvokes);
+				getNextInvokes(current.getNextNodes().get(FIRST), followingInvokes, Boolean.FALSE);
 
 				List<Copy> copyBlocks = createCopyForMatchedVariables(settedVariables, followingInvokes);
 
@@ -150,8 +153,6 @@ public class Analyzer implements IAnalyzer {
 						settedVariables.add(invokeActivity.getOutputVariable());
 					}
 				}
-				// TODO check if activity change value of any variable if yes
-				// put in list of variables with value set
 			}
 			current.setVisited();
 			current = current.getNextNodes().get(FIRST);
@@ -171,10 +172,51 @@ public class Analyzer implements IAnalyzer {
 	 */
 	private List<Copy> createCopyForMatchedVariables(List<Variable> settedVariables, List<Invoke> followingInvokes) {
 		List<Copy> result = new ArrayList<>();
+		
+		// This is how to create new copy element
+		Copy copy = BPELFactory.eINSTANCE.createCopy();
+		// Thanks
 
 		for (Invoke it : followingInvokes) {
-			it.getInputVariable();
-			// TODO finish him
+			Variable invokeInput = it.getInputVariable();
+			// TODO here create list of primitive type variables that are part
+			// of complex invoke input type
+			Message msg = invokeInput.getMessageType();
+			ResourceSet temp = this.loader.getBPELProcess().getImports().get(0).eResource().getResourceSet();
+			if (msg != null) {
+				if (msg.eIsProxy()) {
+					msg = (Message)EmfModelQuery.resolveProxy( this.loader.getBPELProcess() , msg);
+				}
+//				if (part==null) {
+//					Map parts = msg.getParts();
+//					if (parts!=null && !parts.isEmpty()) {
+//						Map.Entry entry = (Map.Entry)parts.entrySet().iterator().next();
+//						part = (Part)entry.getValue();
+//					}
+//				}
+//				if (part!=null) {
+//					XSDElementDeclaration declaration = part.getElementDeclaration();
+//					if (declaration != null) {
+//						uriWSDL = declaration.getSchema().getSchemaLocation();
+//						rootElement = declaration.getName();
+//					}
+//				}
+			}
+
+			for (Variable setVar : settedVariables) {
+				
+				
+				if (null != setVar.getMessageType()) {
+					// complex type variable
+
+					// TODO here create list of primitive type variables that
+					// are part of complex setVar type
+					
+					
+				} else {
+					// primitive type variable
+				}
+			}
 		}
 
 		return result;
@@ -207,7 +249,7 @@ public class Analyzer implements IAnalyzer {
 	 *            list of node following invoke activities
 	 * @return list of following node type of invoke
 	 */
-	private List<Invoke> getNextInvokes(GraphNode<Activity> node, List<Invoke> invokeList) {
+	private List<Invoke> getNextInvokes(GraphNode<Activity> node, List<Invoke> invokeList, Boolean isAssignFound) {
 		GraphNode<Activity> tempNode = node;
 
 		while (tempNode.hasNext()) {
@@ -215,13 +257,18 @@ public class Analyzer implements IAnalyzer {
 
 			if (tempNode.isBranched()) {
 				for (GraphNode<Activity> it : tempNode.getNextNodes()) {
-					getNextInvokes(it, invokeList);
+					getNextInvokes(it, invokeList, isAssignFound);
+				}
+				if (isAssignFound) {
+					break;
 				}
 			}
 
 			if (tempActivity instanceof Invoke && !invokeList.contains((Invoke) tempActivity)) {
 				invokeList.add((Invoke) tempActivity);
+				break;
 			} else if (tempActivity instanceof Assign) {
+				isAssignFound = Boolean.TRUE;
 				break;
 			}
 			tempNode = tempNode.getNextNodes().get(FIRST);

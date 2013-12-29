@@ -21,19 +21,17 @@ public class InfoPage extends WizardPage {
 		setTitle(Messages.WIZARD_INFO_PAGE_TITLE);
 		model = newModel;
 		controller = newController;
-		// TODO Auto-generated constructor stub
 		setPageComplete(false);
 	}
 
 	@Override
 	public IWizardPage getNextPage() {
-		IWizardPage nextPage = super.getNextPage();
 
-		// TODO magic to run analyzer
 		controller.executeAnalyze();
 		controller.executeGenerator();
 		setPageComplete(true);
 
+		IWizardPage nextPage = super.getNextPage();
 		return nextPage;
 	}
 

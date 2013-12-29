@@ -13,12 +13,13 @@ public class AnalyzerWizard extends Wizard {
 	protected InfoPage infoPage = null;
 	protected AssignPage assignPage = null;
 
-	public AnalyzerWizard() {
+	public AnalyzerWizard(String pathToBPEL) {
 		super();
+
 		wizardModel = new AnalyzerWizardModel();
-		wizardController = new AnalyzerWizardController(
-				"D:/private/Dropbox/engineer/project/aag_test/IBMexamples/processes/travelbookingBPEL.bpel",
-				wizardModel);
+
+		wizardController = new AnalyzerWizardController(pathToBPEL, wizardModel);
+		// "D:/private/Dropbox/engineer/project/BPEL-assign-generator/IBMexamples/processes/travelbookingBPEL.bpel",
 		setNeedsProgressMonitor(Boolean.TRUE);
 	}
 

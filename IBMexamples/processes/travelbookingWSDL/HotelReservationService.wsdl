@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions targetNamespace="http://travelbooking" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://travelbooking" xmlns:intf="http://travelbooking" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<wsdl:definitions targetNamespace="http://travelbooking/HotelReservationService" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://travelbooking/HotelReservationService" xmlns:intf="http://travelbooking/HotelReservationService" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 <!--WSDL created by Apache Axis version: 1.4
 Built on Apr 22, 2006 (06:55:48 PDT)-->
  <wsdl:types>
-  <schema elementFormDefault="qualified" targetNamespace="http://travelbooking" xmlns="http://www.w3.org/2001/XMLSchema">
+  <schema elementFormDefault="qualified" targetNamespace="http://travelbooking/HotelReservationService" xmlns="http://www.w3.org/2001/XMLSchema">
    <element name="doHotelReservation">
     <complexType>
      <sequence>
@@ -29,7 +29,7 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
 
    <wsdl:message name="doHotelReservationRequest">
 
-      <wsdl:part element="impl:doHotelReservation" name="parameters">
+      <wsdl:part element="impl:doHotelReservation" name="request">
 
       </wsdl:part>
 
@@ -37,7 +37,7 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
 
    <wsdl:message name="doHotelReservationResponse">
 
-      <wsdl:part element="impl:doHotelReservationResponse" name="parameters">
+      <wsdl:part element="impl:doHotelReservationResponse" name="response">
 
       </wsdl:part>
 

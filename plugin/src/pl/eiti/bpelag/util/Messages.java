@@ -22,4 +22,7 @@ public class Messages {
 	public static final String ASSIGN_CATEGORY_PARTNERROLE = "Partner Link Reference";
 	public static final String ASSIGN_CATEGORY_ENDPOINTREF = "Endpoint Reference";
 	public static final String ASSIGN_CATEGORY_OPAQUE = "Opaque";
+	
+	public static final String DIALOG_NO_BPEL_FILE = "No bpel process file opened/active.";
+	public static final String DIALOG_TITLE_BAR = "No BPEL file";
 }

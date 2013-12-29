@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions targetNamespace="http://travelbooking" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://travelbooking" xmlns:intf="http://travelbooking" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<wsdl:definitions targetNamespace="http://travelbooking/CreditCardCheckingService" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://travelbooking/CreditCardCheckingService" xmlns:intf="http://travelbooking/CreditCardCheckingService" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 <!--WSDL created by Apache Axis version: 1.4
 Built on Apr 22, 2006 (06:55:48 PDT)-->
  <wsdl:types>
-  <schema elementFormDefault="qualified" targetNamespace="http://travelbooking" xmlns="http://www.w3.org/2001/XMLSchema">
+  <schema elementFormDefault="qualified" targetNamespace="http://travelbooking/CreditCardCheckingService" xmlns="http://www.w3.org/2001/XMLSchema">
    <element name="doCreditCardChecking">
     <complexType>
      <sequence>
@@ -24,7 +24,7 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
 
    <wsdl:message name="doCreditCardCheckingRequest">
 
-      <wsdl:part element="impl:doCreditCardChecking" name="parameters">
+      <wsdl:part element="impl:doCreditCardChecking" name="request">
 
       </wsdl:part>
 
@@ -32,7 +32,7 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
 
    <wsdl:message name="doCreditCardCheckingResponse">
 
-      <wsdl:part element="impl:doCreditCardCheckingResponse" name="parameters">
+      <wsdl:part element="impl:doCreditCardCheckingResponse" name="response">
 
       </wsdl:part>
 
