@@ -50,11 +50,7 @@
         <bpel:variable name="hotelReservationPLRequest" messageType="ns2:doHotelReservationRequest"></bpel:variable>
         <bpel:variable name="carReservationPLResponse" messageType="ns3:doCarReservationResponse"></bpel:variable>
         <bpel:variable name="carReservationPLRequest" messageType="ns3:doCarReservationRequest"></bpel:variable>
-        <bpel:variable name="fixedInt" type="xsd:integer">
-            <bpel:from>
-                <bpel:literal xml:space="preserve">111</bpel:literal>
-            </bpel:from>
-        </bpel:variable>
+        
     </bpel:variables>
 
 	<!-- ================================================================= -->
@@ -62,7 +58,7 @@
 	<!-- Set of activities coordinating the flow of messages across the -->
 	<!-- services integrated within this business process -->
 	<!-- ================================================================= -->
-	<bpel:sequence name="main"><!-- Receive input from requestor. Note: 
+	<bpel:sequence name="travelBooking"><!-- Receive input from requestor. Note: 
 			This maps to operation defined in travelbookingBPEL.wsdl -->
 		<bpel:receive name="Receive" partnerLink="client"
 			portType="tns:travelbookingBPEL" operation="bookTravel" variable="input"
@@ -70,10 +66,12 @@
 
 		<!-- Asynchronous callback to the requester. Note: the callback location 
 			and correlation id is transparently handled using WS-addressing. -->
-		<bpel:assign validate="no" name="dataMap1">
+		<bpel:assign validate="yes" name="dataMap1">
             <bpel:copy>
                 <bpel:from part="input" variable="input">
-                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:cardNumber]]></bpel:query>
+                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                    	<![CDATA[tns:cardNumber]]>
+                    </bpel:query>
                 </bpel:from>
                 <bpel:to part="request" variable="creditCardPLRequest">
                     <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
@@ -83,10 +81,14 @@
             </bpel:copy>
             <bpel:copy>
                 <bpel:from part="input" variable="input">
-                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:cardType]]></bpel:query>
+                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                    	<![CDATA[tns:cardType]]>
+                    </bpel:query>
                 </bpel:from>
                 <bpel:to part="request" variable="creditCardPLRequest">
-                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[ns0:cardType]]></bpel:query>
+                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                    	<![CDATA[ns0:cardType]]>
+                   	</bpel:query>
                 </bpel:to>
             </bpel:copy>
         </bpel:assign>
@@ -271,7 +273,9 @@
 				</bpel:while>
 			</bpel:sequence>
 		</bpel:flow>
-		<bpel:reply name="Reply" partnerLink="client"
+        
+        <bpel:invoke name="Confirmation"></bpel:invoke>
+        <bpel:reply name="Reply" partnerLink="client"
 			portType="tns:travelbookingBPEL" operation="bookTravel"
 			variable="output"></bpel:reply>
 	</bpel:sequence>
