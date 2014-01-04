@@ -1,35 +1,38 @@
 package pl.eiti.bpelag.analyzer.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.bpel.model.Activity;
 import org.eclipse.bpel.model.Assign;
 import org.eclipse.bpel.model.BPELFactory;
 import org.eclipse.bpel.model.Copy;
+import org.eclipse.bpel.model.Import;
 import org.eclipse.bpel.model.Invoke;
 import org.eclipse.bpel.model.Receive;
 import org.eclipse.bpel.model.Variable;
 import org.eclipse.bpel.model.Variables;
-import org.eclipse.bpel.validator.EmfModelQuery;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.wst.wsdl.Message;
 
 import pl.eiti.bpelag.analyzer.IAnalysisResult;
 import pl.eiti.bpelag.analyzer.IAnalyzer;
+import pl.eiti.bpelag.loader.BPELLoader;
+import pl.eiti.bpelag.loader.WSDLLoader;
 import pl.eiti.bpelag.model.graph.GraphNode;
 import pl.eiti.bpelag.model.impl.GraphModel;
-import pl.eiti.bpelag.reader.BPELReader;
 import pl.eiti.bpelag.transformer.impl.GraphTransformer;
 import pl.eiti.bpelag.util.ActivityUtil;
+import pl.eiti.bpelag.util.StringElemUtil;
 
 /**
  * BPEL graph model analyzer class.
  */
 public class Analyzer implements IAnalyzer {
 	private static final Integer FIRST = Integer.valueOf(0);
-	private BPELReader loader = null;
+	private BPELLoader bpelLoader = null;
+	private WSDLLoader wsdlLoader = null;
 	private GraphTransformer transformer = null;
 	private GraphModel model = null;
 	private AnalysisResult result = null;
@@ -38,21 +41,32 @@ public class Analyzer implements IAnalyzer {
 	 * Default constructor.
 	 */
 	public Analyzer() {
-		this.loader = new BPELReader();
+		this.bpelLoader = new BPELLoader();
+		this.wsdlLoader = new WSDLLoader();
 		transformer = GraphTransformer.instance();
 		this.model = new GraphModel();
 	}
 
 	@Override
 	public void init(String pathToBPEL) {
-		loader.setBPELFileLocation(pathToBPEL);
-		loader.loadProcess();
-		model = (GraphModel) transformer.ProcessToModel(loader.getBPELProcess());
+		bpelLoader.setBPELFileLocation(pathToBPEL);
+		bpelLoader.loadProcess();
+
+		List<String> importLocation = new ArrayList<>();
+		for (Import importElement : bpelLoader.getBPELProcess().getImports()) {
+			importLocation.add(importElement.getLocation());
+		}
+
+		if (!importLocation.isEmpty()) {
+			wsdlLoader.load(importLocation, StringElemUtil.getPath(pathToBPEL));
+		}
+
+		model = (GraphModel) transformer.ProcessToModel(bpelLoader.getBPELProcess());
 	}
 
 	@Override
 	public IAnalysisResult analyze() {
-		List<Variable> processVariables = getProcVariables(loader.getBPELProcess().getVariables());
+		List<Variable> processVariables = getProcVariables(bpelLoader.getBPELProcess().getVariables());
 		List<Variable> settedVariables = getSettedVariables(processVariables);
 
 		result = new AnalysisResult();
@@ -98,7 +112,7 @@ public class Analyzer implements IAnalyzer {
 	private List<Variable> getSettedVariables(List<Variable> processVariables) {
 		List<Variable> settedVariables = new ArrayList<>();
 
-		for (Receive it : loader.getAllReceives()) {
+		for (Receive it : bpelLoader.getAllReceives()) {
 			settedVariables.add(it.getVariable());
 		}
 
@@ -172,54 +186,39 @@ public class Analyzer implements IAnalyzer {
 	 */
 	private List<Copy> createCopyForMatchedVariables(List<Variable> settedVariables, List<Invoke> followingInvokes) {
 		List<Copy> result = new ArrayList<>();
-		
+
 		// This is how to create new copy element
 		Copy copy = BPELFactory.eINSTANCE.createCopy();
 		// Thanks
+		Map<String, List<String>> settedVarsElementsMap = new HashMap<>();
+
+		for (Variable setVar : settedVariables) {
+			String processingVar = setVar.getName();
+			settedVarsElementsMap.put(processingVar, new ArrayList<String>());
+
+			if (null != setVar.getMessageType()) {
+				// complex type variable
+				settedVarsElementsMap.get(processingVar).addAll(retrieveElements(setVar));
+			}
+		}
+
+		List<String> invokeInputElements = null;
 
 		for (Invoke it : followingInvokes) {
 			Variable invokeInput = it.getInputVariable();
 			// TODO here create list of primitive type variables that are part
 			// of complex invoke input type
-			Message msg = invokeInput.getMessageType();
-			ResourceSet temp = this.loader.getBPELProcess().getImports().get(0).eResource().getResourceSet();
-			if (msg != null) {
-				if (msg.eIsProxy()) {
-					msg = (Message)EmfModelQuery.resolveProxy( this.loader.getBPELProcess() , msg);
-				}
-//				if (part==null) {
-//					Map parts = msg.getParts();
-//					if (parts!=null && !parts.isEmpty()) {
-//						Map.Entry entry = (Map.Entry)parts.entrySet().iterator().next();
-//						part = (Part)entry.getValue();
-//					}
-//				}
-//				if (part!=null) {
-//					XSDElementDeclaration declaration = part.getElementDeclaration();
-//					if (declaration != null) {
-//						uriWSDL = declaration.getSchema().getSchemaLocation();
-//						rootElement = declaration.getName();
-//					}
-//				}
-			}
-
-			for (Variable setVar : settedVariables) {
-				
-				
-				if (null != setVar.getMessageType()) {
-					// complex type variable
-
-					// TODO here create list of primitive type variables that
-					// are part of complex setVar type
-					
-					
-				} else {
-					// primitive type variable
-				}
+			if (null != invokeInput.getMessageType()) {
+				invokeInputElements = retrieveElements(invokeInput);
 			}
 		}
 
 		return result;
+	}
+
+	private List<String> retrieveElements(Variable invokeInput) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	/**
@@ -279,12 +278,12 @@ public class Analyzer implements IAnalyzer {
 
 	@Override
 	public List<Assign> getAssignActivities() {
-		return loader.getAllAssignBlocks();
+		return bpelLoader.getAllAssignBlocks();
 	}
 
 	@Override
 	public List<Variable> getProcessVariables() {
-		return loader.getAllVariables();
+		return bpelLoader.getAllVariables();
 	}
 
 	/** Accessor section */
@@ -293,7 +292,7 @@ public class Analyzer implements IAnalyzer {
 	}
 
 	public org.eclipse.bpel.model.Process getBPELProcess() {
-		return loader.getBPELProcess();
+		return bpelLoader.getBPELProcess();
 	}
 
 	@Override

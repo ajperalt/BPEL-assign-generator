@@ -1,4 +1,4 @@
-package pl.eiti.bpelag.reader;
+package pl.eiti.bpelag.loader;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ import org.eclipse.emf.ecore.resource.Resource.Factory;
  * Reader class using to load BPEL process file to object model based on
  * org.eclipse.bpel.model package classes.
  */
-public class BPELReader {
+public class BPELLoader {
 
 	private Process process = null;
 	private String BPELFileLocation = null;
@@ -32,7 +32,7 @@ public class BPELReader {
 	/**
 	 * Default constructor.
 	 */
-	public BPELReader() {
+	public BPELLoader() {
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class BPELReader {
 	 * @param newBPELFileLocation
 	 *            file location
 	 */
-	public BPELReader(String newBPELFileLocation) {
+	public BPELLoader(String newBPELFileLocation) {
 		this();
 		this.BPELFileLocation = newBPELFileLocation;
 	}

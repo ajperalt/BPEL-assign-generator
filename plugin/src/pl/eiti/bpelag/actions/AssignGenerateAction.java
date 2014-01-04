@@ -25,9 +25,9 @@ import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 import org.eclipse.ui.part.FileEditorInput;
 
+import pl.eiti.bpelag.loader.BPELLoader;
 import pl.eiti.bpelag.model.graph.GraphNode;
 import pl.eiti.bpelag.model.impl.GraphModel;
-import pl.eiti.bpelag.reader.BPELReader;
 import pl.eiti.bpelag.transformer.impl.GraphTransformer;
 import pl.eiti.bpelag.ui.AnalyzerWizard;
 import pl.eiti.bpelag.util.ActivityUtil;
@@ -150,7 +150,7 @@ public class AssignGenerateAction implements IWorkbenchWindowActionDelegate {
 	 */
 	@SuppressWarnings("unused")
 	private void MainTest() {
-		BPELReader processReader = new BPELReader(
+		BPELLoader processReader = new BPELLoader(
 				"E:/private/Dropbox/engineer/project/aag_test/IBMexamples/processes/travelbookingBPEL.bpel");
 
 		processReader.loadProcess();
