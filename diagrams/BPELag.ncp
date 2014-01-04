@@ -7,10 +7,197 @@
       <Entity type="Class">
         <Name>BPELLoader</Name>
         <Access>Public</Access>
-        <Location left="296" top="71" />
+        <Location left="21" top="24" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>WSDLLoader</Name>
+        <Access>Public</Access>
+        <Location left="200" top="24" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>AssignGenerateAction</Name>
+        <Access>Public</Access>
+        <Location left="233" top="268" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Generator</Name>
+        <Access>Public</Access>
+        <Location left="436" top="227" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Analyzer</Name>
+        <Access>Public</Access>
+        <Location left="21" top="587" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>AnalysisResult</Name>
+        <Access>Public</Access>
+        <Location left="21" top="298" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Graph</Name>
+        <Access>Public</Access>
+        <Location left="986" top="62" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>GraphNode</Name>
+        <Access>Public</Access>
+        <Location left="244" top="587" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>GraphModel</Name>
+        <Access>Public</Access>
+        <Location left="307" top="450" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>GraphTransformer</Name>
+        <Access>Public</Access>
+        <Location left="940" top="348" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>AnalyzerWizardController</Name>
+        <Access>Public</Access>
+        <Location left="21" top="450" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>AnalyzerWizardModel</Name>
+        <Access>Public</Access>
+        <Location left="21" top="697" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>AnalyzerWizard</Name>
+        <Access>Public</Access>
+        <Location left="344" top="650" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>AssignPage</Name>
+        <Access>Public</Access>
+        <Location left="999" top="587" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>InfoPage</Name>
+        <Access>Public</Access>
+        <Location left="1193" top="293" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ActivityUtil</Name>
+        <Access>Public</Access>
+        <Location left="528" top="110" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Messages</Name>
+        <Access>Public</Access>
+        <Location left="200" top="161" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Settings</Name>
+        <Access>Public</Access>
+        <Location left="1144" top="43" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>StringElemUtil</Name>
+        <Access>Public</Access>
+        <Location left="400" top="62" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Activator</Name>
+        <Access>Public</Access>
+        <Location left="21" top="161" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IAnalysisResult</Name>
+        <Access>Public</Access>
+        <Location left="802" top="110" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IAnalyzer</Name>
+        <Access>Public</Access>
+        <Location left="713" top="270" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IGenerator</Name>
+        <Access>Public</Access>
+        <Location left="671" top="84" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IModel</Name>
+        <Access>Public</Access>
+        <Location left="577" top="408" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IProcessTransformer</Name>
+        <Access>Public</Access>
+        <Location left="762" top="531" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
       </Entity>
     </Entities>
     <Relationships />

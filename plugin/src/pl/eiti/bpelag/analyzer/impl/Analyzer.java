@@ -9,12 +9,16 @@ import org.eclipse.bpel.model.Activity;
 import org.eclipse.bpel.model.Assign;
 import org.eclipse.bpel.model.BPELFactory;
 import org.eclipse.bpel.model.Copy;
+import org.eclipse.bpel.model.From;
 import org.eclipse.bpel.model.Import;
 import org.eclipse.bpel.model.Invoke;
+import org.eclipse.bpel.model.Query;
 import org.eclipse.bpel.model.Receive;
+import org.eclipse.bpel.model.To;
 import org.eclipse.bpel.model.Variable;
 import org.eclipse.bpel.model.Variables;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.wst.wsdl.WSDLElement;
 
 import pl.eiti.bpelag.analyzer.IAnalysisResult;
 import pl.eiti.bpelag.analyzer.IAnalyzer;
@@ -24,6 +28,7 @@ import pl.eiti.bpelag.model.graph.GraphNode;
 import pl.eiti.bpelag.model.impl.GraphModel;
 import pl.eiti.bpelag.transformer.impl.GraphTransformer;
 import pl.eiti.bpelag.util.ActivityUtil;
+import pl.eiti.bpelag.util.Settings;
 import pl.eiti.bpelag.util.StringElemUtil;
 
 /**
@@ -188,21 +193,21 @@ public class Analyzer implements IAnalyzer {
 		List<Copy> result = new ArrayList<>();
 
 		// This is how to create new copy element
-		Copy copy = BPELFactory.eINSTANCE.createCopy();
+		// Copy copy = BPELFactory.eINSTANCE.createCopy();
 		// Thanks
-		Map<String, List<String>> settedVarsElementsMap = new HashMap<>();
 
-		for (Variable setVar : settedVariables) {
-			String processingVar = setVar.getName();
-			settedVarsElementsMap.put(processingVar, new ArrayList<String>());
+		Map<Variable, List<WSDLElement>> settedVarsElementsMap = new HashMap<>();
 
-			if (null != setVar.getMessageType()) {
+		for (Variable processingVar : settedVariables) {
+			settedVarsElementsMap.put(processingVar, new ArrayList<WSDLElement>());
+
+			if (null != processingVar.getMessageType()) {
 				// complex type variable
-				settedVarsElementsMap.get(processingVar).addAll(retrieveElements(setVar));
+				// settedVarsElementsMap.get(processingVar).addAll(retrieveElements(processingVar));
 			}
 		}
 
-		List<String> invokeInputElements = null;
+		List<WSDLElement> invokeInputElements = null;
 
 		for (Invoke it : followingInvokes) {
 			Variable invokeInput = it.getInputVariable();
@@ -211,12 +216,96 @@ public class Analyzer implements IAnalyzer {
 			if (null != invokeInput.getMessageType()) {
 				invokeInputElements = retrieveElements(invokeInput);
 			}
+
+			for (Variable var : settedVarsElementsMap.keySet()) {
+				if (!settedVarsElementsMap.get(var).isEmpty() && null != invokeInputElements) {
+					// From complex to complex type check
+
+				} else if (settedVarsElementsMap.get(var).isEmpty() && null != invokeInputElements) {
+					// From simple to complex type check
+					WSDLElement varElement = getMatching(var, invokeInputElements);
+					if (null != varElement) {
+						Query query = BPELFactory.eINSTANCE.createQuery();
+						query.setQueryLanguage(Settings.QUERY_LANGUAGE);
+						// TODO finish query creation
+						query.setValue(Settings.QUERY_BEGIN + var.getElement().getNamespaceURI() + ":"
+								+ varElement.getElement().getLocalName() + Settings.QUERY_END);
+
+						From fromElement = BPELFactory.eINSTANCE.createFrom();
+						To toElement = BPELFactory.eINSTANCE.createTo();
+						fromElement.setVariable(var);
+						toElement.setVariable(invokeInput);
+						toElement.setQuery(query);
+						// TODO add part to copy here
+
+						Copy copyElement = BPELFactory.eINSTANCE.createCopy();
+						copyElement.setFrom(fromElement);
+						copyElement.setTo(toElement);
+
+						result.add(copyElement);
+					}
+				} else if (!settedVarsElementsMap.get(var).isEmpty() && null == invokeInputElements) {
+					// From complex to simple type check
+					WSDLElement varElement = getMatching(invokeInput, settedVarsElementsMap.get(var));
+					if (null != varElement) {
+						Query query = BPELFactory.eINSTANCE.createQuery();
+						query.setQueryLanguage(Settings.QUERY_LANGUAGE);
+						// TODO finish query creation
+						query.setValue(Settings.QUERY_BEGIN + var.getElement().getNamespaceURI() + ":"
+								+ varElement.getElement().getLocalName() + Settings.QUERY_END);
+
+						From fromElement = BPELFactory.eINSTANCE.createFrom();
+						To toElement = BPELFactory.eINSTANCE.createTo();
+						fromElement.setVariable(var);
+						fromElement.setQuery(query);
+						// TODO add part to copy here
+						toElement.setVariable(invokeInput);
+
+						Copy copyElement = BPELFactory.eINSTANCE.createCopy();
+						copyElement.setFrom(fromElement);
+						copyElement.setTo(toElement);
+
+						result.add(copyElement);
+					}
+				} else {
+					// From simple to simple type check
+					if (isMatching(invokeInput, var)) {
+						// Create and add copy instruction here
+						From fromElement = BPELFactory.eINSTANCE.createFrom();
+						To toElement = BPELFactory.eINSTANCE.createTo();
+						fromElement.setVariable(var);
+						toElement.setVariable(invokeInput);
+
+						Copy copyElement = BPELFactory.eINSTANCE.createCopy();
+						copyElement.setFrom(fromElement);
+						copyElement.setTo(toElement);
+
+						result.add(copyElement);
+					}
+				}
+			}
 		}
 
 		return result;
 	}
 
-	private List<String> retrieveElements(Variable invokeInput) {
+	private WSDLElement getMatching(Variable var, List<WSDLElement> invokeInputElements) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private Boolean isMatching(Variable varTo, Variable varFrom) {
+		Boolean result = Boolean.FALSE;
+
+		if (varFrom.getName().equals(varTo.getName())
+				&& ((null != varFrom.getMessageType() && varFrom.getMessageType().equals(varTo.getMessageType())) || (null != varFrom
+						.getType() && varFrom.getType().equals(varTo.getType())))) {
+			result = Boolean.TRUE;
+		}
+		return result;
+	}
+
+	private List<WSDLElement> retrieveElements(Variable invokeInput) {
 		// TODO Auto-generated method stub
 		return null;
 	}
