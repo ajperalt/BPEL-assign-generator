@@ -10,8 +10,7 @@
     <bpel:import namespace="http://travelbooking/HotelReservationService" location="travelbookingWSDL/HotelReservationService.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"></bpel:import>
     <bpel:import namespace="http://travelbooking/FlightReservationService" location="travelbookingWSDL/FlightReservationService.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"></bpel:import>
     <bpel:import namespace="http://travelbooking/CreditCardCheckingService" location="travelbookingWSDL/CreditCardCheckingService.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"></bpel:import>
-    <bpel:import location="travelbookingBPELArtifacts.wsdl"
-		namespace="http://eclipse.org/bpel/sample" importType="http://schemas.xmlsoap.org/wsdl/" />
+    <bpel:import location="travelbookingBPELArtifacts.wsdl"	namespace="http://eclipse.org/bpel/sample" importType="http://schemas.xmlsoap.org/wsdl/" />
 
 	<!-- ================================================================= -->
 	<!-- PARTNERLINKS -->
