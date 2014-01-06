@@ -1,12 +1,15 @@
 package pl.eiti.bpelag.ui.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.bpel.model.Assign;
 import org.eclipse.bpel.model.Copy;
 import org.eclipse.bpel.model.From;
 import org.eclipse.bpel.model.To;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.wst.wsdl.Message;
 
 import pl.eiti.bpelag.analyzer.IAnalysisResult;
 import pl.eiti.bpelag.analyzer.IAnalyzer;
@@ -36,6 +39,7 @@ public class AnalyzerWizardController {
 		model = newModel;
 		analyzer.init(pathToBPEL);
 		executeAnalyze();
+		executeGenerator();
 	}
 
 	public void executeAnalyze() {
@@ -106,5 +110,22 @@ public class AnalyzerWizardController {
 			break;
 		// TODO finish him
 		}
+	}
+
+	public Map<String, List<String>> resolveMessageType(Message complexType) {
+		return ((Analyzer) analyzer).resolveMessageType(complexType);
+	}
+
+	public void generateMarkers(int index) {
+		List<String> result = new ArrayList<>();
+		Assign selected = model.getAssignList().get(index);
+		for (Copy it : selected.getCopy()) {
+			if (analysisResult.get(selected).contains(it)) {
+				result.add("+");
+			} else {
+				result.add(" ");
+			}
+		}
+		model.setMarkers(result);
 	}
 }

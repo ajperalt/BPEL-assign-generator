@@ -27,8 +27,8 @@ public class InfoPage extends WizardPage {
 	@Override
 	public IWizardPage getNextPage() {
 
-		controller.executeAnalyze();
-		controller.executeGenerator();
+//		controller.executeAnalyze();
+//		controller.executeGenerator();
 		setPageComplete(true);
 
 		IWizardPage nextPage = super.getNextPage();

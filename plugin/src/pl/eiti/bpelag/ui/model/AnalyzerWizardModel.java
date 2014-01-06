@@ -6,9 +6,12 @@ import java.util.List;
 import org.eclipse.bpel.model.Assign;
 import org.eclipse.bpel.model.Copy;
 import org.eclipse.bpel.model.From;
+import org.eclipse.bpel.model.To;
 import org.eclipse.bpel.model.Variable;
 import org.eclipse.bpel.model.impl.AssignImpl;
 import org.eclipse.bpel.model.impl.CopyImpl;
+import org.eclipse.bpel.model.impl.FromImpl;
+import org.eclipse.bpel.model.impl.ToImpl;
 import org.eclipse.bpel.ui.adapters.IVirtualCopyRuleSide;
 import org.eclipse.bpel.ui.util.BPELUtil;
 import org.eclipse.emf.ecore.EObject;
@@ -22,6 +25,7 @@ public class AnalyzerWizardModel {
 
 	private List<Copy> copyList = null;
 	private Copy currentlyProcessingCopy = null;
+	private List<String> markers = null;
 
 	private List<String> toComboList = null;
 	private List<String> fromComboList = null;
@@ -87,6 +91,10 @@ public class AnalyzerWizardModel {
 		return copies;
 	}
 
+	public void setCurrentlyProcessingCopy(int index) {
+		currentlyProcessingCopy = copyList.get(index);
+	}
+
 	public List<Copy> getCopyList() {
 		return copyList;
 	}
@@ -106,8 +114,8 @@ public class AnalyzerWizardModel {
 	private String asText(EObject elem) {
 		IVirtualCopyRuleSide side = BPELUtil.adapt(elem, IVirtualCopyRuleSide.class);
 		String result = "?";
-		
-		if(null == side) {
+
+		if (null == side) {
 			return result;
 		}
 
@@ -171,5 +179,49 @@ public class AnalyzerWizardModel {
 
 	public void setCurrentlyProcessingCopy(Copy currentlyProcessingCopy) {
 		this.currentlyProcessingCopy = currentlyProcessingCopy;
+	}
+
+	public Integer getFromVarIndex() {
+		return processVariables.indexOf(currentlyProcessingCopy.getFrom().getVariable());
+	}
+
+	public Integer getToVarIndex() {
+		return processVariables.indexOf(currentlyProcessingCopy.getTo().getVariable());
+	}
+
+	public String getFromPartName() {
+		String result = null;
+
+		From currentFrom = currentlyProcessingCopy.getFrom();
+		if (currentFrom instanceof FromImpl) {
+			// TODO retrieve part name somehow
+		}
+		return result;
+	}
+
+	public String getToPartName() {
+		String result = null;
+
+		To currentTo = currentlyProcessingCopy.getTo();
+		if (currentTo instanceof ToImpl) {
+			// TODO retrieve part name somehow
+		}
+		return result;
+	}
+
+	public String getElementNameFrom() {
+		return currentlyProcessingCopy.getFrom().getQuery().getValue();
+	}
+
+	public String getElementNameTo() {
+		return currentlyProcessingCopy.getTo().getQuery().getValue();
+	}
+
+	public List<String> getMarkers() {
+		return markers;
+	}
+
+	public void setMarkers(List<String> markers) {
+		this.markers = markers;
 	}
 }

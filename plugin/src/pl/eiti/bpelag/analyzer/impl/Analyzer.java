@@ -1,6 +1,7 @@
 package pl.eiti.bpelag.analyzer.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +39,8 @@ import pl.eiti.bpelag.util.StringElemUtil;
 /**
  * BPEL graph model analyzer class.
  */
-public class Analyzer implements IAnalyzer {
+@SuppressWarnings("restriction")
+public class Analyzer extends Settings implements IAnalyzer {
 	private static final Integer FIRST = Integer.valueOf(0);
 	private BPELLoader bpelLoader = null;
 	private WSDLLoader wsdlLoader = null;
@@ -280,12 +282,13 @@ public class Analyzer implements IAnalyzer {
 		List<SimpleMessageElement> simpleElements = new ArrayList<>();
 
 		for (String varMessageElem : varMessageElements) {
-			String[] varMessageInfo = varMessageElem.split(Settings.M_DELIMITER);
+			String[] varMessageInfo = varMessageElem.split(M_DELIMITER);
 
 			for (String invokeMessageElem : invokeMessageElements) {
-				String[] invokeMessageInfo = invokeMessageElem.split(Settings.M_DELIMITER);
+				String[] invokeMessageInfo = invokeMessageElem.split(M_DELIMITER);
 
-				if (invokeMessageInfo[1].equals(varMessageInfo[1]) && invokeMessageInfo[2].equals(varMessageInfo[2])) {
+				if (invokeMessageInfo[ELEM_TYPE_INDEX].equals(varMessageInfo[ELEM_TYPE_INDEX])
+						&& invokeMessageInfo[ELEM_NAME_INDEX].equals(varMessageInfo[ELEM_NAME_INDEX])) {
 					SimpleMessageElement simpleElem = new SimpleMessageElement();
 					simpleElem.fromSimpleMessage = varMessageElem;
 					simpleElem.toSimpleMessage = invokeMessageElem;
@@ -298,31 +301,31 @@ public class Analyzer implements IAnalyzer {
 		for (SimpleMessageElement match : simpleElements) {
 
 			if (null != match.fromSimpleMessage && null != match.toSimpleMessage) {
-				String[] fromElementSplitted = match.fromSimpleMessage.split(Settings.M_DELIMITER);
-				String[] toElementSplitted = match.toSimpleMessage.split(Settings.M_DELIMITER);
+				String[] fromElementSplitted = match.fromSimpleMessage.split(M_DELIMITER);
+				String[] toElementSplitted = match.toSimpleMessage.split(M_DELIMITER);
 
 				Query fromQuery = BPELFactory.eINSTANCE.createQuery();
-				fromQuery.setQueryLanguage(Settings.QUERY_LANGUAGE);
+				fromQuery.setQueryLanguage(QUERY_LANGUAGE);
 				fromQuery.setValue(((MessageProxy) varToCopyFrom.getMessageType()).getQName().getPrefix() + ":"
-						+ fromElementSplitted[1]);
+						+ fromElementSplitted[ELEM_NAME_INDEX]);
 
 				Query toQuery = BPELFactory.eINSTANCE.createQuery();
-				toQuery.setQueryLanguage(Settings.QUERY_LANGUAGE);
+				toQuery.setQueryLanguage(QUERY_LANGUAGE);
 				toQuery.setValue(((MessageProxy) varToCopyTo.getMessageType()).getQName().getPrefix() + ":"
-						+ toElementSplitted[1]);
+						+ toElementSplitted[ELEM_NAME_INDEX]);
 
 				From fromElement = BPELFactory.eINSTANCE.createFrom();
 				To toElement = BPELFactory.eINSTANCE.createTo();
 
 				fromElement.setVariable(varToCopyFrom);
 				if (fromElement instanceof FromImpl) {
-					((FromImpl) fromElement).setPartName(fromElementSplitted[0]);
+					((FromImpl) fromElement).setPartName(fromElementSplitted[PART_NAME_INDEX]);
 				}
 				fromElement.setQuery(fromQuery);
 
 				toElement.setVariable(varToCopyTo);
 				if (toElement instanceof FromImpl) {
-					((FromImpl) toElement).setPartName(toElementSplitted[0]);
+					((FromImpl) toElement).setPartName(toElementSplitted[PART_NAME_INDEX]);
 				}
 				toElement.setQuery(toQuery);
 
@@ -361,22 +364,22 @@ public class Analyzer implements IAnalyzer {
 		String simpleElement = null;
 
 		for (String messageElem : messageElements) {
-			String[] messageInfo = messageElem.split(Settings.M_DELIMITER);
+			String[] messageInfo = messageElem.split(M_DELIMITER);
 
-			if (simpleTypeVar.getName().equals(messageInfo[1])
-					&& simpleTypeVar.getType().getName().equals(messageInfo[2])) {
+			if (simpleTypeVar.getName().equals(messageInfo[ELEM_NAME_INDEX])
+					&& simpleTypeVar.getType().getName().equals(messageInfo[ELEM_TYPE_INDEX])) {
 				simpleElement = messageElem;
 				break;
 			}
 		}
 
 		if (null != simpleElement) {
-			String[] elementSplitted = simpleElement.split(Settings.M_DELIMITER);
+			String[] elementSplitted = simpleElement.split(M_DELIMITER);
 
 			Query query = BPELFactory.eINSTANCE.createQuery();
-			query.setQueryLanguage(Settings.QUERY_LANGUAGE);
+			query.setQueryLanguage(QUERY_LANGUAGE);
 			query.setValue(((MessageProxy) complexTypeVar.getMessageType()).getQName().getPrefix() + ":"
-					+ elementSplitted[1]);
+					+ elementSplitted[ELEM_NAME_INDEX]);
 
 			From fromElement = BPELFactory.eINSTANCE.createFrom();
 			To toElement = BPELFactory.eINSTANCE.createTo();
@@ -385,14 +388,14 @@ public class Analyzer implements IAnalyzer {
 				fromElement.setVariable(simpleTypeVar);
 				toElement.setVariable(complexTypeVar);
 				if (toElement instanceof FromImpl) {
-					((FromImpl) toElement).setPartName(elementSplitted[0]);
+					((FromImpl) toElement).setPartName(elementSplitted[PART_NAME_INDEX]);
 				}
 				toElement.setQuery(query);
 			} else {
 				toElement.setVariable(simpleTypeVar);
 				fromElement.setVariable(complexTypeVar);
 				if (fromElement instanceof FromImpl) {
-					((FromImpl) fromElement).setPartName(elementSplitted[0]);
+					((FromImpl) fromElement).setPartName(elementSplitted[PART_NAME_INDEX]);
 				}
 				fromElement.setQuery(query);
 			}
@@ -433,9 +436,10 @@ public class Analyzer implements IAnalyzer {
 	 * (MessagePartName/delimiter/xsdElementTypeName/delimiter/xsdElementName).
 	 * 
 	 * @param complexType
-	 *            defined in wsdl complex type message
+	 *            defined in WSDL complex type message
 	 * @return list of concatenated information about elements
 	 */
+	@SuppressWarnings({ "unchecked" })
 	private List<String> retrieveElements(Message complexType) {
 		List<String> result = new ArrayList<>();
 
@@ -453,11 +457,39 @@ public class Analyzer implements IAnalyzer {
 
 						if (object instanceof XSDElementDeclaration) {
 							XSDElementDeclaration xsdED = (XSDElementDeclaration) object;
-							result.add(partName + Settings.M_LIMITER + xsdED.getType().getName() + Settings.M_LIMITER
-									+ xsdED.getName());
+							result.add(partName + M_LIMITER + xsdED.getType().getName() + M_LIMITER + xsdED.getName());
 						}
 					}
 				}
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * Resolves message type to map part element to elements included in part
+	 * element.
+	 * 
+	 * @param complexType
+	 *            complex type message
+	 * @return map of message part elements to list of elements within selected
+	 *         part element
+	 */
+	public Map<String, List<String>> resolveMessageType(Message complexMessageType) {
+		Message complexType = wsdlLoader.getMessage(complexMessageType.getQName());
+
+		Map<String, List<String>> result = new HashMap<String, List<String>>();
+
+		for (String element : retrieveElements(complexType)) {
+			String[] splittedElement = element.split(M_DELIMITER);
+			if (result.containsKey(splittedElement[PART_NAME_INDEX])) {
+				result.get(splittedElement[PART_NAME_INDEX]).add(
+						splittedElement[ELEM_NAME_INDEX] + " : " + splittedElement[ELEM_TYPE_INDEX]);
+			} else {
+				List<String> simpleElement = new ArrayList<>();
+				simpleElement.add(splittedElement[ELEM_NAME_INDEX] + " : " + splittedElement[ELEM_TYPE_INDEX]);
+				result.put(splittedElement[PART_NAME_INDEX], simpleElement);
 			}
 		}
 
