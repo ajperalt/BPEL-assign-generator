@@ -2,9 +2,7 @@ package pl.eiti.bpelag.loader;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.bpel.model.Assign;
 import org.eclipse.bpel.model.Process;
@@ -72,29 +70,31 @@ public class BPELLoader {
 	 * @return saved process name
 	 */
 	public String saveProcess() {
-		// try {
-		// this.resource.save( /** some map, not sure what it should be */ );
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-
-		/** Only for tests */
-		URI uri = URI.createFileURI("E:/private/Dropbox/engineer/project/aag_test/tests/test.bpel");
-		Factory factory = Resource.Factory.Registry.INSTANCE.getFactory(uri);
-		BPELResource retRes = (BPELResource) factory.createResource(uri);
-		retRes.getContents().add(this.process);
-
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("bpel", "http://docs.oasis-open.org/wsbpel/2.0/process/executable");
-		map.put("tns", "http://matrix.bpelprocess");
-		map.put("xsd", "http://www.w3.org/2001/XMLSchema");
 		try {
-			retRes.save(map);
+			this.resource.save(null);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		// /** Only for tests */
+		// URI uri =
+		// URI.createFileURI("E:/private/Dropbox/engineer/project/aag_test/tests/test.bpel");
+		// Factory factory = Resource.Factory.Registry.INSTANCE.getFactory(uri);
+		// BPELResource retRes = (BPELResource) factory.createResource(uri);
+		// retRes.getContents().add(this.process);
+		//
+		// Map<String, String> map = new HashMap<String, String>();
+		// map.put("bpel",
+		// "http://docs.oasis-open.org/wsbpel/2.0/process/executable");
+		// map.put("tns", "http://matrix.bpelprocess");
+		// map.put("xsd", "http://www.w3.org/2001/XMLSchema");
+		// try {
+		// retRes.save(map);
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 		return this.process.getName();
 	}
 

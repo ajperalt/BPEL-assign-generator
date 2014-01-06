@@ -1,11 +1,6 @@
 package pl.eiti.bpelag.actions;
 
-import java.util.Set;
-
-import org.eclipse.bpel.model.Activity;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.emf.common.util.TreeIterator;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -25,12 +20,7 @@ import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 import org.eclipse.ui.part.FileEditorInput;
 
-import pl.eiti.bpelag.loader.BPELLoader;
-import pl.eiti.bpelag.model.graph.GraphNode;
-import pl.eiti.bpelag.model.impl.GraphModel;
-import pl.eiti.bpelag.transformer.impl.GraphTransformer;
 import pl.eiti.bpelag.ui.AnalyzerWizard;
-import pl.eiti.bpelag.util.ActivityUtil;
 import pl.eiti.bpelag.util.Messages;
 import pl.eiti.bpelag.util.Settings;
 
@@ -142,79 +132,5 @@ public class AssignGenerateAction implements IWorkbenchWindowActionDelegate {
 		MessageConsole myConsole = new MessageConsole(name, null);
 		conMan.addConsoles(new IConsole[] { myConsole });
 		return myConsole;
-	}
-
-	/** BELOW - ONLY FOR TESTING */
-	/**
-	 * Temporary method.
-	 */
-	@SuppressWarnings("unused")
-	private void MainTest() {
-		BPELLoader processReader = new BPELLoader(
-				"E:/private/Dropbox/engineer/project/aag_test/IBMexamples/processes/travelbookingBPEL.bpel");
-
-		processReader.loadProcess();
-		GraphTransformer transformer = GraphTransformer.instance();
-
-		// this.consoleStream.print("BPEL process name: ");
-		// this.consoleStream.println(processReader.getBPELProcess().getName());
-		// this.consoleStream.println();
-
-		// this.processModel = new GraphModel(processReader.getBPELProcess());
-
-		this.consoleStream.println(">>>>>>>>>> BPEL Process elements:");
-
-		// TreeIterator<EObject> test =
-		// processReader.getBPELProcess().eAllContents();
-		// Set<Activity> processed = new HashSet<>();
-		// processStructurePrint(test, "", processed);
-
-		processModelPrint((GraphModel) transformer.ProcessToModel(processReader.getBPELProcess()));
-
-		// IModel model = (GraphModel)
-		// GraphTransformer.instance().ProcessToModel(processReader.getBPELProcess());
-		//
-		// processModelPrint(model);
-
-		this.consoleStream.println();
-
-		this.consoleStream.println("BPEL process >> " + processReader.saveProcess() + " << Saved");
-
-		this.consoleStream.println();
-		this.consoleStream.println(">>>>>>>>>> BPEL Assign Generator STOP  <<<<<<<<<<");
-	}
-
-	private void processModelPrint(GraphModel processToModel) {
-		this.consoleStream.println();
-		graphPrint(processToModel.getRoot());
-	}
-
-	/**
-	 * Temporary method.
-	 */
-	@SuppressWarnings("unused")
-	private void processStructurePrint(TreeIterator<EObject> input, String tab, Set<Activity> processedActivities) {
-
-		while (input.hasNext()) {
-			EObject temp = input.next();
-			if (temp instanceof Activity && !(processedActivities.contains((Activity) temp))) {
-				processedActivities.add((Activity) temp);
-				if (ActivityUtil.isBasicActivity((Activity) temp)) {
-					this.consoleStream.println(tab + ((Activity) temp).getName());
-				} else {
-					this.consoleStream.println(tab + ((Activity) temp).getName());
-					TreeIterator<EObject> a = temp.eAllContents();
-					processStructurePrint(a, tab + "     ", processedActivities);
-					this.consoleStream.println(tab + ((Activity) temp).getName());
-				}
-			}
-		}
-	}
-
-	private void graphPrint(GraphNode<Activity> node) {
-		this.consoleStream.println(node.getData().getName());
-		for (GraphNode<Activity> it : node.getNextNodes()) {
-			graphPrint(it);
-		}
 	}
 }
