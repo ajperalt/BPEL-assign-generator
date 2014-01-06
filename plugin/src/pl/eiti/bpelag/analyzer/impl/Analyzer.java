@@ -2,6 +2,7 @@ package pl.eiti.bpelag.analyzer.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.bpel.model.Activity;
 import org.eclipse.bpel.model.Assign;
@@ -10,12 +11,18 @@ import org.eclipse.bpel.model.Copy;
 import org.eclipse.bpel.model.From;
 import org.eclipse.bpel.model.Import;
 import org.eclipse.bpel.model.Invoke;
+import org.eclipse.bpel.model.Query;
 import org.eclipse.bpel.model.Receive;
 import org.eclipse.bpel.model.To;
 import org.eclipse.bpel.model.Variable;
 import org.eclipse.bpel.model.Variables;
+import org.eclipse.bpel.model.impl.FromImpl;
+import org.eclipse.bpel.model.proxy.MessageProxy;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.wst.wsdl.WSDLElement;
+import org.eclipse.wst.wsdl.Message;
+import org.eclipse.wst.wsdl.internal.impl.PartImpl;
+import org.eclipse.xsd.XSDElementDeclaration;
 
 import pl.eiti.bpelag.analyzer.IAnalysisResult;
 import pl.eiti.bpelag.analyzer.IAnalyzer;
@@ -25,6 +32,7 @@ import pl.eiti.bpelag.model.graph.GraphNode;
 import pl.eiti.bpelag.model.impl.GraphModel;
 import pl.eiti.bpelag.transformer.impl.GraphTransformer;
 import pl.eiti.bpelag.util.ActivityUtil;
+import pl.eiti.bpelag.util.Settings;
 import pl.eiti.bpelag.util.StringElemUtil;
 
 /**
@@ -188,38 +196,14 @@ public class Analyzer implements IAnalyzer {
 	private List<Copy> createCopyForMatchedVariables(List<Variable> settedVariables, List<Invoke> followingInvokes) {
 		List<Copy> result = new ArrayList<>();
 
-		// This is how to create new copy element
-		// Copy copy = BPELFactory.eINSTANCE.createCopy();
-		// Thanks
-		//
-		// Map<Variable, List<WSDLElement>> settedVarsElementsMap = new
-		// HashMap<>();
-		//
-		// for (Variable processingVar : settedVariables) {
-		// settedVarsElementsMap.put(processingVar, new
-		// ArrayList<WSDLElement>());
-		//
-		// if (null != processingVar.getMessageType()) {
-		// // complex type variable
-		// //
-		// settedVarsElementsMap.get(processingVar).addAll(retrieveElements(processingVar));
-		// }
-		// }
-		//
-		// List<WSDLElement> invokeInputElements = null;
-
 		for (Invoke it : followingInvokes) {
 			Variable invokeInput = it.getInputVariable();
-			// TODO here create list of primitive type variables that are part
-			// of complex invoke input type
-			// if (null != invokeInput.getMessageType()) {
-			// invokeInputElements = retrieveElements(invokeInput);
-			// }
 
 			for (Variable var : settedVariables) {
-				// for (Variable var : settedVarsElementsMap.keySet()) {
+
 				if (null != var.getMessageType() && null != invokeInput.getMessageType()) {
 					// both types complex
+
 					if (var.getMessageType().equals(invokeInput.getMessageType())) {
 						// create and add copy instruction here
 						From fromElement = BPELFactory.eINSTANCE.createFrom();
@@ -232,22 +216,22 @@ public class Analyzer implements IAnalyzer {
 						copyElement.setTo(toElement);
 
 						result.add(copyElement);
-
-						// copy instruction created - leave the loop
-						break;
+					} else {
+						result.addAll(retrieveComplexTypeMatching(var, invokeInput));
 					}
 
 					// copy instruction created - leave the loop
 					break;
-					// TODO what to do when different types
 				} else if (null != var.getMessageType() && null == invokeInput.getMessageType()) {
 					// complex variable but invoke input simple type
 
+					result.addAll(retrieveSimpleToComplexTypeMatching(invokeInput, var, Boolean.FALSE));
 					// copy instruction created - leave the loop
 					break;
 				} else if (null == var.getMessageType() && null != invokeInput.getMessageType()) {
 					// simple type variable but invoke input complex type
 
+					result.addAll(retrieveSimpleToComplexTypeMatching(var, invokeInput, Boolean.TRUE));
 					// copy instruction created - leave the loop
 					break;
 				} else {
@@ -268,165 +252,169 @@ public class Analyzer implements IAnalyzer {
 					// copy instruction created - leave the loop
 					break;
 				}
-
-				/** OLD PART - BEGIN */
-				// if (!settedVarsElementsMap.get(var).isEmpty() && null !=
-				// invokeInputElements) {
-				// // From complex to complex type check
-				//
-				// } else if (settedVarsElementsMap.get(var).isEmpty() && null
-				// != invokeInputElements) {
-				// // From simple to complex type check
-				// WSDLElement varElement = getMatching(var,
-				// invokeInputElements);
-				// if (null != varElement) {
-				// Query query = BPELFactory.eINSTANCE.createQuery();
-				// query.setQueryLanguage(Settings.QUERY_LANGUAGE);
-				// // TODO finish query creation
-				// query.setValue(Settings.QUERY_BEGIN +
-				// var.getElement().getNamespaceURI() + ":"
-				// + varElement.getElement().getLocalName() +
-				// Settings.QUERY_END);
-				//
-				// var.getMessageType().getQName();
-				//
-				// From fromElement = BPELFactory.eINSTANCE.createFrom();
-				// To toElement = BPELFactory.eINSTANCE.createTo();
-				// fromElement.setVariable(var);
-				// toElement.setVariable(invokeInput);
-				// toElement.setQuery(query);
-				// // TODO add part to copy here
-				//
-				// Copy copyElement = BPELFactory.eINSTANCE.createCopy();
-				// copyElement.setFrom(fromElement);
-				// copyElement.setTo(toElement);
-				//
-				// result.add(copyElement);
-				// }
-				// } else if (!settedVarsElementsMap.get(var).isEmpty() && null
-				// == invokeInputElements) {
-				// // From complex to simple type check
-				// WSDLElement varElement = getMatching(invokeInput,
-				// settedVarsElementsMap.get(var));
-				// if (null != varElement) {
-				// Query query = BPELFactory.eINSTANCE.createQuery();
-				// query.setQueryLanguage(Settings.QUERY_LANGUAGE);
-				// // TODO finish query creation
-				// query.setValue(Settings.QUERY_BEGIN +
-				// var.getElement().getNamespaceURI() + ":"
-				// + varElement.getElement().getLocalName() +
-				// Settings.QUERY_END);
-				//
-				// From fromElement = BPELFactory.eINSTANCE.createFrom();
-				// To toElement = BPELFactory.eINSTANCE.createTo();
-				// fromElement.setVariable(var);
-				// fromElement.setQuery(query);
-				// // TODO add part to copy here
-				// toElement.setVariable(invokeInput);
-				//
-				// Copy copyElement = BPELFactory.eINSTANCE.createCopy();
-				// copyElement.setFrom(fromElement);
-				// copyElement.setTo(toElement);
-				//
-				// result.add(copyElement);
-				// }
-				// } else {
-				// // From simple to simple type check
-				// if (isMatching(invokeInput, var)) {
-				// // Create and add copy instruction here
-				// From fromElement = BPELFactory.eINSTANCE.createFrom();
-				// To toElement = BPELFactory.eINSTANCE.createTo();
-				// fromElement.setVariable(var);
-				// toElement.setVariable(invokeInput);
-				//
-				// Copy copyElement = BPELFactory.eINSTANCE.createCopy();
-				// copyElement.setFrom(fromElement);
-				// copyElement.setTo(toElement);
-				//
-				// result.add(copyElement);
-				// }
-				// }
-				/** OLD PART - END */
 			}
 		}
 
 		return result;
-
-		// List<Copy> result = new ArrayList<>();
-		//
-		//
-		// // This is how to create new copy element
-		// Copy copy = BPELFactory.eINSTANCE.createCopy();
-		// // Thanks
-		// Map<String, List<String>> settedVarsElementsMap = new HashMap<>();
-		//
-		// for (Variable setVar : settedVariables) {
-		// String processingVar = setVar.getName();
-		// settedVarsElementsMap.put(processingVar, new ArrayList<String>());
-		//
-		// if (null != setVar.getMessageType()) {
-		// // complex type variable
-		// //
-		// settedVarsElementsMap.get(processingVar).add(retrieveElements(setVar));
-		// }
-		// }
-		//
-		// List<String> invokeInputElements = null;
-		//
-		// for (Invoke it : followingInvokes) {
-		// Variable invokeInput = it.getInputVariable();
-		// // TODO here create list of primitive type variables that are part
-		// // of complex invoke input type
-		// Message msg = invokeInput.getMessageType();
-		// ResourceSet temp =
-		// this.bpelLoader.getBPELProcess().getImports().get(0).eResource().getResourceSet();
-		// if (msg != null) {
-		// if (msg.eIsProxy()) {
-		// msg = (Message)EmfModelQuery.resolveProxy(
-		// this.bpelLoader.getBPELProcess() , msg);
-		// }
-		// // if (part==null) {
-		// // Map parts = msg.getParts();
-		// // if (parts!=null && !parts.isEmpty()) {
-		// // Map.Entry entry = (Map.Entry)parts.entrySet().iterator().next();
-		// // part = (Part)entry.getValue();
-		// // }
-		// // }
-		// // if (part!=null) {
-		// // XSDElementDeclaration declaration = part.getElementDeclaration();
-		// // if (declaration != null) {
-		// // uriWSDL = declaration.getSchema().getSchemaLocation();
-		// // rootElement = declaration.getName();
-		// // }
-		// // }
-		// }
-		//
-		// for (Variable setVar : settedVariables) {
-		//
-		//
-		// if (null != setVar.getMessageType()) {
-		// // complex type variable
-		//
-		// // TODO here create list of primitive type variables that
-		// // are part of complex setVar type
-		//
-		//
-		// } else {
-		// // primitive type variable
-		// }
-		// if (null != invokeInput.getMessageType()) {
-		// // invokeInputElements = retrieveElements(invokeInput);
-		// }
-		// }
-		//
-		// } return result;
 	}
 
-	private WSDLElement getMatching(Variable var, List<WSDLElement> invokeInputElements) {
-		// TODO Auto-generated method stub
-		return null;
+	/**
+	 * Retrieves all matchings between simple types that variables given as
+	 * parameters includes.
+	 * 
+	 * @param varToCopyFrom
+	 *            complex type variable to copy from
+	 * @param varToCopyTo
+	 *            complex type variable to copy to
+	 * @return list of copy elements
+	 */
+	private List<Copy> retrieveComplexTypeMatching(Variable varToCopyFrom, Variable varToCopyTo) {
+		List<Copy> result = new ArrayList<>();
+
+		Message varComplexType = wsdlLoader.getMessage(varToCopyFrom.getMessageType().getQName());
+		Message invokeComplexType = wsdlLoader.getMessage(varToCopyTo.getMessageType().getQName());
+
+		List<String> varMessageElements = retrieveElements(varComplexType);
+		List<String> invokeMessageElements = retrieveElements(invokeComplexType);
+
+		List<SimpleMessageElement> simpleElements = new ArrayList<>();
+
+		for (String varMessageElem : varMessageElements) {
+			String[] varMessageInfo = varMessageElem.split(Settings.M_DELIMITER);
+
+			for (String invokeMessageElem : invokeMessageElements) {
+				String[] invokeMessageInfo = invokeMessageElem.split(Settings.M_DELIMITER);
+
+				if (invokeMessageInfo[1].equals(varMessageInfo[1]) && invokeMessageInfo[2].equals(varMessageInfo[2])) {
+					SimpleMessageElement simpleElem = new SimpleMessageElement();
+					simpleElem.fromSimpleMessage = varMessageElem;
+					simpleElem.toSimpleMessage = invokeMessageElem;
+
+					simpleElements.add(simpleElem);
+				}
+			}
+		}
+
+		for (SimpleMessageElement match : simpleElements) {
+
+			if (null != match.fromSimpleMessage && null != match.toSimpleMessage) {
+				String[] fromElementSplitted = match.fromSimpleMessage.split(Settings.M_DELIMITER);
+				String[] toElementSplitted = match.toSimpleMessage.split(Settings.M_DELIMITER);
+
+				Query fromQuery = BPELFactory.eINSTANCE.createQuery();
+				fromQuery.setQueryLanguage(Settings.QUERY_LANGUAGE);
+				fromQuery.setValue(((MessageProxy) varToCopyFrom.getMessageType()).getQName().getPrefix() + ":"
+						+ fromElementSplitted[1]);
+
+				Query toQuery = BPELFactory.eINSTANCE.createQuery();
+				toQuery.setQueryLanguage(Settings.QUERY_LANGUAGE);
+				toQuery.setValue(((MessageProxy) varToCopyTo.getMessageType()).getQName().getPrefix() + ":"
+						+ toElementSplitted[1]);
+
+				From fromElement = BPELFactory.eINSTANCE.createFrom();
+				To toElement = BPELFactory.eINSTANCE.createTo();
+
+				fromElement.setVariable(varToCopyFrom);
+				if (fromElement instanceof FromImpl) {
+					((FromImpl) fromElement).setPartName(fromElementSplitted[0]);
+				}
+				fromElement.setQuery(fromQuery);
+
+				toElement.setVariable(varToCopyTo);
+				if (toElement instanceof FromImpl) {
+					((FromImpl) toElement).setPartName(toElementSplitted[0]);
+				}
+				toElement.setQuery(toQuery);
+
+				Copy newCopy = BPELFactory.eINSTANCE.createCopy();
+				newCopy.setFrom(fromElement);
+				newCopy.setTo(toElement);
+				result.add(newCopy);
+			}
+		}
+
+		return result;
 	}
 
+	/**
+	 * Retrieves all matchings between simple type variable given as parameter
+	 * and complex type elements variable with additional switch that inform if
+	 * it will be copy from simple to complex type or from complex to simple
+	 * type.
+	 * 
+	 * @param simpleTypeVar
+	 *            simple type variable
+	 * @param complexTypeVar
+	 *            complex type variable
+	 * @param fromSimpleToComplex
+	 *            switch that determines copy instruction direction
+	 * @return list of copy elements
+	 */
+	private List<Copy> retrieveSimpleToComplexTypeMatching(Variable simpleTypeVar, Variable complexTypeVar,
+			Boolean fromSimpleToComplex) {
+		List<Copy> result = new ArrayList<>();
+
+		Message complexType = wsdlLoader.getMessage(complexTypeVar.getMessageType().getQName());
+
+		List<String> messageElements = retrieveElements(complexType);
+
+		String simpleElement = null;
+
+		for (String messageElem : messageElements) {
+			String[] messageInfo = messageElem.split(Settings.M_DELIMITER);
+
+			if (simpleTypeVar.getName().equals(messageInfo[1])
+					&& simpleTypeVar.getType().getName().equals(messageInfo[2])) {
+				simpleElement = messageElem;
+				break;
+			}
+		}
+
+		if (null != simpleElement) {
+			String[] elementSplitted = simpleElement.split(Settings.M_DELIMITER);
+
+			Query query = BPELFactory.eINSTANCE.createQuery();
+			query.setQueryLanguage(Settings.QUERY_LANGUAGE);
+			query.setValue(((MessageProxy) complexTypeVar.getMessageType()).getQName().getPrefix() + ":"
+					+ elementSplitted[1]);
+
+			From fromElement = BPELFactory.eINSTANCE.createFrom();
+			To toElement = BPELFactory.eINSTANCE.createTo();
+
+			if (fromSimpleToComplex) {
+				fromElement.setVariable(simpleTypeVar);
+				toElement.setVariable(complexTypeVar);
+				if (toElement instanceof FromImpl) {
+					((FromImpl) toElement).setPartName(elementSplitted[0]);
+				}
+				toElement.setQuery(query);
+			} else {
+				toElement.setVariable(simpleTypeVar);
+				fromElement.setVariable(complexTypeVar);
+				if (fromElement instanceof FromImpl) {
+					((FromImpl) fromElement).setPartName(elementSplitted[0]);
+				}
+				fromElement.setQuery(query);
+			}
+
+			Copy newCopy = BPELFactory.eINSTANCE.createCopy();
+			newCopy.setFrom(fromElement);
+			newCopy.setTo(toElement);
+			result.add(newCopy);
+		}
+
+		return result;
+	}
+
+	/**
+	 * Checks if simple type variables given as parameters are matching.
+	 * 
+	 * @param varTo
+	 *            simple type variable to copy to
+	 * @param varFrom
+	 *            simple type variable to copy from
+	 * @return boolean type information if parameters are matching
+	 */
 	private Boolean isMatching(Variable varTo, Variable varFrom) {
 		Boolean result = Boolean.FALSE;
 
@@ -438,10 +426,41 @@ public class Analyzer implements IAnalyzer {
 		return result;
 	}
 
-	private List<WSDLElement> retrieveElements(Variable var) {
-		List<WSDLElement> result = new ArrayList<>();
-		var.getMessageType();
-		// TODO implement this
+	/**
+	 * Retrieves all elements of given complex type message and create
+	 * concatenated information about them delimited by M_LIMITER defined in
+	 * Settings class
+	 * (MessagePartName/delimiter/xsdElementTypeName/delimiter/xsdElementName).
+	 * 
+	 * @param complexType
+	 *            defined in wsdl complex type message
+	 * @return list of concatenated information about elements
+	 */
+	private List<String> retrieveElements(Message complexType) {
+		List<String> result = new ArrayList<>();
+
+		if (complexType instanceof Message) {
+			Map<String, PartImpl> partsMap = ((Message) complexType).getParts();
+
+			for (String partName : partsMap.keySet()) {
+				PartImpl elementPart = (PartImpl) ((Message) complexType).getParts().get(partName);
+
+				if (null != elementPart) {
+					TreeIterator<EObject> iterator = elementPart.getElementDeclaration().eAllContents();
+
+					while (iterator.hasNext()) {
+						EObject object = (EObject) iterator.next();
+
+						if (object instanceof XSDElementDeclaration) {
+							XSDElementDeclaration xsdED = (XSDElementDeclaration) object;
+							result.add(partName + Settings.M_LIMITER + xsdED.getType().getName() + Settings.M_LIMITER
+									+ xsdED.getName());
+						}
+					}
+				}
+			}
+		}
+
 		return result;
 	}
 
@@ -522,5 +541,10 @@ public class Analyzer implements IAnalyzer {
 	@Override
 	public Copy createCopy() {
 		return BPELFactory.eINSTANCE.createCopy();
+	}
+
+	private class SimpleMessageElement {
+		public String fromSimpleMessage;
+		public String toSimpleMessage;
 	}
 }
