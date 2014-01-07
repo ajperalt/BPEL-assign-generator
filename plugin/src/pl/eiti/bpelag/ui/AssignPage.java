@@ -259,11 +259,16 @@ public class AssignPage extends WizardPage {
 			Integer fromIndex = model.getFromTypeCopyIndex(copyElemList.getSelectionIndex());
 			Integer toIndex = model.getToTypeCopyIndex(copyElemList.getSelectionIndex());
 
-			if (null != fromIndex) {
+			if (null != fromIndex && !(fromIndex < 0)) {
 				copyFromCombo.select(fromIndex);
+			} else {
+				copyFromCombo.select(model.getFromComboList().indexOf(Messages.ASSIGN_CATEGORY_VARPART));
 			}
-			if (null != toIndex) {
+
+			if (null != toIndex && !(toIndex < 0)) {
 				copyToCombo.select(toIndex);
+			} else {
+				copyToCombo.select(model.getToComboList().indexOf(Messages.ASSIGN_CATEGORY_VARPART));
 			}
 
 			if (copyFromList.getItems().length <= 0 && copyToList.getItems().length <= 0) {
@@ -273,6 +278,9 @@ public class AssignPage extends WizardPage {
 
 			unexpandTree(copyFromList);
 			unexpandTree(copyToList);
+
+			copyFromList.deselectAll();
+			copyToList.deselectAll();
 
 			if (null != model.getFromVarIndex()) {
 				copyFromList.getItem(model.getFromVarIndex()).setExpanded(Boolean.TRUE);
@@ -387,6 +395,7 @@ public class AssignPage extends WizardPage {
 
 		@Override
 		public void widgetSelected(SelectionEvent arg0) {
+
 			// TODO when from combo selected hide/show specific component to
 			// fill from element.
 		}
@@ -469,8 +478,6 @@ public class AssignPage extends WizardPage {
 			for (String elem : model.getCopyListNames(assignList.getSelectionIndex())) {
 				copyElemList.add(elem);
 			}
-
-			copyElemList.setSelection(copyElemList.getItemCount() - 1);
 		}
 	}
 
