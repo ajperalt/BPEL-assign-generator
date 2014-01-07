@@ -128,4 +128,10 @@ public class AnalyzerWizardController {
 		}
 		model.setMarkers(result);
 	}
+
+	public void saveProcess() {
+		if (analyzer instanceof Analyzer) {
+			((Analyzer) analyzer).saveProcess();
+		}
+	}
 }

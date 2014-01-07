@@ -2,13 +2,16 @@ package pl.eiti.bpelag.loader;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.bpel.model.Assign;
 import org.eclipse.bpel.model.Process;
 import org.eclipse.bpel.model.Receive;
 import org.eclipse.bpel.model.Variable;
 import org.eclipse.bpel.model.resource.BPELResource;
+import org.eclipse.bpel.model.resource.BPELWriter;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -71,7 +74,9 @@ public class BPELLoader {
 	 */
 	public String saveProcess() {
 		try {
-			this.resource.save(null);
+			Map<Object, Object> saveOptions = new HashMap<>();
+			saveOptions.put(BPELWriter.SKIP_AUTO_IMPORT, Boolean.FALSE);
+			this.resource.save(saveOptions);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

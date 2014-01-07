@@ -18,6 +18,7 @@ import org.eclipse.bpel.model.To;
 import org.eclipse.bpel.model.Variable;
 import org.eclipse.bpel.model.Variables;
 import org.eclipse.bpel.model.impl.FromImpl;
+import org.eclipse.bpel.model.impl.ToImpl;
 import org.eclipse.bpel.model.proxy.MessageProxy;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
@@ -324,8 +325,8 @@ public class Analyzer extends Settings implements IAnalyzer {
 				fromElement.setQuery(fromQuery);
 
 				toElement.setVariable(varToCopyTo);
-				if (toElement instanceof FromImpl) {
-					((FromImpl) toElement).setPartName(toElementSplitted[PART_NAME_INDEX]);
+				if (toElement instanceof ToImpl) {
+					((ToImpl) toElement).setPartName(toElementSplitted[PART_NAME_INDEX]);
 				}
 				toElement.setQuery(toQuery);
 
@@ -387,8 +388,8 @@ public class Analyzer extends Settings implements IAnalyzer {
 			if (fromSimpleToComplex) {
 				fromElement.setVariable(simpleTypeVar);
 				toElement.setVariable(complexTypeVar);
-				if (toElement instanceof FromImpl) {
-					((FromImpl) toElement).setPartName(elementSplitted[PART_NAME_INDEX]);
+				if (toElement instanceof ToImpl) {
+					((ToImpl) toElement).setPartName(elementSplitted[PART_NAME_INDEX]);
 				}
 				toElement.setQuery(query);
 			} else {
@@ -549,6 +550,10 @@ public class Analyzer extends Settings implements IAnalyzer {
 		}
 
 		return invokeList;
+	}
+
+	public void saveProcess() {
+		this.bpelLoader.saveProcess();
 	}
 
 	@Override

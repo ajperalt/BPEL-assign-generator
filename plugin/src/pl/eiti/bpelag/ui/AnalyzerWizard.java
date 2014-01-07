@@ -39,7 +39,8 @@ public class AnalyzerWizard extends Wizard {
 
 	@Override
 	public boolean performFinish() {
-		// TODO Auto-generated method stub
+		wizardController.saveProcess();
+
 		return true;
 	}
 

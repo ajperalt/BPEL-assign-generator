@@ -16,6 +16,8 @@ public class Settings {
 	public static String VAR_IMG_PATH = "icons/variable.gif";
 	public static String MES_IMG_PATH = "icons/message_part.gif";
 	public static String ELE_IMG_PATH = "icons/XSDElementDeclaration.gif";
+	
+	
 
 	public static Integer PART_NAME_INDEX = 0;
 	public static Integer ELEM_TYPE_INDEX = 1;
