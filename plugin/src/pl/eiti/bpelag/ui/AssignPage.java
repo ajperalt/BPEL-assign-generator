@@ -110,14 +110,9 @@ public class AssignPage extends WizardPage {
 		generatedMarker = new List(copyListContainer, SWT.BORDER);
 		generatedMarker.setLayoutData(new RowData(10, 140));
 		generatedMarker.setEnabled(Boolean.FALSE);
-		// FontData markerFont = new FontData();
-		// markerFont.setStyle(SWT.BOLD);
-		// generatedMarker.setFont(new Font(dev, markerFont));
 
 		copyElemList = new List(copyListContainer, SWT.BORDER | SWT.V_SCROLL);
 		copyElemList.setLayoutData(new RowData(150, 140));
-		// copyElemList = new List(copyContainer, SWT.BORDER);
-		// copyElemList.setLayoutData(new RowData(200, 145));
 
 		copyButtonContainer = new Composite(copyContainer, SWT.NONE);
 		copyButtonContainer.setLayout(new RowLayout(SWT.HORIZONTAL));
@@ -368,18 +363,17 @@ public class AssignPage extends WizardPage {
 			}
 
 		}
+	}
 
-		private void unexpandTree(Tree treeElem) {
-			for (TreeItem item : treeElem.getItems()) {
-				if (item.getExpanded()) {
-					item.setExpanded(Boolean.FALSE);
-					for (TreeItem mes : item.getItems()) {
-						mes.setExpanded(Boolean.FALSE);
-					}
+	private void unexpandTree(Tree treeElem) {
+		for (TreeItem item : treeElem.getItems()) {
+			if (item.getExpanded()) {
+				item.setExpanded(Boolean.FALSE);
+				for (TreeItem mes : item.getItems()) {
+					mes.setExpanded(Boolean.FALSE);
 				}
 			}
 		}
-
 	}
 
 	/**
@@ -395,11 +389,36 @@ public class AssignPage extends WizardPage {
 
 		@Override
 		public void widgetSelected(SelectionEvent arg0) {
+			String copyType = null;
+			int selectionIndex = copyFromCombo.getSelectionIndex();
 
-			// TODO when from combo selected hide/show specific component to
-			// fill from element.
+			copyType = model.getFromComboList().get(selectionIndex);
+
+			switch (copyType) {
+			case Messages.ASSIGN_CATEGORY_VARPART:
+				copyFromList.setVisible(Boolean.TRUE);
+				break;
+			case Messages.ASSIGN_CATEGORY_EXPRESSION:
+				copyFromList.setVisible(Boolean.FALSE);
+				break;
+			case Messages.ASSIGN_CATEGORY_LITERAL:
+				copyFromList.setVisible(Boolean.FALSE);
+				break;
+			case Messages.ASSIGN_CATEGORY_VARPROPERTY:
+				copyFromList.setVisible(Boolean.TRUE);
+				break;
+			case Messages.ASSIGN_CATEGORY_PARTNERROLE:
+				copyFromList.setVisible(Boolean.FALSE);
+				break;
+			case Messages.ASSIGN_CATEGORY_ENDPOINTREF:
+				copyFromList.setVisible(Boolean.FALSE);
+				break;
+			case Messages.ASSIGN_CATEGORY_OPAQUE:
+				copyFromList.setVisible(Boolean.FALSE);
+				break;
+			}
 		}
-
+		// TODO finish him
 	}
 
 	/**
@@ -415,6 +434,25 @@ public class AssignPage extends WizardPage {
 
 		@Override
 		public void widgetSelected(SelectionEvent arg0) {
+			String copyType = null;
+			int selectionIndex = copyToCombo.getSelectionIndex();
+
+			copyType = model.getToComboList().get(selectionIndex);
+
+			switch (copyType) {
+			case Messages.ASSIGN_CATEGORY_VARPART:
+				// TO
+				break;
+			case Messages.ASSIGN_CATEGORY_EXPRESSION:
+				// TO
+				break;
+			case Messages.ASSIGN_CATEGORY_VARPROPERTY:
+				// TO
+				break;
+			case Messages.ASSIGN_CATEGORY_PARTNERROLE:
+				// TO
+				break;
+			}
 			// TODO when to combo selected hide/show specific component to fill
 			// to element.
 		}
