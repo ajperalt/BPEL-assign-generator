@@ -2,6 +2,7 @@ package pl.eiti.bpelag.ui;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Map;
 
 import org.eclipse.bpel.model.Variable;
@@ -19,8 +20,10 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
@@ -63,6 +66,11 @@ public class AssignPage extends WizardPage {
 	private Label copyToLabel = null;
 	private Combo copyToCombo = null;
 	private Tree copyToList = null;
+
+	private Label expressionLabel = null;
+	private Text copyFromExpression = null;
+
+	private Boolean isExpandEvent = Boolean.FALSE;
 
 	protected AssignPage(String pageName, AnalyzerWizardController newController, AnalyzerWizardModel newModel) {
 		super(pageName);
@@ -152,8 +160,16 @@ public class AssignPage extends WizardPage {
 		copyFromCombo = new Combo(copyFromComboContainer, SWT.READ_ONLY);
 		copyFromCombo.setLayoutData(new RowData(100, SWT.DEFAULT));
 
-		copyFromList = new Tree(copyFromContainer, SWT.BORDER);
+		copyFromList = new Tree(copyFromContainer, SWT.BORDER | SWT.SINGLE);
 		copyFromList.setLayoutData(new RowData(300, 240));
+
+		expressionLabel = new Label(copyFromContainer, SWT.NONE);
+		expressionLabel.setText(Messages.COPY_EXPRESSION_LABEL);
+
+		copyFromExpression = new Text(copyFromContainer, SWT.BORDER);
+		copyFromExpression.setLayoutData(new RowData(300, 240));
+		copyFromExpression.setVisible(Boolean.FALSE);
+		copyFromExpression.setLocation(copyFromList.getLocation());
 
 		copyToContainer = new Composite(mainContainer, SWT.NONE);
 		copyToContainer.setLayout(new RowLayout(SWT.VERTICAL));
@@ -172,7 +188,7 @@ public class AssignPage extends WizardPage {
 		copyToCombo = new Combo(copyToComboContainer, SWT.READ_ONLY);
 		copyToCombo.setLayoutData(new RowData(100, SWT.DEFAULT));
 
-		copyToList = new Tree(copyToContainer, SWT.BORDER);
+		copyToList = new Tree(copyToContainer, SWT.BORDER | SWT.SINGLE);
 		copyToList.setLayoutData(new RowData(300, 240));
 
 		/** Data load section */
@@ -256,12 +272,18 @@ public class AssignPage extends WizardPage {
 
 			if (null != fromIndex && !(fromIndex < 0)) {
 				copyFromCombo.select(fromIndex);
+				Event comboSelect = new Event();
+				comboSelect.item = copyFromCombo;
+				copyFromCombo.notifyListeners(SWT.Selection, comboSelect);
 			} else {
 				copyFromCombo.select(model.getFromComboList().indexOf(Messages.ASSIGN_CATEGORY_VARPART));
 			}
 
 			if (null != toIndex && !(toIndex < 0)) {
 				copyToCombo.select(toIndex);
+				Event comboSelect = new Event();
+				comboSelect.item = copyToCombo;
+				copyToCombo.notifyListeners(SWT.Selection, comboSelect);
 			} else {
 				copyToCombo.select(model.getToComboList().indexOf(Messages.ASSIGN_CATEGORY_VARPART));
 			}
@@ -366,6 +388,7 @@ public class AssignPage extends WizardPage {
 	}
 
 	private void unexpandTree(Tree treeElem) {
+		isExpandEvent = Boolean.TRUE;
 		for (TreeItem item : treeElem.getItems()) {
 			if (item.getExpanded()) {
 				item.setExpanded(Boolean.FALSE);
@@ -374,6 +397,7 @@ public class AssignPage extends WizardPage {
 				}
 			}
 		}
+		isExpandEvent = Boolean.FALSE;
 	}
 
 	/**
@@ -394,27 +418,32 @@ public class AssignPage extends WizardPage {
 
 			copyType = model.getFromComboList().get(selectionIndex);
 
+			copyFromList.setVisible(Boolean.FALSE);
+			// if (copyFromList.getLayoutData() instanceof GridData) {
+			// ((GridData) copyFromList.getLayoutData()).exclude = Boolean.TRUE;
+			// }
+			expressionLabel.setVisible(Boolean.FALSE);
+			expressionLabel.setVisible(Boolean.FALSE);
+
 			switch (copyType) {
 			case Messages.ASSIGN_CATEGORY_VARPART:
 				copyFromList.setVisible(Boolean.TRUE);
+				// ((GridData) copyFromList.getLayoutData()).exclude =
+				// Boolean.FALSE;
 				break;
 			case Messages.ASSIGN_CATEGORY_EXPRESSION:
-				copyFromList.setVisible(Boolean.FALSE);
+				expressionLabel.setVisible(Boolean.TRUE);
+				copyFromExpression.setVisible(Boolean.TRUE);
 				break;
 			case Messages.ASSIGN_CATEGORY_LITERAL:
-				copyFromList.setVisible(Boolean.FALSE);
 				break;
 			case Messages.ASSIGN_CATEGORY_VARPROPERTY:
-				copyFromList.setVisible(Boolean.TRUE);
 				break;
 			case Messages.ASSIGN_CATEGORY_PARTNERROLE:
-				copyFromList.setVisible(Boolean.FALSE);
 				break;
 			case Messages.ASSIGN_CATEGORY_ENDPOINTREF:
-				copyFromList.setVisible(Boolean.FALSE);
 				break;
 			case Messages.ASSIGN_CATEGORY_OPAQUE:
-				copyFromList.setVisible(Boolean.FALSE);
 				break;
 			}
 		}
@@ -441,16 +470,16 @@ public class AssignPage extends WizardPage {
 
 			switch (copyType) {
 			case Messages.ASSIGN_CATEGORY_VARPART:
-				// TO
+				copyToList.setVisible(Boolean.TRUE);
 				break;
 			case Messages.ASSIGN_CATEGORY_EXPRESSION:
-				// TO
+				copyToList.setVisible(Boolean.FALSE);
 				break;
 			case Messages.ASSIGN_CATEGORY_VARPROPERTY:
-				// TO
+				copyToList.setVisible(Boolean.FALSE);
 				break;
 			case Messages.ASSIGN_CATEGORY_PARTNERROLE:
-				// TO
+				copyToList.setVisible(Boolean.FALSE);
 				break;
 			}
 			// TODO when to combo selected hide/show specific component to fill
@@ -472,8 +501,17 @@ public class AssignPage extends WizardPage {
 
 		@Override
 		public void widgetSelected(SelectionEvent arg0) {
-			// TODO some magic piece of code to fill copy from selected
-			// variable.
+			if (!isExpandEvent) {
+				TreeItem selectedItem = copyFromList.getSelection()[0];
+				java.util.List<String> elements = new ArrayList<>();
+
+				while (null != selectedItem) {
+					elements.add(selectedItem.getText());
+					selectedItem = selectedItem.getParentItem();
+				}
+
+				model.getCurrentlyProcessingCopy().setFrom(controller.createFromVarPart(elements));
+			}
 		}
 
 	}
@@ -491,7 +529,17 @@ public class AssignPage extends WizardPage {
 
 		@Override
 		public void widgetSelected(SelectionEvent arg0) {
-			// TODO some magic piece of code to fill copy to selected variable.
+			if (!isExpandEvent) {
+				TreeItem selectedItem = copyToList.getSelection()[0];
+				java.util.List<String> elements = new ArrayList<>();
+
+				while (null != selectedItem) {
+					elements.add(selectedItem.getText());
+					selectedItem = selectedItem.getParentItem();
+				}
+
+				model.getCurrentlyProcessingCopy().setTo(controller.createToVarPart(elements));
+			}
 		}
 
 	}

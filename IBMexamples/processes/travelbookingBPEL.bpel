@@ -91,7 +91,7 @@
                     </bpel:copy>
                     <bpel:copy>
                         <bpel:from part="input" variable="input">
-                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:source]]></bpel:query>
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:arrival]]></bpel:query>
                         </bpel:from>
                         <bpel:to part="request" variable="checkFlightPLRequest">
                             <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[ns1:source]]></bpel:query>
@@ -138,14 +138,6 @@
             </bpel:sequence>
             <bpel:sequence name="Sequence2">
                 <bpel:assign name="dataMap3" validate="no">
-                    <bpel:copy>
-                        <bpel:from part="input" variable="input">
-                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:hotelCategory]]></bpel:query>
-                        </bpel:from>
-                        <bpel:to part="request" variable="hotelReservationPLRequest">
-                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[ns2:category]]></bpel:query>
-                        </bpel:to>
-                    </bpel:copy>
                     <bpel:copy>
                         <bpel:from part="input" variable="input">
                             <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:cardNumber]]></bpel:query>

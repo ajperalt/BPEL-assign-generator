@@ -1,6 +1,7 @@
 package pl.eiti.bpelag.generator.impl;
 
 import org.eclipse.bpel.model.Assign;
+import org.eclipse.bpel.model.BPELFactory;
 import org.eclipse.bpel.model.Copy;
 import org.eclipse.bpel.model.From;
 import org.eclipse.bpel.model.Query;
@@ -91,7 +92,10 @@ public class Generator implements IGenerator {
 	private Boolean areQueriesEqual(Query existingQuery, Query generatedQuery) {
 		Boolean result = Boolean.FALSE;
 
-		if (existingQuery.getQueryLanguage().equals(generatedQuery.getQueryLanguage())
+		if (null != existingQuery && null != generatedQuery && null != existingQuery.getQueryLanguage()
+				&& null != existingQuery.getValue() && null != generatedQuery.getQueryLanguage()
+				&& null != generatedQuery.getValue()
+				&& existingQuery.getQueryLanguage().equals(generatedQuery.getQueryLanguage())
 				&& existingQuery.getValue().equals(generatedQuery.getValue())) {
 			result = Boolean.TRUE;
 		}
@@ -111,4 +115,24 @@ public class Generator implements IGenerator {
 		assignActivity.getCopy().add(copyElement);
 	}
 
+	@Override
+	public From createNewFrom() {
+		From newFrom = BPELFactory.eINSTANCE.createFrom();
+
+		return newFrom;
+	}
+
+	@Override
+	public To createNewTo() {
+		To newTo = BPELFactory.eINSTANCE.createTo();
+
+		return newTo;
+	}
+
+	@Override
+	public Query createNewQuery() {
+		Query newQuery = BPELFactory.eINSTANCE.createQuery();
+
+		return newQuery;
+	}
 }
