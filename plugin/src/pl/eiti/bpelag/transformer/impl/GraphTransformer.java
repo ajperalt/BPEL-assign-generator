@@ -31,7 +31,7 @@ public class GraphTransformer implements IProcessTransformer {
 	 * 
 	 * @return graph transformer instance reference
 	 */
-	public static GraphTransformer instance() {
+	public static GraphTransformer getInstance() {
 		if (null == instance) {
 			instance = new GraphTransformer();
 		}

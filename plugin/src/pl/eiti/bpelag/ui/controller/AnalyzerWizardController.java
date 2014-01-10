@@ -18,6 +18,7 @@ import pl.eiti.bpelag.analyzer.IAnalyzer;
 import pl.eiti.bpelag.analyzer.impl.Analyzer;
 import pl.eiti.bpelag.generator.IGenerator;
 import pl.eiti.bpelag.generator.impl.Generator;
+import pl.eiti.bpelag.resolver.WSDLResolver;
 import pl.eiti.bpelag.ui.model.AnalyzerWizardModel;
 import pl.eiti.bpelag.util.Settings;
 
@@ -79,7 +80,8 @@ public class AnalyzerWizardController {
 	// }
 
 	public Map<String, List<String>> resolveMessageType(Message complexType) {
-		return ((Analyzer) analyzer).resolveMessageType(complexType);
+		return WSDLResolver.getInstance().resolveMessageType(complexType);
+		// return WSDLResolver.getInstance().resolveMessageType(complexType);
 	}
 
 	public void generateMarkers(int index) {
@@ -102,7 +104,6 @@ public class AnalyzerWizardController {
 	}
 
 	public From createFromVarPart(java.util.List<String> elements) {
-		// TODO Auto-generated method stub
 		From newFrom = generator.createNewFrom();
 
 		int size = elements.size();
@@ -152,7 +153,6 @@ public class AnalyzerWizardController {
 	}
 
 	public To createToVarPart(java.util.List<String> elements) {
-		// TODO Auto-generated method stub
 		To newTo = generator.createNewTo();
 
 		if (0 < elements.size()) {

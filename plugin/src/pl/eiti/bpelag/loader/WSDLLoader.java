@@ -17,14 +17,24 @@ import org.eclipse.wst.wsdl.util.WSDLResourceImpl;
 import pl.eiti.bpelag.util.StringElemUtil;
 
 public class WSDLLoader {
+	private static WSDLLoader instance = null;
+
 	private List<Message> wsdlMessages = null;
 	private WSDLResourceFactoryRegistry factory = null;
 
 	/**
 	 * Default constructor.
 	 */
-	public WSDLLoader() {
+	private WSDLLoader() {
 		wsdlMessages = new ArrayList<>();
+	}
+
+	public static WSDLLoader getInstance() {
+		if (null == instance) {
+			instance = new WSDLLoader();
+		}
+
+		return instance;
 	}
 
 	/**
@@ -35,7 +45,7 @@ public class WSDLLoader {
 	 * @param absolutePath
 	 *            absolute path to BPEL process file
 	 */
-	@SuppressWarnings({ "unchecked", "restriction" })
+	@SuppressWarnings({ "unchecked" })
 	public void load(List<String> importLocations, String absolutePath) {
 		for (String location : importLocations) {
 			String absoluteLocation = "";
@@ -44,7 +54,6 @@ public class WSDLLoader {
 			}
 			absoluteLocation += location;
 
-			// TODO
 			WSDLResourceImpl wsdlElem = loadWSDL(absoluteLocation);
 
 			wsdlMessages.addAll(wsdlElem.getDefinition().getEMessages());
