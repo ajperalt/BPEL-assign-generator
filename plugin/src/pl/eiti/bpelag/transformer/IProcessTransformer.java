@@ -16,15 +16,5 @@ public interface IProcessTransformer {
 	 *            process element to transform
 	 * @return model created from process
 	 */
-	public IModel ProcessToModel(Process process);
-
-	/**
-	 * Process updater from existing model declaration.
-	 * 
-	 * @param process
-	 *            process to update
-	 * @param model
-	 *            model to update process from
-	 */
-	public void updateProcessFromModel(Process process, IModel model);
+	public IModel processToModel(Process process);
 }

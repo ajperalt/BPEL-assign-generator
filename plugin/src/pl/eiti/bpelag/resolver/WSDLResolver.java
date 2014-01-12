@@ -11,7 +11,7 @@ import org.eclipse.wst.wsdl.Message;
 import org.eclipse.wst.wsdl.internal.impl.PartImpl;
 import org.eclipse.xsd.XSDElementDeclaration;
 
-import pl.eiti.bpelag.loader.WSDLLoader;
+import pl.eiti.bpelag.dao.WSDLDAO;
 import pl.eiti.bpelag.util.Settings;
 
 @SuppressWarnings("restriction")
@@ -78,7 +78,7 @@ public class WSDLResolver extends Settings {
 	 *         part element
 	 */
 	public Map<String, List<String>> resolveMessageType(Message complexMessageType) {
-		Message complexType = WSDLLoader.getInstance().getMessage(complexMessageType.getQName());
+		Message complexType = WSDLDAO.getInstance().getMessage(complexMessageType.getQName());
 
 		Map<String, List<String>> result = new HashMap<String, List<String>>();
 

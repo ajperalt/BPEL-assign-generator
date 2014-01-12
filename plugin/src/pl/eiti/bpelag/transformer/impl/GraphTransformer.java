@@ -39,17 +39,12 @@ public class GraphTransformer implements IProcessTransformer {
 	}
 
 	@Override
-	public IModel ProcessToModel(Process process) {
+	public IModel processToModel(Process process) {
 		GraphModel BPELModel = new GraphModel();
 
 		createGraphModel(process, BPELModel);
 
 		return BPELModel;
-	}
-
-	@Override
-	public void updateProcessFromModel(Process process, IModel model) {
-		// TODO Auto-generated method stub
 	}
 
 	/**

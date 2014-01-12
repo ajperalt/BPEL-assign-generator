@@ -16,8 +16,8 @@ import org.eclipse.emf.ecore.EObject;
 
 import pl.eiti.bpelag.analyzer.IAnalysisResult;
 import pl.eiti.bpelag.analyzer.IAnalyzer;
-import pl.eiti.bpelag.loader.BPELLoader;
-import pl.eiti.bpelag.loader.WSDLLoader;
+import pl.eiti.bpelag.dao.BPELDAO;
+import pl.eiti.bpelag.dao.WSDLDAO;
 import pl.eiti.bpelag.matcher.IMatcher;
 import pl.eiti.bpelag.matcher.impl.DefaultMatcher;
 import pl.eiti.bpelag.model.graph.GraphNode;
@@ -30,11 +30,10 @@ import pl.eiti.bpelag.util.StringElemUtil;
 /**
  * BPEL graph model analyzer class.
  */
-@SuppressWarnings("restriction")
 public class Analyzer extends Settings implements IAnalyzer {
 	private static final Integer FIRST = Integer.valueOf(0);
-	private BPELLoader bpelLoader = null;
-	private WSDLLoader wsdlLoader = null;
+	private BPELDAO bpelLoader = null;
+	private WSDLDAO wsdlLoader = null;
 	private GraphTransformer transformer = null;
 	private GraphModel model = null;
 	private AnalysisResult result = null;
@@ -44,8 +43,8 @@ public class Analyzer extends Settings implements IAnalyzer {
 	 * Default constructor.
 	 */
 	public Analyzer() {
-		this.bpelLoader = new BPELLoader();
-		this.wsdlLoader = WSDLLoader.getInstance();
+		this.bpelLoader = new BPELDAO();
+		this.wsdlLoader = WSDLDAO.getInstance();
 		transformer = GraphTransformer.getInstance();
 		this.model = new GraphModel();
 		this.matcher = new DefaultMatcher();
@@ -65,7 +64,7 @@ public class Analyzer extends Settings implements IAnalyzer {
 			wsdlLoader.load(importLocation, StringElemUtil.getPath(pathToBPEL));
 		}
 
-		model = (GraphModel) transformer.ProcessToModel(bpelLoader.getBPELProcess());
+		model = (GraphModel) transformer.processToModel(bpelLoader.getBPELProcess());
 	}
 
 	@Override

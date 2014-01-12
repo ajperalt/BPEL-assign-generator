@@ -15,17 +15,17 @@ import org.eclipse.bpel.model.impl.ToImpl;
 import org.eclipse.bpel.model.proxy.MessageProxy;
 import org.eclipse.wst.wsdl.Message;
 
-import pl.eiti.bpelag.loader.WSDLLoader;
+import pl.eiti.bpelag.dao.WSDLDAO;
 import pl.eiti.bpelag.matcher.IMatcher;
 import pl.eiti.bpelag.resolver.WSDLResolver;
 import pl.eiti.bpelag.util.Settings;
 
 public class DefaultMatcher extends Settings implements IMatcher {
-	WSDLLoader wsdlLoader = null;
+	WSDLDAO wsdlLoader = null;
 	WSDLResolver wsdlResolver = null;
 
 	public DefaultMatcher() {
-		wsdlLoader = WSDLLoader.getInstance();
+		wsdlLoader = WSDLDAO.getInstance();
 		wsdlResolver = WSDLResolver.getInstance();
 	}
 

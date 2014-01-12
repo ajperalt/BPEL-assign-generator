@@ -1,4 +1,4 @@
-package pl.eiti.bpelag.loader;
+package pl.eiti.bpelag.dao;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,8 +16,8 @@ import org.eclipse.wst.wsdl.util.WSDLResourceImpl;
 
 import pl.eiti.bpelag.util.StringElemUtil;
 
-public class WSDLLoader {
-	private static WSDLLoader instance = null;
+public class WSDLDAO {
+	private static WSDLDAO instance = null;
 
 	private List<Message> wsdlMessages = null;
 	private WSDLResourceFactoryRegistry factory = null;
@@ -25,13 +25,13 @@ public class WSDLLoader {
 	/**
 	 * Default constructor.
 	 */
-	private WSDLLoader() {
+	private WSDLDAO() {
 		wsdlMessages = new ArrayList<>();
 	}
 
-	public static WSDLLoader getInstance() {
+	public static WSDLDAO getInstance() {
 		if (null == instance) {
-			instance = new WSDLLoader();
+			instance = new WSDLDAO();
 		}
 
 		return instance;

@@ -202,4 +202,157 @@
     </Entities>
     <Relationships />
   </ProjectItem>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>GraphModel</Name>
+    <Language>Java</Language>
+    <Entities>
+      <Entity type="Interface">
+        <Name>IModel</Name>
+        <Access>Public</Access>
+        <Location left="757" top="154" />
+        <Size width="163" height="77" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Class">
+        <Name>GraphNode</Name>
+        <Access>Public</Access>
+        <Location left="327" top="326" />
+        <Size width="165" height="162" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private T data</Member>
+        <Member type="Constructor">public GraphNode(T newData)</Member>
+        <Member type="Method">public Boolean hasNext()</Member>
+        <Member type="Method">public Boolean hasPrevious()</Member>
+        <Member type="Method">public Boolean isBranched()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Graph</Name>
+        <Access>Public</Access>
+        <Location left="216" top="154" />
+        <Size width="163" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Constructor">public Graph()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>GraphModel</Name>
+        <Access>Public</Access>
+        <Location left="537" top="154" />
+        <Size width="163" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Constructor">public GraphModel()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Enum">
+        <Name>State</Name>
+        <Access>Private</Access>
+        <Location left="97" top="370" />
+        <Size width="163" height="112" />
+        <Collapsed>False</Collapsed>
+        <Value>UNVISITED</Value>
+        <Value>PROCESSING</Value>
+        <Value>VISITED</Value>
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Association" first="1" second="1">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Bidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+        <StartMultiplicity>0..*</StartMultiplicity>
+        <EndMultiplicity>0..*</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Nesting" first="1" second="4">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>285</X>
+          <Y>435</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="2" second="1">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Bidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Realization" first="3" second="0">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>732</X>
+          <Y>201</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="3" second="2">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>503</X>
+          <Y>201</Y>
+        </BendPoint>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>GraphTransformer</Name>
+    <Language>Java</Language>
+    <Entities>
+      <Entity type="Interface">
+        <Name>IModel</Name>
+        <Access>Public</Access>
+        <Location left="93" top="44" />
+        <Size width="163" height="77" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IProcessTransformer</Name>
+        <Access>Public</Access>
+        <Location left="367" top="44" />
+        <Size width="253" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">IModel processToModel(Process process)</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>GraphModel</Name>
+        <Access>Public</Access>
+        <Location left="93" top="208" />
+        <Size width="163" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Constructor">public GraphModel()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>GraphTransformer</Name>
+        <Access>Public</Access>
+        <Location left="367" top="208" />
+        <Size width="562" height="162" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private static GraphTransformer instance</Member>
+        <Member type="Method">public static GraphTransformer getInstance()</Member>
+        <Member type="Constructor">private GraphTransformer()</Member>
+        <Member type="Method">private void createGraphModel(Process process, GraphModel model)</Member>
+        <Member type="Method">private void executeComplexCreate(GraphNode&lt;Activity&gt; previous, GraphNode&lt;Activity&gt; closingNode)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Realization" first="2" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="3" second="1">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="2" second="3">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Bidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
 </Project>

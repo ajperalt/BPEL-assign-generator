@@ -4,8 +4,8 @@
          targetNamespace="http://sample.bpel.org/bpel/sample"
          suppressJoinFailure="yes"
          xmlns:tns="http://sample.bpel.org/bpel/sample"
-         xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
-         >
+         xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/abstract"
+         abstractProcessProfile="http://docs.oasis-open.org/wsbpel/2.0/process/abstract/simple-template/2006/08">
 
     <!-- Import the client WSDL -->
 	<bpel:import location="testArtifacts.wsdl" namespace="http://sample.bpel.org/bpel/sample" 
@@ -21,12 +21,16 @@
                      partnerLinkType="tns:test"
                      myRole="testProvider"
                      />
+        <bpel:partnerLink name="testPL" partnerLinkType="tns:test" partnerRole="testProvider"></bpel:partnerLink>
     </bpel:partnerLinks>
   
     <!-- ================================================================= -->         
     <!-- VARIABLES                                                         -->
     <!-- List of messages and XML documents used within this BPEL process  -->
     <!-- ================================================================= -->         
+    <bpel:messageExchanges>
+        <bpel:messageExchange name="messageExchange"></bpel:messageExchange>
+    </bpel:messageExchanges>
     <bpel:variables>
         <!-- Reference to the message passed as input during initiation -->
         <bpel:variable name="input"
@@ -65,6 +69,8 @@
         </bpel:assign>
         
         <!-- Generate reply to synchronous request -->
+        
+        <bpel:invoke name="Invoke" partnerLink="testPL" operation="process" portType="tns:test" inputVariable="input" outputVariable="output"></bpel:invoke>
         <bpel:reply name="replyOutput" 
                partnerLink="client"
                portType="tns:test"
