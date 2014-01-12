@@ -16,15 +16,15 @@ import org.eclipse.wst.wsdl.Message;
 import pl.eiti.bpelag.analyzer.IAnalysisResult;
 import pl.eiti.bpelag.analyzer.IAnalyzer;
 import pl.eiti.bpelag.analyzer.impl.Analyzer;
-import pl.eiti.bpelag.generator.IGenerator;
-import pl.eiti.bpelag.generator.impl.Generator;
+import pl.eiti.bpelag.generator.IUpdater;
+import pl.eiti.bpelag.generator.impl.Updater;
 import pl.eiti.bpelag.resolver.WSDLResolver;
 import pl.eiti.bpelag.ui.model.AnalyzerWizardModel;
 import pl.eiti.bpelag.util.Settings;
 
 public class AnalyzerWizardController {
 	private IAnalyzer analyzer = null;
-	private IGenerator generator = null;
+	private IUpdater generator = null;
 
 	private String pathToBPEL = null;
 	private IAnalysisResult analysisResult = null;
@@ -33,7 +33,7 @@ public class AnalyzerWizardController {
 
 	public AnalyzerWizardController() {
 		analyzer = new Analyzer();
-		generator = new Generator();
+		generator = new Updater();
 	}
 
 	public AnalyzerWizardController(final String pathToFile, AnalyzerWizardModel newModel) {
@@ -53,7 +53,7 @@ public class AnalyzerWizardController {
 
 	public void executeGenerator() {
 		if (analyzer instanceof Analyzer) {
-			generator.generate(((Analyzer) analyzer).getBPELProcess(), analysisResult);
+			generator.update(((Analyzer) analyzer).getBPELProcess(), analysisResult);
 		}
 	}
 

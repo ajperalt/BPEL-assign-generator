@@ -12,16 +12,16 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 
 import pl.eiti.bpelag.analyzer.IAnalysisResult;
-import pl.eiti.bpelag.generator.IGenerator;
+import pl.eiti.bpelag.generator.IUpdater;
 
 /**
  * Generator updates all assign activities of given process from analysis result
  * map - if copy elements generated exists for given assign activity.
  */
-public class Generator implements IGenerator {
+public class Updater implements IUpdater {
 
 	@Override
-	public void generate(org.eclipse.bpel.model.Process BPELprocess, IAnalysisResult analysis) {
+	public void update(org.eclipse.bpel.model.Process BPELprocess, IAnalysisResult analysis) {
 		TreeIterator<EObject> procIterator = BPELprocess.eAllContents();
 
 		while (procIterator.hasNext()) {

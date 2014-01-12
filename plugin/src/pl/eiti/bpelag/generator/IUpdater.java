@@ -6,8 +6,8 @@ import org.eclipse.bpel.model.To;
 
 import pl.eiti.bpelag.analyzer.IAnalysisResult;
 
-public interface IGenerator {
-	public void generate(org.eclipse.bpel.model.Process BPELprocess, IAnalysisResult analysis);
+public interface IUpdater {
+	public void update(org.eclipse.bpel.model.Process BPELprocess, IAnalysisResult analysis);
 
 	public From createNewFrom();
 
