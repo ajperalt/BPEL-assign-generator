@@ -8,14 +8,14 @@
             visible="true"
             id="pl.eiti.bpelag.actionSet">
          <menu
-               label="BPEL"
+               label="BPELcg"
                id="BPELMenu">
             <separator
                   name="bpelagGroup">
             </separator>
          </menu>
          <action
-               label="Assign Generate"
+               label="Copy Generate"
                icon="icons/bpel-oasis.png"
                class="pl.eiti.bpelag.actions.AssignGenerateAction"
                tooltip="BPEL Assign Generate"

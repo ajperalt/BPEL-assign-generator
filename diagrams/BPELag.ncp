@@ -246,7 +246,7 @@
       </Entity>
       <Entity type="Enum">
         <Name>State</Name>
-        <Access>Private</Access>
+        <Access>Public</Access>
         <Location left="97" top="370" />
         <Size width="163" height="112" />
         <Collapsed>False</Collapsed>
@@ -257,6 +257,8 @@
     </Entities>
     <Relationships>
       <Relationship type="Association" first="1" second="1">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Bidirectional</Direction>
@@ -273,6 +275,8 @@
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="2" second="1">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Bidirectional</Direction>
@@ -348,6 +352,153 @@
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="2" second="3">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Bidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Analyzer</Name>
+    <Language>Java</Language>
+    <Entities>
+      <Entity type="Class">
+        <Name>AnalysisResult</Name>
+        <Access>Public</Access>
+        <Location left="37" top="444" />
+        <Size width="293" height="111" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public List&lt;Copy&gt; put(Assign key, List&lt;Copy&gt; value)</Member>
+        <Member type="Method">public List&lt;Copy&gt; get(Assign key)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Analyzer</Name>
+        <Access>Public</Access>
+        <Location left="37" top="16" />
+        <Size width="808" height="315" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private BPELDAO bpelDAO</Member>
+        <Member type="Field">private WSDLDAO wsdlDAO</Member>
+        <Member type="Field">private GraphTransformer transformer</Member>
+        <Member type="Field">private GraphModel model</Member>
+        <Member type="Field">private IAnalysisResult result</Member>
+        <Member type="Field">private IMatcher matcher</Member>
+        <Member type="Constructor">public Analyzer()</Member>
+        <Member type="Method">public void init(String path)</Member>
+        <Member type="Method">public IAnalysisResult&lt;Assign, List&lt;Copy&gt;&gt; analyze()</Member>
+        <Member type="Method">private List&lt;Variable&gt; getProcVariables(Variables variables)</Member>
+        <Member type="Method">private List&lt;Variable&gt; getSettedVariables(List&lt;Variables&gt; processVariables)</Member>
+        <Member type="Method">private void analyzeGraphNodes(GraphNode&lt;Activity&gt; rootNode, List&lt;Variable&gt; settedVariables, IAnalysisResult&lt;Assign, List&lt;Copy&gt;&gt; analysisResult)</Member>
+        <Member type="Method">private void analyzeFlow(GraphNode&lt;Activity&gt; flowStartNode, List&lt;Variable&gt; settedVariables, IAnalysisResult&lt;Assign, List&lt;Copy&gt;&gt; analysisResult)</Member>
+        <Member type="Method">private List&lt;Invoke&gt; getNextInvokes(GraphNode&lt;Activity&gt; node, List&lt;Invoke&gt; invokeList, Boolean isAssignFound)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IAnalysisResult</Name>
+        <Access>Public</Access>
+        <Location left="582" top="535" />
+        <Size width="242" height="111" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">V put(K key, V value)</Member>
+        <Member type="Method">V get(K key)</Member>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IAnalyzer</Name>
+        <Access>Public</Access>
+        <Location left="582" top="385" />
+        <Size width="171" height="111" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public void init(String path)</Member>
+        <Member type="Method">IAnalysisResult analyze()</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>HashMap</Name>
+        <Access>Public</Access>
+        <Location left="37" top="614" />
+        <Size width="293" height="77" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Realization" first="0" second="2">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="1" second="3">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="1" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Bidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Generalization" first="0" second="4">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Updater</Name>
+    <Language>Java</Language>
+    <Entities>
+      <Entity type="Interface">
+        <Name>IUpdater</Name>
+        <Access>Public</Access>
+        <Location left="32" top="30" />
+        <Size width="349" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public void update(Process BPELProcess, IAnalysisResult analysis)</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>Updater</Name>
+        <Access>Public</Access>
+        <Location left="32" top="192" />
+        <Size width="424" height="128" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public void update(Process BPELProcess, IAnalysisResult analysis)</Member>
+        <Member type="Method">private Boolean exists(Assign existingAssign, Copy generatedCopy)</Member>
+        <Member type="Method">private Boolean areQueriesEqual(Query existingQuery, Query generatedQuery)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>AnalyzerWizardController</Name>
+        <Access>Public</Access>
+        <Location left="532" top="30" />
+        <Size width="429" height="349" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private IAnalyzer analyzer</Member>
+        <Member type="Field">private IUpdater updater</Member>
+        <Member type="Field">private IAnalysisResult analysisResult</Member>
+        <Member type="Field">private String pathToBPEL</Member>
+        <Member type="Field">private AnalyzerWizardModel model</Member>
+        <Member type="Constructor">public AnalyzerWizardController(String path, AnalyzerWizardModel newModel)</Member>
+        <Member type="Method">public void executeAnalyze()</Member>
+        <Member type="Method">public void executeUpdate()</Member>
+        <Member type="Method">public void saveProcess()</Member>
+        <Member type="Method">public void generateMarkers(int index)</Member>
+        <Member type="Method">public Map&lt;String, List&lt;String&gt;&gt; resolveMessageType(Message complexType)</Member>
+        <Member type="Method">public void addNewCopy()</Member>
+        <Member type="Method">public void deleteCopy(int selectionIndex)</Member>
+        <Member type="Method">public List&lt;Assign&gt; getAssignBlockList()</Member>
+        <Member type="Method">public From createFromVarPart(java.util.List&lt;String&gt; elements)</Member>
+        <Member type="Method">public To createToVarPart(java.util.List&lt;String&gt; elements)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Realization" first="1" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="1" second="2">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Bidirectional</Direction>

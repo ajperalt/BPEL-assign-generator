@@ -27,9 +27,11 @@ public class Updater implements IUpdater {
 		while (procIterator.hasNext()) {
 			EObject procElement = procIterator.next();
 			if (procElement instanceof Assign) {
-				for (Copy generatedCopy : analysis.get((Assign) procElement)) {
-					if (!exists((Assign) procElement, generatedCopy)) {
-						addCopyElement((Assign) procElement, generatedCopy);
+				for (Object generatedCopy : analysis.get((Assign) procElement)) {
+					if (generatedCopy instanceof Copy) {
+						if (!exists((Assign) procElement, (Copy) generatedCopy)) {
+							addCopyElement((Assign) procElement, (Copy) generatedCopy);
+						}
 					}
 				}
 			}

@@ -24,7 +24,7 @@ import pl.eiti.bpelag.util.Settings;
 
 public class AnalyzerWizardController {
 	private IAnalyzer analyzer = null;
-	private IUpdater generator = null;
+	private IUpdater updater = null;
 
 	private String pathToBPEL = null;
 	private IAnalysisResult analysisResult = null;
@@ -33,7 +33,7 @@ public class AnalyzerWizardController {
 
 	public AnalyzerWizardController() {
 		analyzer = new Analyzer();
-		generator = new Updater();
+		updater = new Updater();
 	}
 
 	public AnalyzerWizardController(final String pathToFile, AnalyzerWizardModel newModel) {
@@ -42,7 +42,7 @@ public class AnalyzerWizardController {
 		model = newModel;
 		analyzer.init(pathToBPEL);
 		executeAnalyze();
-		executeGenerator();
+		executeUpdate();
 	}
 
 	public void executeAnalyze() {
@@ -51,9 +51,9 @@ public class AnalyzerWizardController {
 		model.setProcessVariables(analyzer.getProcessVariables());
 	}
 
-	public void executeGenerator() {
+	public void executeUpdate() {
 		if (analyzer instanceof Analyzer) {
-			generator.update(((Analyzer) analyzer).getBPELProcess(), analysisResult);
+			updater.update(((Analyzer) analyzer).getBPELProcess(), analysisResult);
 		}
 	}
 
@@ -70,18 +70,8 @@ public class AnalyzerWizardController {
 		model.getCurrentlyProcessingAssign().getCopy().remove(selectionIndex);
 	}
 
-	// public void setCopyFromType(int selectionIndex) {
-	// setCopyType(model.getCurrentlyProcessingCopy().getFrom(),
-	// selectionIndex);
-	// }
-	//
-	// public void setCopyToType(int selectionIndex) {
-	// setCopyType(model.getCurrentlyProcessingCopy().getTo(), selectionIndex);
-	// }
-
 	public Map<String, List<String>> resolveMessageType(Message complexType) {
 		return WSDLResolver.getInstance().resolveMessageType(complexType);
-		// return WSDLResolver.getInstance().resolveMessageType(complexType);
 	}
 
 	public void generateMarkers(int index) {
@@ -104,7 +94,7 @@ public class AnalyzerWizardController {
 	}
 
 	public From createFromVarPart(java.util.List<String> elements) {
-		From newFrom = generator.createNewFrom();
+		From newFrom = updater.createNewFrom();
 
 		int size = elements.size();
 		int index = size - 1;
@@ -142,7 +132,7 @@ public class AnalyzerWizardController {
 		if (2 < size) {
 			String[] varSplitted = elements.get(index).split(":");
 
-			Query newQuery = generator.createNewQuery();
+			Query newQuery = updater.createNewQuery();
 			newQuery.setQueryLanguage(Settings.QUERY_LANGUAGE);
 			newQuery.setValue(newFrom.getVariable().getMessageType().getQName().getPrefix() + ":"
 					+ varSplitted[0].trim());
@@ -153,7 +143,7 @@ public class AnalyzerWizardController {
 	}
 
 	public To createToVarPart(java.util.List<String> elements) {
-		To newTo = generator.createNewTo();
+		To newTo = updater.createNewTo();
 
 		if (0 < elements.size()) {
 			String[] varSplitted = elements.get(0).split(":");
@@ -185,7 +175,7 @@ public class AnalyzerWizardController {
 		if (2 < elements.size()) {
 			String[] varSplitted = elements.get(2).split(":");
 
-			Query newQuery = generator.createNewQuery();
+			Query newQuery = updater.createNewQuery();
 			newQuery.setQueryLanguage(Settings.QUERY_LANGUAGE);
 			newQuery.setValue(newTo.getVariable().getMessageType().getQName().getPrefix() + ":" + varSplitted[0].trim());
 		}
