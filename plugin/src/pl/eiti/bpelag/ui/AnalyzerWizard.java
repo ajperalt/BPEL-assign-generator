@@ -19,7 +19,6 @@ public class AnalyzerWizard extends Wizard {
 		wizardModel = new AnalyzerWizardModel();
 
 		wizardController = new AnalyzerWizardController(pathToBPEL, wizardModel);
-		// "D:/private/Dropbox/engineer/project/BPEL-assign-generator/IBMexamples/processes/travelbookingBPEL.bpel",
 		setNeedsProgressMonitor(Boolean.TRUE);
 	}
 
@@ -33,7 +32,6 @@ public class AnalyzerWizard extends Wizard {
 
 	@Override
 	public boolean canFinish() {
-		// TODO Auto-generated method stub
 		return super.canFinish();
 	}
 

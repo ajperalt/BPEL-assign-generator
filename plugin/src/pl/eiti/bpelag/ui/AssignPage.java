@@ -260,7 +260,7 @@ public class AssignPage extends WizardPage {
 
 		@Override
 		public void widgetDefaultSelected(SelectionEvent arg0) {
-			// TODO nobody knows what to do here.
+			// nothing to do here.
 		}
 
 		@Override
@@ -355,7 +355,6 @@ public class AssignPage extends WizardPage {
 					messIconImg = new Image(dev, new ImageData(FileLocator.resolve(mesImgURL).toString().substring(6)));
 					elemIconImg = new Image(dev, new ImageData(FileLocator.resolve(eleImgURL).toString().substring(6)));
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 
@@ -408,7 +407,7 @@ public class AssignPage extends WizardPage {
 
 		@Override
 		public void widgetDefaultSelected(SelectionEvent arg0) {
-			// TODO nobody knows what to do here.
+			// nothing to do here.
 		}
 
 		@Override
@@ -419,17 +418,12 @@ public class AssignPage extends WizardPage {
 			copyType = model.getFromComboList().get(selectionIndex);
 
 			copyFromList.setVisible(Boolean.FALSE);
-			// if (copyFromList.getLayoutData() instanceof GridData) {
-			// ((GridData) copyFromList.getLayoutData()).exclude = Boolean.TRUE;
-			// }
 			expressionLabel.setVisible(Boolean.FALSE);
 			expressionLabel.setVisible(Boolean.FALSE);
 
 			switch (copyType) {
 			case Messages.ASSIGN_CATEGORY_VARPART:
 				copyFromList.setVisible(Boolean.TRUE);
-				// ((GridData) copyFromList.getLayoutData()).exclude =
-				// Boolean.FALSE;
 				break;
 			case Messages.ASSIGN_CATEGORY_EXPRESSION:
 				expressionLabel.setVisible(Boolean.TRUE);
@@ -447,7 +441,6 @@ public class AssignPage extends WizardPage {
 				break;
 			}
 		}
-		// TODO finish him
 	}
 
 	/**
@@ -458,7 +451,7 @@ public class AssignPage extends WizardPage {
 
 		@Override
 		public void widgetDefaultSelected(SelectionEvent arg0) {
-			// TODO nobody knows what to do here.
+			// nothing to do here.
 		}
 
 		@Override
@@ -482,10 +475,7 @@ public class AssignPage extends WizardPage {
 				copyToList.setVisible(Boolean.FALSE);
 				break;
 			}
-			// TODO when to combo selected hide/show specific component to fill
-			// to element.
 		}
-
 	}
 
 	/**
@@ -496,7 +486,7 @@ public class AssignPage extends WizardPage {
 
 		@Override
 		public void widgetDefaultSelected(SelectionEvent arg0) {
-			// TODO nobody knows what to do here.
+			// nothing to do here.
 		}
 
 		@Override
@@ -511,6 +501,13 @@ public class AssignPage extends WizardPage {
 				}
 
 				model.getCurrentlyProcessingCopy().setFrom(controller.createFromVarPart(elements));
+
+				copyElemList.removeAll();
+
+				for (String elem : model.getCopyListNames(model.getAssignList().indexOf(
+						model.getCurrentlyProcessingAssign()))) {
+					copyElemList.add(elem);
+				}
 			}
 		}
 
@@ -524,7 +521,7 @@ public class AssignPage extends WizardPage {
 
 		@Override
 		public void widgetDefaultSelected(SelectionEvent arg0) {
-			// TODO nobody knows what to do here.
+			// nothing to do here.
 		}
 
 		@Override
@@ -539,6 +536,12 @@ public class AssignPage extends WizardPage {
 				}
 
 				model.getCurrentlyProcessingCopy().setTo(controller.createToVarPart(elements));
+				copyElemList.removeAll();
+
+				for (String elem : model.getCopyListNames(model.getAssignList().indexOf(
+						model.getCurrentlyProcessingAssign()))) {
+					copyElemList.add(elem);
+				}
 			}
 		}
 
@@ -548,8 +551,7 @@ public class AssignPage extends WizardPage {
 
 		@Override
 		public void widgetDefaultSelected(SelectionEvent arg0) {
-			// TODO Auto-generated method stub
-
+			// nothing to do here.
 		}
 
 		@Override
@@ -571,8 +573,7 @@ public class AssignPage extends WizardPage {
 
 		@Override
 		public void widgetDefaultSelected(SelectionEvent arg0) {
-			// TODO Auto-generated method stub
-
+			// nothing to do here.
 		}
 
 		@Override

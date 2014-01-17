@@ -182,11 +182,19 @@ public class AnalyzerWizardModel {
 	}
 
 	public Integer getFromVarIndex() {
-		return processVariables.indexOf(currentlyProcessingCopy.getFrom().getVariable());
+		Integer result = null;
+		if (null != currentlyProcessingCopy && null != currentlyProcessingCopy.getFrom()) {
+			result = processVariables.indexOf(currentlyProcessingCopy.getFrom().getVariable());
+		}
+		return result;
 	}
 
 	public Integer getToVarIndex() {
-		return processVariables.indexOf(currentlyProcessingCopy.getTo().getVariable());
+		Integer result = null;
+		if (null != currentlyProcessingCopy && null != currentlyProcessingCopy.getTo()) {
+			result = processVariables.indexOf(currentlyProcessingCopy.getTo().getVariable());
+		}
+		return result;
 	}
 
 	public String getFromPartName() {
@@ -194,7 +202,6 @@ public class AnalyzerWizardModel {
 
 		From currentFrom = currentlyProcessingCopy.getFrom();
 		if (currentFrom instanceof FromImpl) {
-			// TODO retrieve part name somehow
 		}
 		return result;
 	}
@@ -204,7 +211,6 @@ public class AnalyzerWizardModel {
 
 		To currentTo = currentlyProcessingCopy.getTo();
 		if (currentTo instanceof ToImpl) {
-			// TODO retrieve part name somehow
 		}
 		return result;
 	}

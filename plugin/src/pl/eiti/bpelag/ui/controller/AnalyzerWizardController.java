@@ -11,6 +11,7 @@ import org.eclipse.bpel.model.Query;
 import org.eclipse.bpel.model.To;
 import org.eclipse.bpel.model.Variable;
 import org.eclipse.bpel.model.impl.FromImpl;
+import org.eclipse.bpel.model.impl.ToImpl;
 import org.eclipse.wst.wsdl.Message;
 
 import pl.eiti.bpelag.analyzer.IAnalysisResult;
@@ -145,8 +146,12 @@ public class AnalyzerWizardController {
 	public To createToVarPart(java.util.List<String> elements) {
 		To newTo = updater.createNewTo();
 
+		int size = elements.size();
+		int index = size - 1;
+
 		if (0 < elements.size()) {
-			String[] varSplitted = elements.get(0).split(":");
+			String[] varSplitted = elements.get(index).split(":");
+			index--;
 
 			for (Variable it : model.getProcessVariables()) {
 				Boolean typeOK = Boolean.FALSE;
@@ -166,18 +171,21 @@ public class AnalyzerWizardController {
 		}
 
 		if (1 < elements.size()) {
-			String[] varSplitted = elements.get(1).split(":");
-			if (newTo instanceof FromImpl) {
-				((FromImpl) newTo).setPartName(varSplitted[0].trim());
+			String[] varSplitted = elements.get(index).split(":");
+			index--;
+			if (newTo instanceof ToImpl) {
+				((ToImpl) newTo).setPartName(varSplitted[0].trim());
 			}
 		}
 
 		if (2 < elements.size()) {
-			String[] varSplitted = elements.get(2).split(":");
+			String[] varSplitted = elements.get(index).split(":");
+			index--;
 
 			Query newQuery = updater.createNewQuery();
 			newQuery.setQueryLanguage(Settings.QUERY_LANGUAGE);
 			newQuery.setValue(newTo.getVariable().getMessageType().getQName().getPrefix() + ":" + varSplitted[0].trim());
+			newTo.setQuery(newQuery);
 		}
 
 		return newTo;

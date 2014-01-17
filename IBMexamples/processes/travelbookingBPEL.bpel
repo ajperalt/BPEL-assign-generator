@@ -51,6 +51,7 @@
         <bpel:assign name="dataMap1" validate="yes">
             
             
+            
         </bpel:assign>
         <bpel:invoke inputVariable="creditCardPLRequest"
             name="checkCreditCard" operation="doCreditCardChecking"

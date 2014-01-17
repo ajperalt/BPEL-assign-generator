@@ -57,7 +57,6 @@ public class BPELDAO {
 		try {
 			this.resource.load(null);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		this.process = (Process) resource.getContents().get(0);
@@ -78,28 +77,9 @@ public class BPELDAO {
 			saveOptions.put(BPELWriter.SKIP_AUTO_IMPORT, Boolean.FALSE);
 			this.resource.save(saveOptions);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		// /** Only for tests */
-		// URI uri =
-		// URI.createFileURI("E:/private/Dropbox/engineer/project/aag_test/tests/test.bpel");
-		// Factory factory = Resource.Factory.Registry.INSTANCE.getFactory(uri);
-		// BPELResource retRes = (BPELResource) factory.createResource(uri);
-		// retRes.getContents().add(this.process);
-		//
-		// Map<String, String> map = new HashMap<String, String>();
-		// map.put("bpel",
-		// "http://docs.oasis-open.org/wsbpel/2.0/process/executable");
-		// map.put("tns", "http://matrix.bpelprocess");
-		// map.put("xsd", "http://www.w3.org/2001/XMLSchema");
-		// try {
-		// retRes.save(map);
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
 		return this.process.getName();
 	}
 

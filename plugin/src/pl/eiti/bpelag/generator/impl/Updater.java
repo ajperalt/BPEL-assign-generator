@@ -66,11 +66,9 @@ public class Updater implements IUpdater {
 			if (existingFrom.getVariable().equals(generatedFrom.getVariable())
 					&& areQueriesEqual(existingFrom.getQuery(), generatedFrom.getQuery())) {
 				if ((existingFrom instanceof FromImpl) && (generatedFrom instanceof FromImpl)) {
-					// TODO check partName somehow, if check OK then true
 					sameFrom = Boolean.TRUE;
 				}
 				if ((existingTo instanceof ToImpl) && (generatedTo instanceof ToImpl)) {
-					// TODO check partName somehow, if check OK then true
 					sameTo = Boolean.TRUE;
 				}
 				if (sameFrom && sameTo) {
