@@ -74,7 +74,7 @@ public class BPELDAO {
 	public String saveProcess() {
 		try {
 			Map<Object, Object> saveOptions = new HashMap<>();
-			saveOptions.put(BPELWriter.SKIP_AUTO_IMPORT, Boolean.FALSE);
+			saveOptions.put(BPELWriter.SKIP_AUTO_IMPORT, Boolean.TRUE);
 			this.resource.save(saveOptions);
 		} catch (IOException e) {
 			e.printStackTrace();

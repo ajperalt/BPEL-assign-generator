@@ -1,5 +1,7 @@
 package pl.eiti.bpelag.actions;
 
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -17,7 +19,6 @@ import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
-import org.eclipse.ui.console.MessageConsoleStream;
 import org.eclipse.ui.part.FileEditorInput;
 
 import pl.eiti.bpelag.ui.AnalyzerWizard;
@@ -35,7 +36,6 @@ import pl.eiti.bpelag.util.Settings;
 public class AssignGenerateAction implements IWorkbenchWindowActionDelegate {
 	@SuppressWarnings("unused")
 	private IWorkbenchWindow window = null;
-	private MessageConsoleStream consoleStream = null;
 
 	/**
 	 * The constructor.
@@ -68,6 +68,7 @@ public class AssignGenerateAction implements IWorkbenchWindowActionDelegate {
 
 		if (null != activePage) {
 			editor = activePage.getActiveEditor();
+			editor.doSave(null);
 		}
 
 		if (null != editor) {
@@ -76,11 +77,27 @@ public class AssignGenerateAction implements IWorkbenchWindowActionDelegate {
 
 		if (input instanceof FileEditorInput) {
 			path = ((FileEditorInput) input).getPath();
+			
+//			IPath bakPath = new Path(path.lastSegment() + ".bak"); //new Path(path.toString() + ".bak");
+//			
+//			try {
+//				((FileEditorInput) input).getFile().copy(bakPath, Boolean.TRUE, null);
+//			} catch (CoreException e) {
+//				e.printStackTrace();
+//			}
 		}
 
 		if (path != null && Settings.BPEL_EXTENSION.equalsIgnoreCase(path.getFileExtension())) {
+			
 			WizardDialog dialog = new WizardDialog(currentShell, new AnalyzerWizard(path.toString()));
 			dialog.open();
+			if (input instanceof FileEditorInput) {
+				try {
+					((FileEditorInput) input).getFile().refreshLocal(IResource.DEPTH_ZERO, null);
+				} catch (CoreException e) {
+					e.printStackTrace();
+				}
+			}
 		} else {
 			MessageDialog.openInformation(currentShell, Messages.DIALOG_TITLE_BAR, Messages.DIALOG_NO_BPEL_FILE);
 		}
@@ -114,7 +131,7 @@ public class AssignGenerateAction implements IWorkbenchWindowActionDelegate {
 	public void init(IWorkbenchWindow window) {
 		this.window = window;
 		MessageConsole myConsole = findConsole("");
-		this.consoleStream = myConsole.newMessageStream();
+		myConsole.newMessageStream();
 	}
 
 	/**

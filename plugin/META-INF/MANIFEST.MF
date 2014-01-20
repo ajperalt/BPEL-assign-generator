@@ -7,6 +7,7 @@ Bundle-Activator: pl.eiti.bpelag.Activator
 Require-Bundle: org.eclipse.bpel.model,
  org.eclipse.ui,
  org.eclipse.core.runtime,
+ org.eclipse.core.resources,
  org.eclipse.ui.console,
  org.eclipse.bpel.model;visibility:=reexport,
  org.eclipse.bpel.ui;bundle-version="1.0.3",
