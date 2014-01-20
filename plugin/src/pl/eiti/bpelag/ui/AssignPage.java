@@ -159,6 +159,7 @@ public class AssignPage extends WizardPage {
 
 		copyFromCombo = new Combo(copyFromComboContainer, SWT.READ_ONLY);
 		copyFromCombo.setLayoutData(new RowData(100, SWT.DEFAULT));
+		copyFromCombo.setEnabled(Boolean.FALSE);
 
 		copyFromList = new Tree(copyFromContainer, SWT.BORDER | SWT.SINGLE);
 		copyFromList.setLayoutData(new RowData(300, 240));
@@ -187,6 +188,7 @@ public class AssignPage extends WizardPage {
 
 		copyToCombo = new Combo(copyToComboContainer, SWT.READ_ONLY);
 		copyToCombo.setLayoutData(new RowData(100, SWT.DEFAULT));
+		copyToCombo.setEnabled(Boolean.FALSE);
 
 		copyToList = new Tree(copyToContainer, SWT.BORDER | SWT.SINGLE);
 		copyToList.setLayoutData(new RowData(300, 240));
