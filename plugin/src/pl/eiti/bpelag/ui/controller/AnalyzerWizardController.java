@@ -190,4 +190,16 @@ public class AnalyzerWizardController {
 
 		return newTo;
 	}
+
+	public void moveUpCopy(int copySelectionIndex) {
+		Copy temp = model.getCurrentlyProcessingAssign().getCopy().get(copySelectionIndex);
+		model.getCurrentlyProcessingAssign().getCopy().remove(temp);
+		model.getCurrentlyProcessingAssign().getCopy().add(copySelectionIndex - 1, temp);
+	}
+
+	public void moveDownCopy(int copySelectionIndex) {
+		Copy temp = model.getCurrentlyProcessingAssign().getCopy().get(copySelectionIndex);
+		model.getCurrentlyProcessingAssign().getCopy().remove(temp);
+		model.getCurrentlyProcessingAssign().getCopy().add(copySelectionIndex + 1, temp);
+	}
 }

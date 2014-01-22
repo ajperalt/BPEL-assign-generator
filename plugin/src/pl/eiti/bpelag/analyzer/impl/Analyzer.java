@@ -142,7 +142,7 @@ public class Analyzer extends Settings implements IAnalyzer {
 	private void analyzeGraphNodes(GraphNode<Activity> rootNode, List<Variable> settedVariables,
 			IAnalysisResult<Assign, List<Copy>> analysisResult) {
 		GraphNode<Activity> current = rootNode;
-
+		System.out.println();
 		while (current.hasNext() && !current.isVisited()) {
 			Activity processingActivity = current.getData();
 			Boolean isFlow = ActivityUtil.isFlowActivity(processingActivity);
@@ -153,6 +153,8 @@ public class Analyzer extends Settings implements IAnalyzer {
 					break;
 				} else {
 					analyzeFlow(current, settedVariables, analysisResult);
+					current.setVisited();
+					current = getClosingFlow(current);
 				}
 			} else if (processingActivity instanceof Assign) {
 				List<Invoke> followingInvokes = new ArrayList<>();
@@ -173,7 +175,9 @@ public class Analyzer extends Settings implements IAnalyzer {
 			}
 			current.setVisited();
 			current = current.getNextNodes().get(FIRST);
-			current.setProcessing();
+			if (current.isUnvisited()) {
+				current.setProcessing();
+			}
 		}
 	}
 
@@ -192,6 +196,20 @@ public class Analyzer extends Settings implements IAnalyzer {
 		for (GraphNode<Activity> node : flowStartNode.getNextNodes()) {
 			analyzeGraphNodes(node, settedVariables, analysisResult);
 		}
+	}
+
+	private GraphNode<Activity> getClosingFlow(GraphNode<Activity> openFlow) {
+		GraphNode<Activity> result = null;
+		GraphNode<Activity> iter = openFlow;
+
+		while (iter.hasNext()) {
+			iter = iter.getNextNodes().get(FIRST);
+			if (iter.getData().equals(openFlow.getData())) {
+				result = iter;
+			}
+		}
+
+		return result;
 	}
 
 	/**
@@ -221,7 +239,7 @@ public class Analyzer extends Settings implements IAnalyzer {
 
 			if (tempActivity instanceof Invoke && !invokeList.contains((Invoke) tempActivity)) {
 				invokeList.add((Invoke) tempActivity);
-				break;
+				// break;
 			} else if (tempActivity instanceof Assign) {
 				isAssignFound = Boolean.TRUE;
 				break;

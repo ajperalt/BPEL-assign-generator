@@ -21,7 +21,7 @@
         location="travelbookingBPELArtifacts.wsdl" namespace="http://eclipse.org/bpel/sample"/>
     <bpel:partnerLinks>
         <bpel:partnerLink myRole="travelbookingBPELProvider"
-            name="client" partnerLinkType="tns:travelbookingBPEL"/>
+            name="client" partnerLinkType="tns:travelbookingBPEL" partnerRole="travelbookingBPELProvider"/>
         <bpel:partnerLink name="creditCardPL"
             partnerLinkType="tns:creditCardPLT" partnerRole="serviceRole"/>
         <bpel:partnerLink name="checkFlightPL"
@@ -35,13 +35,15 @@
         <bpel:variable messageType="tns:travelbookingBPELRequestMessage" name="input"/>
         <bpel:variable
             messageType="tns:travelbookingBPELResponseMessage" name="output"/>
+        <bpel:variable messageType="tns:confirmResponse" name="confirmOutput"/>
+        <bpel:variable messageType="tns:confirmRequest" name="confirmInput"/>
         <bpel:variable messageType="ns0:doCreditCardCheckingResponse" name="creditCardPLResponse"/>
         <bpel:variable messageType="ns0:doCreditCardCheckingRequest" name="creditCardPLRequest"/>
         <bpel:variable messageType="ns1:doFlightReservationResponse" name="checkFlightPLResponse"/>
         <bpel:variable messageType="ns1:doFlightReservationRequest" name="checkFlightPLRequest"/>
         <bpel:variable messageType="ns2:doHotelReservationResponse" name="hotelReservationPLResponse"/>
         <bpel:variable messageType="ns2:doHotelReservationRequest" name="hotelReservationPLRequest"/>
-        <bpel:variable messageType="ns3:doCarReservationResponse" name="carReservationPLResponse"/>
+        <bpel:variable messageType="ns3:carConfirmation" name="carReservationPLResponse"/>
         <bpel:variable messageType="ns3:doCarReservationRequest" name="carReservationPLRequest"/>
     </bpel:variables>
     <bpel:sequence name="travelBooking">
@@ -170,6 +172,22 @@
                             <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[ns2:to]]></bpel:query>
                         </bpel:to>
                     </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="input" variable="input">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:hotelCompany]]></bpel:query>
+                        </bpel:from>
+                        <bpel:to part="request" variable="hotelReservationPLRequest">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[ns2:name]]></bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="input" variable="input">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:hotelCategory]]></bpel:query>
+                        </bpel:from>
+                        <bpel:to part="request" variable="hotelReservationPLRequest">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[ns2:category]]></bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
                 </bpel:assign>
                 <bpel:invoke inputVariable="hotelReservationPLRequest"
                     name="checkHotelReservation"
@@ -179,6 +197,14 @@
             </bpel:sequence>
             <bpel:sequence name="Sequence1">
                 <bpel:assign name="dataMap4" validate="no">
+                    <bpel:copy>
+                        <bpel:from part="input" variable="input">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:cardNumber]]></bpel:query>
+                        </bpel:from>
+                        <bpel:to part="request" variable="carReservationPLRequest">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[ns3:cardNumber]]></bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
                     <bpel:copy>
                         <bpel:from part="input" variable="input">
                             <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:cardType]]></bpel:query>
@@ -197,7 +223,7 @@
                     </bpel:copy>
                     <bpel:copy>
                         <bpel:from part="input" variable="input">
-                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:cardNumber]]></bpel:query>
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:to]]></bpel:query>
                         </bpel:from>
                         <bpel:to part="request" variable="carReservationPLRequest">
                             <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[ns3:to]]></bpel:query>
@@ -205,10 +231,26 @@
                     </bpel:copy>
                     <bpel:copy>
                         <bpel:from part="input" variable="input">
-                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:to]]></bpel:query>
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:carCompany]]></bpel:query>
                         </bpel:from>
                         <bpel:to part="request" variable="carReservationPLRequest">
-                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[ns3:to]]></bpel:query>
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[ns3:company]]></bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="input" variable="input">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:carCategory]]></bpel:query>
+                        </bpel:from>
+                        <bpel:to part="request" variable="carReservationPLRequest">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[ns3:category]]></bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="response" variable="carReservationPLResponse">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[ns3:carConfirmation]]></bpel:query>
+                        </bpel:from>
+                        <bpel:to part="confirmInput" variable="confirmInput">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:carConfirmation]]></bpel:query>
                         </bpel:to>
                     </bpel:copy>
                 </bpel:assign>
@@ -222,7 +264,19 @@
                 </bpel:while>
             </bpel:sequence>
         </bpel:flow>
-        <bpel:invoke name="Confirmation"/>
+        <bpel:assign name="dataMap5" validate="no">
+            <bpel:copy>
+                <bpel:from part="response" variable="carReservationPLResponse">
+                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[ns3:carConfirmation]]></bpel:query>
+                </bpel:from>
+                <bpel:to part="confirmInput" variable="confirmInput">
+                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:carConfirmation]]></bpel:query>
+                </bpel:to>
+            </bpel:copy>
+        </bpel:assign>
+        <bpel:invoke inputVariable="confirmInput" name="Confirmation"
+            operation="confirm" outputVariable="confirmOutput"
+            partnerLink="client" portType="tns:travelbookingBPEL"/>
         <bpel:reply name="Reply" operation="bookTravel"
             partnerLink="client" portType="tns:travelbookingBPEL" variable="output"/>
     </bpel:sequence>

@@ -24,9 +24,10 @@ public class AnalyzerWizard extends Wizard {
 
 	@Override
 	public void addPages() {
-		infoPage = new InfoPage(Messages.WIZARD_INFO_PAGE_NAME, wizardController, wizardModel);
+		// infoPage = new InfoPage(Messages.WIZARD_INFO_PAGE_NAME,
+		// wizardController, wizardModel);
 		assignPage = new AssignPage(Messages.WIZARD_ASSIGN_PAGE_NAME, wizardController, wizardModel);
-		addPage(infoPage);
+		// addPage(infoPage);
 		addPage(assignPage);
 	}
 

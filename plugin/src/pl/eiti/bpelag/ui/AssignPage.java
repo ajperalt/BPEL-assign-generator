@@ -23,7 +23,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
@@ -66,9 +65,6 @@ public class AssignPage extends WizardPage {
 	private Label copyToLabel = null;
 	private Combo copyToCombo = null;
 	private Tree copyToList = null;
-
-	private Label expressionLabel = null;
-	private Text copyFromExpression = null;
 
 	private Boolean isExpandEvent = Boolean.FALSE;
 
@@ -164,14 +160,6 @@ public class AssignPage extends WizardPage {
 		copyFromList = new Tree(copyFromContainer, SWT.BORDER | SWT.SINGLE);
 		copyFromList.setLayoutData(new RowData(300, 240));
 
-		expressionLabel = new Label(copyFromContainer, SWT.NONE);
-		expressionLabel.setText(Messages.COPY_EXPRESSION_LABEL);
-
-		copyFromExpression = new Text(copyFromContainer, SWT.BORDER);
-		copyFromExpression.setLayoutData(new RowData(300, 240));
-		copyFromExpression.setVisible(Boolean.FALSE);
-		copyFromExpression.setLocation(copyFromList.getLocation());
-
 		copyToContainer = new Composite(mainContainer, SWT.NONE);
 		copyToContainer.setLayout(new RowLayout(SWT.VERTICAL));
 		copyToContainer.setLayoutData(new RowData(330, 333));
@@ -207,6 +195,8 @@ public class AssignPage extends WizardPage {
 		copyElemList.addSelectionListener(new CopySelectionListener());
 		newButton.addSelectionListener(new NewCopySelectionListener());
 		delButton.addSelectionListener(new DeleteCopySelectionListener());
+		moveDownButton.addSelectionListener(new MoveDownSelectionListener());
+		moveUpButton.addSelectionListener(new MoveUpSelectionListener());
 		copyFromCombo.addSelectionListener(new FromTypeSelectionListener());
 		copyToCombo.addSelectionListener(new ToTypeSelectionListener());
 		copyFromList.addSelectionListener(new FromElementSelectionListener());
@@ -420,16 +410,12 @@ public class AssignPage extends WizardPage {
 			copyType = model.getFromComboList().get(selectionIndex);
 
 			copyFromList.setVisible(Boolean.FALSE);
-			expressionLabel.setVisible(Boolean.FALSE);
-			expressionLabel.setVisible(Boolean.FALSE);
 
 			switch (copyType) {
 			case Messages.ASSIGN_CATEGORY_VARPART:
 				copyFromList.setVisible(Boolean.TRUE);
 				break;
 			case Messages.ASSIGN_CATEGORY_EXPRESSION:
-				expressionLabel.setVisible(Boolean.TRUE);
-				copyFromExpression.setVisible(Boolean.TRUE);
 				break;
 			case Messages.ASSIGN_CATEGORY_LITERAL:
 				break;
@@ -581,15 +567,106 @@ public class AssignPage extends WizardPage {
 		@Override
 		public void widgetSelected(SelectionEvent arg0) {
 			Integer copySelectionIndex = copyElemList.getSelectionIndex();
-			controller.deleteCopy(copySelectionIndex);
-			copyElemList.removeAll();
-			copyFromCombo.deselectAll();
-			copyToCombo.deselectAll();
-			copyFromList.removeAll();
-			copyToList.removeAll();
+			if (copySelectionIndex >= 0) {
+				controller.deleteCopy(copySelectionIndex);
+				copyElemList.removeAll();
+				copyFromCombo.deselectAll();
+				copyToCombo.deselectAll();
+				copyFromList.removeAll();
+				copyToList.removeAll();
+				generatedMarker.removeAll();
 
-			for (String elem : model.getCopyListNames(assignList.getSelectionIndex())) {
-				copyElemList.add(elem);
+				for (String elem : model.getCopyListNames(assignList.getSelectionIndex())) {
+					copyElemList.add(elem);
+				}
+
+				controller.generateMarkers(assignList.getSelectionIndex());
+
+				for (String it : model.getMarkers()) {
+					generatedMarker.add(it);
+				}
+			}
+		}
+
+	}
+
+	private class MoveDownSelectionListener implements SelectionListener {
+
+		@Override
+		public void widgetDefaultSelected(SelectionEvent arg0) {
+			// Nothing to implement here.
+		}
+
+		@Override
+		public void widgetSelected(SelectionEvent arg0) {
+			int copySelectionIndex = copyElemList.getSelectionIndex();
+
+			if (copySelectionIndex >= 0 && copySelectionIndex < copyElemList.getItemCount() - 1) {
+
+				controller.moveDownCopy(copySelectionIndex);
+
+				controller.generateMarkers(assignList.getSelectionIndex());
+
+				copyElemList.removeAll();
+				copyFromCombo.deselectAll();
+				copyToCombo.deselectAll();
+				copyFromList.removeAll();
+				copyToList.removeAll();
+				generatedMarker.removeAll();
+
+				for (String elem : model.getCopyListNames(assignList.getSelectionIndex())) {
+					copyElemList.add(elem);
+				}
+
+				for (String it : model.getMarkers()) {
+					generatedMarker.add(it);
+				}
+
+				copyElemList.select(copySelectionIndex + 1);
+				Event copyElemListEvent = new Event();
+				copyElemListEvent.item = copyFromCombo;
+				copyElemList.notifyListeners(SWT.Selection, copyElemListEvent);
+			}
+		}
+
+	}
+
+	private class MoveUpSelectionListener implements SelectionListener {
+
+		@Override
+		public void widgetDefaultSelected(SelectionEvent arg0) {
+			// Nothing to implement here.
+		}
+
+		@Override
+		public void widgetSelected(SelectionEvent arg0) {
+			int copySelectionIndex = copyElemList.getSelectionIndex();
+
+			if (copySelectionIndex > 0 && copySelectionIndex < copyElemList.getItemCount()) {
+
+				controller.moveUpCopy(copySelectionIndex);
+
+				controller.generateMarkers(assignList.getSelectionIndex());
+
+				copyElemList.removeAll();
+				copyFromCombo.deselectAll();
+				copyToCombo.deselectAll();
+				copyFromList.removeAll();
+				copyToList.removeAll();
+				generatedMarker.removeAll();
+
+				for (String elem : model.getCopyListNames(assignList.getSelectionIndex())) {
+					copyElemList.add(elem);
+				}
+
+				for (String it : model.getMarkers()) {
+					generatedMarker.add(it);
+				}
+
+				copyElemList.select(copySelectionIndex - 1);
+				Event copyElemListEvent = new Event();
+				copyElemListEvent.item = copyFromCombo;
+				copyElemList.notifyListeners(SWT.Selection, copyElemListEvent);
 			}
 		}
 

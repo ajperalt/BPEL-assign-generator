@@ -71,6 +71,7 @@ public class GraphTransformer implements IProcessTransformer {
 			complexNodeClone = new GraphNode<Activity>((Activity) temp);
 		}
 		executeCreate(model.getRoot(), complexNodeClone);
+
 	}
 
 	/**
@@ -95,6 +96,9 @@ public class GraphTransformer implements IProcessTransformer {
 					previous.addNextNode(insertedNode);
 					if (!isFlow) {
 						previous = insertedNode;
+					} else {
+						insertedNode.addNextNode(closingNode);
+						closingNode.addPreviousNode(insertedNode);
 					}
 				} else {
 					complexEndNode = new GraphNode<Activity>((Activity) processed);
@@ -103,12 +107,15 @@ public class GraphTransformer implements IProcessTransformer {
 					executeCreate(insertedNode, complexEndNode);
 					if (!isFlow) {
 						previous = complexEndNode;
+					} else {
+						complexEndNode.addNextNode(closingNode);
+						closingNode.addPreviousNode(complexEndNode);
 					}
 				}
-				if (isFlow) {
-					insertedNode.addNextNode(closingNode);
-					closingNode.addPreviousNode(insertedNode);
-				}
+				// if (isFlow) {
+				// insertedNode.addNextNode(closingNode);
+				// closingNode.addPreviousNode(insertedNode);
+				// }
 			}
 		}
 		if (!isFlow) {

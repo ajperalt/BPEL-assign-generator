@@ -12,6 +12,7 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 
 import pl.eiti.bpelag.analyzer.IAnalysisResult;
+import pl.eiti.bpelag.analyzer.impl.AnalysisResult;
 import pl.eiti.bpelag.generator.IUpdater;
 
 /**
@@ -26,7 +27,7 @@ public class Updater implements IUpdater {
 
 		while (procIterator.hasNext()) {
 			EObject procElement = procIterator.next();
-			if (procElement instanceof Assign) {
+			if (procElement instanceof Assign && ((AnalysisResult) analysis).containsKey(procElement)) {
 				for (Object generatedCopy : analysis.get((Assign) procElement)) {
 					if (generatedCopy instanceof Copy) {
 						if (!exists((Assign) procElement, (Copy) generatedCopy)) {

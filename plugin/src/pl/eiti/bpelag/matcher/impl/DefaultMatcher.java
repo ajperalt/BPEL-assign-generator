@@ -58,19 +58,19 @@ public class DefaultMatcher extends Settings implements IMatcher {
 					}
 
 					// copy instruction created - leave the loop
-					break;
+					// break;
 				} else if (null != var.getMessageType() && null == invokeInput.getMessageType()) {
 					// complex variable but invoke input simple type
 
 					result.addAll(retrieveSimpleToComplexTypeMatching(invokeInput, var, Boolean.FALSE));
 					// copy instruction created - leave the loop
-					break;
+					// break;
 				} else if (null == var.getMessageType() && null != invokeInput.getMessageType()) {
 					// simple type variable but invoke input complex type
 
 					result.addAll(retrieveSimpleToComplexTypeMatching(var, invokeInput, Boolean.TRUE));
 					// copy instruction created - leave the loop
-					break;
+					// break;
 				} else {
 					// both types simple
 					if (isMatching(invokeInput, var)) {
@@ -87,7 +87,7 @@ public class DefaultMatcher extends Settings implements IMatcher {
 						result.add(copyElement);
 					}
 					// copy instruction created - leave the loop
-					break;
+					// break;
 				}
 			}
 		}

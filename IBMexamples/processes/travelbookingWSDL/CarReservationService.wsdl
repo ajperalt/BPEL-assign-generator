@@ -23,7 +23,8 @@
 			<element name="doCarReservationResponse">
 				<complexType>
 					<sequence>
-						<element name="doCarReservationReturn" type="xsd:boolean" />
+						<!-- element name="doCarReservationReturn" type="xsd:boolean" / -->
+						<element name="carConfirmation" type="xsd:boolean" />
 					</sequence>
 				</complexType>
 			</element>
@@ -38,13 +39,21 @@
 
 	</wsdl:message>
 
-	<wsdl:message name="doCarReservationResponse">
+	<wsdl:message name="carConfirmation">
 
 		<wsdl:part element="impl:doCarReservationResponse" name="response">
 
 		</wsdl:part>
 
 	</wsdl:message>
+
+	<!--  wsdl:message name="doCarReservationResponse">
+
+		<wsdl:part element="impl:doCarReservationResponse" name="response">
+
+		</wsdl:part>
+
+	</wsdl:message -->
 
 	<wsdl:portType name="CarReservationService">
 
@@ -54,9 +63,11 @@
 
 			</wsdl:input>
 
-			<wsdl:output message="impl:doCarReservationResponse"
-				name="doCarReservationResponse">
+			<!-- wsdl:output message="impl:doCarReservationResponse"
+				name="doCarReservationResponse" -->
 
+			<wsdl:output message="impl:carConfirmation"
+				name="doCarReservationResponse">
 			</wsdl:output>
 
 		</wsdl:operation>
