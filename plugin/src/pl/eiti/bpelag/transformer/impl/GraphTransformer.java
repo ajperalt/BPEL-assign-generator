@@ -112,10 +112,6 @@ public class GraphTransformer implements IProcessTransformer {
 						closingNode.addPreviousNode(complexEndNode);
 					}
 				}
-				// if (isFlow) {
-				// insertedNode.addNextNode(closingNode);
-				// closingNode.addPreviousNode(insertedNode);
-				// }
 			}
 		}
 		if (!isFlow) {
