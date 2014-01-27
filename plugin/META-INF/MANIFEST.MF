@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: BPEL-assign_generator
 Bundle-SymbolicName: pl.eiti.bpelag;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: pl.eiti.bpelag.Activator
+Bundle-Activator: pl.eiti.bpelcg.Activator
 Require-Bundle: org.eclipse.bpel.model,
  org.eclipse.ui,
  org.eclipse.core.runtime,

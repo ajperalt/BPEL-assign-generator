@@ -17,7 +17,7 @@
          <action
                label="Copy Generate"
                icon="icons/bpel-oasis.png"
-               class="pl.eiti.bpelag.actions.AssignGenerateAction"
+               class="pl.eiti.bpelcg.actions.CopyGenerateAction"
                tooltip="BPEL Assign Generate"
                menubarPath="BPELMenu/bpelagGroup"
                toolbarPath="bpelagGroup"
