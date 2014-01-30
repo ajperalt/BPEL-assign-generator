@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Graph node element implementation.
  * 
- * @param <T>
+ * @param T
  *            type of node data
  */
 public class GraphNode<T> {

@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: BPEL-assign_generator
-Bundle-SymbolicName: pl.eiti.bpelag;singleton:=true
+Bundle-Name: BPEL-copy_generator
+Bundle-SymbolicName: pl.eiti.bpelcg;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: pl.eiti.bpelcg.Activator
 Require-Bundle: org.eclipse.bpel.model,

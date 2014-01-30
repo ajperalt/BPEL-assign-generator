@@ -1,8 +1,13 @@
 package pl.eiti.bpelcg.actions;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -76,16 +81,28 @@ public class CopyGenerateAction implements IWorkbenchWindowActionDelegate {
 
 		if (input instanceof FileEditorInput) {
 			path = ((FileEditorInput) input).getPath();
-
-			// IPath bakPath = new Path(path.lastSegment() + ".bak"); //new
-			// Path(path.toString() + ".bak");
-			//
-			// try {
-			// ((FileEditorInput) input).getFile().copy(bakPath, Boolean.TRUE,
-			// null);
-			// } catch (CoreException e) {
-			// e.printStackTrace();
-			// }
+			Path bakPath = new Path(path.toString() + ".bak");
+			
+			try {
+				Files.copy(path.toFile().toPath(), bakPath.toFile().toPath(), StandardCopyOption.REPLACE_EXISTING);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+//
+//			try {
+//				Files.delete(bakPath.toFile().getAbsoluteFile().toPath());
+//			} catch (IOException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//
+//			try {
+//				((FileEditorInput) input).getFile().copy(bakPath, Boolean.TRUE, null);
+//			} catch (CoreException e) {
+//				e.printStackTrace();
+//			}
 		}
 
 		if (path != null && Settings.BPEL_EXTENSION.equalsIgnoreCase(path.getFileExtension())) {

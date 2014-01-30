@@ -3,7 +3,7 @@ package pl.eiti.bpelcg.model.graph;
 /**
  * Graph implementation with root node selected.
  *
- * @param <T> graph nodes type
+ * @param T graph nodes type
  */
 public class Graph<T> {
 	/** Graph root element */

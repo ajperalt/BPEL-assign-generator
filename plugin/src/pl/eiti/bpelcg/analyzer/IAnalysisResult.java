@@ -5,9 +5,9 @@ import java.util.List;
 /**
  * Generic analysis result structure interface.
  * 
- * @param <K>
+ * @param K
  *            key type.
- * @param <V>
+ * @param V
  *            value type as List.
  */
 public interface IAnalysisResult<K, V extends List<?>> {

@@ -4,9 +4,14 @@
    <extension
          point="org.eclipse.ui.actionSets">
       <actionSet
-            label="BPEL Assign Generator Action Set"
+            label="BPEL Copy Generator Action Set"
             visible="true"
-            id="pl.eiti.bpelag.actionSet">
+            id="pl.eiti.bpelcg.actionSet">
+		 <visibleWhen checkEnabled="true">
+	        <with variable="activeWorkbenchWindow.activePerspective">
+	        	<equals value="BPEL" />
+	     	</with>
+	     </visibleWhen>
          <menu
                label="BPELcg"
                id="BPELMenu">
@@ -18,15 +23,18 @@
                label="Copy Generate"
                icon="icons/bpel-oasis.png"
                class="pl.eiti.bpelcg.actions.CopyGenerateAction"
-               tooltip="BPEL Assign Generate"
-               menubarPath="BPELMenu/bpelagGroup"
-               toolbarPath="bpelagGroup"
+               tooltip="BPEL Copy Generate"
+               menubarPath="BPELMenu/bpelcgGroup"
+               toolbarPath="bpelcgGroup"
                id="pl.eiti.bpelag.actions.AssignGenerateAction">
-	         <visibleWhen checkEnabled="true">
-	         	<with variable="activeWorkbenchWindow.activePerspectives">
-	         		<equals value="BPEL" />
-	         	</with>
-	         </visibleWhen>
+         </action>
+         <action
+         	label="Undo"
+         	icon="icons/bpel-undo.png"
+         	class="pl.eiti.bpelcg.actions.UndoAction"
+         	tooltip="Undo"
+         	menubarPath="BPELMenu/bpelcgGroup"
+         	id="pl.eiti.bpelcg.actions.UndoAction">
          </action>
       </actionSet>
    </extension>

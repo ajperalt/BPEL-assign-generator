@@ -31,6 +31,7 @@ public class AnalyzerWizardController {
 	private IUpdater updater = null;
 
 	private String pathToBPEL = null;
+	@SuppressWarnings("rawtypes")
 	private IAnalysisResult analysisResult = null;
 
 	private AnalyzerWizardModel model = null;
@@ -122,6 +123,7 @@ public class AnalyzerWizardController {
 	 * @param index
 	 *            assign element index.
 	 */
+	@SuppressWarnings("unchecked")
 	public void generateMarkers(int index) {
 		List<String> result = new ArrayList<>();
 		Assign selected = model.getAssignList().get(index);

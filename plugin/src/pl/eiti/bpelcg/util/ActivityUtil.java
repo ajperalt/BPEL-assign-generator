@@ -18,6 +18,13 @@ import org.eclipse.bpel.model.Wait;
  * Helper element used in BPELcg plugin project.
  */
 public class ActivityUtil {
+	/*
+	 * Comes from
+	 * https://github.com/BPELtools/BPEL-dataflow-analyzer/blob/master
+	 * /src/de.uni
+	 * -stuttgart.iaas.bpel-d.algorithm/src/de/uni_stuttgart/iaas/bpel_d
+	 * /algorithm/analysis/Activity.java
+	 */
 	private static final Class<?>[] BASIC_ACTIVITIES = { Assign.class, Empty.class, Exit.class,
 			ExtensionActivity.class, Invoke.class, Receive.class, Reply.class, Rethrow.class, Throw.class,
 			Validate.class, Wait.class };

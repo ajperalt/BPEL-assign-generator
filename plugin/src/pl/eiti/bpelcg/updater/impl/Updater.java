@@ -21,6 +21,7 @@ import pl.eiti.bpelcg.updater.IUpdater;
  */
 public class Updater implements IUpdater {
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void update(org.eclipse.bpel.model.Process BPELprocess, IAnalysisResult analysis) {
 		TreeIterator<EObject> procIterator = BPELprocess.eAllContents();

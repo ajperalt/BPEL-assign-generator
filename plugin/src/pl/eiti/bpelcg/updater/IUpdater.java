@@ -19,7 +19,7 @@ public interface IUpdater {
 	 * @param analysis
 	 *            result of process analyze.
 	 */
-	public void update(org.eclipse.bpel.model.Process BPELprocess, IAnalysisResult analysis);
+	public void update(org.eclipse.bpel.model.Process BPELprocess, @SuppressWarnings("rawtypes") IAnalysisResult analysis);
 
 	/**
 	 * Creates a new From element - source of value copying in copy instruction

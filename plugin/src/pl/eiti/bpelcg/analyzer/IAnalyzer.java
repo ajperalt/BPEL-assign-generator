@@ -24,6 +24,7 @@ public interface IAnalyzer {
 	 * 
 	 * @return results of the model analyze
 	 */
+	@SuppressWarnings("rawtypes")
 	public IAnalysisResult analyze();
 
 	/**
